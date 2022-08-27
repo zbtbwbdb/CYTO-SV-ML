@@ -36,12 +36,12 @@ ui<- dashboardPage(
      # Input: Slider for SV feature for axis X                     
            selectInput(inputId = "feature_x",
                        label = "Pairplot X-axis:",
-                       choices = c("sv_chr", "sv_chr2", "sv_type","sv_bp_st_ci_range","sv_bp_end_ci_range","sv_read_ratio","sv_read_diff","sv_bp_st_cc1","sv_bp_end_cc1"),
+                       choices = c("sv_chr", "sv_chr2", "sv_type","sv_bp_st_ci_range","sv_bp_end_ci_range","sv_read_ratio","sv_read_diff","sv_bp_st_cc1","sv_bp_end_cc1","prediction_TA","prediction_TG","prediction_TS"),
                        selected = "sv_read_ratio"),                  
      # Input: Slider for SV feature at axis Y                      
            selectInput(inputId = "feature_y",
                        label = "Pairplot Y-axis:",
-                       choices = c("sv_chr", "sv_chr2", "sv_type","sv_bp_st_ci_range","sv_bp_end_ci_range","sv_read_ratio","sv_read_diff","sv_bp_st_cc1","sv_bp_end_cc1"),
+                       choices = c("sv_chr", "sv_chr2", "sv_type","sv_bp_st_ci_range","sv_bp_end_ci_range","sv_read_ratio","sv_read_diff","sv_bp_st_cc1","sv_bp_end_cc1","prediction_TA","prediction_TG","prediction_TS"),
                        selected = "sv_bp_st_ci_range"),                  
      # Input: Slider for SV feature at axis Z                      
 #           selectInput(inputId = "feature_z",
@@ -81,7 +81,7 @@ ui<- dashboardPage(
 #              tags$style(type="text/css", "#timestamp {white-space: pre-wrap; word-break: break-word;}"),
               tags$style(type="text/css", "#timestamp {white-space: wrap; word-break: break-word;}", "#TxtOut {white-space: normal;}", "#value{ height: 200px; font-family: monospace;}"),
               #3.2 pop message
-              tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});'))),
+              #tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});'))),
 
               #3.3 main layout for plots and tables
               tabsetPanel(
@@ -89,22 +89,22 @@ ui<- dashboardPage(
                         fluidRow(                 
                         column(width = 6, 
                               box(
-                              title = "SV class prediction", width = NULL, solidHeader = TRUE,status = "primary",
-                              wellPanel(htmlOutput("text"))                         
+                              title = "SV summary", width = NULL,height=255, solidHeader = TRUE,status = "primary",
+                              wellPanel(htmlOutput("text"),height=255)                         
                               ),  
                               box(
-                              title = "SV class prediction", width = NULL, solidHeader = TRUE,status = "warning",
-                              plotlyOutput("scatter2", width = 600,height=315)                              
+                              title = "SV feature pair-plot", width = NULL, solidHeader = TRUE,status = "warning",
+                              plotlyOutput("scatter2", width = 600,height=325)                              
                               )),                               
                         column(width = 6,
                               box(
-                              title = "SV class prediction", width = NULL, solidHeader = TRUE,status = "primary",
-                              plotlyOutput("scatter1", width = 600,height=595)
+                              title = "SV prediction plot", width = NULL, solidHeader = TRUE,status = "primary",
+                              plotlyOutput("scatter1", width = 600,height=605)
                               ))
                               ),  
                         fluidRow(                                           
                         box(
-                        title = "SV feature summary", width = 12,    solidHeader = TRUE,  status = "primary",                          
+                        title = "SV data summary", width = 12,    solidHeader = TRUE,  status = "primary",                          
                                                 lineupOutput("lineup1"))
                               )
                         )  
