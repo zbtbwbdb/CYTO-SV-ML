@@ -17,7 +17,7 @@ RUN R -e 'remotes::install_github("jcheng5/d3scatter")'
 
 ### Change directory to `cyto-sv-ml`
 ```
-cd efs-calculator
+cd cyto-sv-ml
 ```
 
 ### Start Shiny Application from R Console
