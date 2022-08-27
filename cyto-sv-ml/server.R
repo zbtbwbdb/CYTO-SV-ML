@@ -67,7 +67,7 @@ server<-function(input, output)
 #            pred_sv=system2("python","data/cyto-sv-ml.py","input_sv.vcf",sv_type, stdout = TRUE, stderr = TRUE)
 #            input_sv['prediction']=int(pred_sv)
 
-            all_input_sv=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_chr2==sv_chr2 & ((all_sv$sv_bp_st>=cytoband_range[1] & all_sv$sv_bp_st<=cytoband_range[2]) | (all_sv$sv_bp_end>=cytoband_range[1] & all_sv$sv_bp_end<=cytoband_range[2])),]
+            all_input_sv=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_chr2==sv_chr2 & all_sv$sv_type==sv_type & ((all_sv$sv_bp_st>=cytoband_range[1] & all_sv$sv_bp_st<=cytoband_range[2]) | (all_sv$sv_bp_end>=cytoband_range[1] & all_sv$sv_bp_end<=cytoband_range[2])),]
             print(dim(all_input_sv))  
             input_sv=all_input_sv[sample(1:dim(all_input_sv)[1],1),]          
             all_benchmark_sv=all_sv[all_sv$label %in% c('TA','TG','TS'), ]
