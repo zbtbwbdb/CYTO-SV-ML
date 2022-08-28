@@ -9,7 +9,7 @@ server<-function(input, output)
     # recipient_db: data frame from encode3.merge.txt simplified with only donors of real transplant (one donor for each recipient)
     # post: pre-compiled BART3 model
 
- #    data("data/cyto_sv_ml")
+     #data("data/cyto_sv_ml")
      load("data/cyto_sv_ml.RData")
      removeModal()
      
@@ -101,7 +101,7 @@ server<-function(input, output)
             input_sv=input_subset_tmp()[[1]]      
             input_sv_type=ifelse(input_sv$sv_type=='BND','Translocation', ifelse(input_sv$sv_type=='DEL', "Deletion", ifelse(input_sv$sv_type=='DUP', 'Duplication',ifelse(input_sv$sv_type=='INV', 'Inversion'))))
             input_sv_class=ifelse(input_sv$predict_label=='TA','Systematic artifact SV', ifelse(input_sv$predict_label=='TG', "True germline SV", ifelse(input_sv$predict_label=='TS', 'True somatic cytogenetic SV')))
-            HTML(paste(paste0("This SV is <b>", input_sv_type, "</b> with 1st break point at chromsome <b>", input_sv$sv_chr, "</b> position <b>", input_sv$sv_bp_st, "</b> (CI=",input_sv$sv_bp_st_ci0,",",input_sv$sv_bp_st_ci1,") and 2nd break point at chromsome <b>", input_sv$sv_chr2, "</b> position <b>", input_sv$sv_bp_end,"</b> (CI=",input_sv$sv_bp_st_ci0,",",input_sv$sv_bp_st_ci1,"), with the coverage of <b>",input_sv$sv_read_r, "</b> reference reads and <b>",input_sv$sv_read_a, "</b> alternated reads."),paste0("The classification by CYTO-SV-ML pipeline is <b>",input_sv_class,"</b> with prediction probility -- System artifact SV: <b>", round(input_sv$prediction_TA,2),"</b>, True germline SV: <b>", round(input_sv$prediction_TG,2),"</b>, True cytogenetic somatic SV: <b>", round(input_sv$prediction_TS,2),"</b>."), paste0(""), paste0("(<u>The pair-plot and table at below is based on benchmark SVs close to  genomic region of the simulated SV. The 3D dot plot at the right is based on all benchmark SVs.</u>)"),sep="<br/>"))
+            HTML(paste(paste0("This SV is <b>", input_sv_type, "</b> with 1st break point at chromsome <b>", input_sv$sv_chr, "</b> position <b>", input_sv$sv_bp_st, "</b> (CI=",input_sv$sv_bp_st_ci0,",",input_sv$sv_bp_st_ci1,") and 2nd break point at chromsome <b>", input_sv$sv_chr2, "</b> position <b>", input_sv$sv_bp_end,"</b> (CI=",input_sv$sv_bp_st_ci0,",",input_sv$sv_bp_st_ci1,"), with the coverage of <b>",input_sv$sv_read_r, "</b> reference reads and <b>",input_sv$sv_read_a, "</b> alternated reads."),paste0("The classification by CYTO-SV-ML pipeline is <b>",input_sv_class,"</b> with prediction probility -- System artifact SV: <b>", round(input_sv$prediction_TA,2),"</b>, True germline SV: <b>", round(input_sv$prediction_TG,2),"</b>, True cytogenetic somatic SV: <b>", round(input_sv$prediction_TS,2),"</b>."), paste0(""), paste0("(<u>The pair-plot and table at below are based on 100 benchmark SVs close to  genomic region of the simulated SV. The 3D dot plot at the right is based on benchmark SVs.</u>)"),sep="<br/>"))
             })                       
                                      
     ###################################################################################################################  
