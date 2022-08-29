@@ -66,11 +66,37 @@ server<-function(input, output)
 #            #3.3 model prediction by system call python script   
 #            pred_sv=system2("python","data/cyto-sv-ml.py","input_sv.vcf",sv_type, stdout = TRUE, stderr = TRUE)
 #            input_sv['prediction']=int(pred_sv)
-
-            all_input_sv=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_chr2==sv_chr2 & all_sv$sv_type==sv_type & ((all_sv$sv_bp_st>=cytoband_range[1] & all_sv$sv_bp_st<=cytoband_range[2]) | (all_sv$sv_bp_end>=cytoband_range[1] & all_sv$sv_bp_end<=cytoband_range[2])),]
+            if ( sv_type=='BND')
+                  {
+              all_input_sv=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_chr2==sv_chr2 & all_sv$sv_type==sv_type & ((all_sv$sv_bp_st>=cytoband_range[1] & all_sv$sv_bp_st<=cytoband_range[2]) | (all_sv$sv_bp_end>=cytoband_range[1] & all_sv$sv_bp_end<=cytoband_range[2])),]
+            } else {
+              all_input_sv=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_type==sv_type & ((all_sv$sv_bp_st>=cytoband_range[1] & all_sv$sv_bp_st<=cytoband_range[2]) | (all_sv$sv_bp_end>=cytoband_range[1] & all_sv$sv_bp_end<=cytoband_range[2])),]
+                  }
             print(dim(all_input_sv))  
+            if(dim(all_input_sv)[1]==0)
+                  {
+                    ###    the pop up messege of detecting none sv            
+                    # pop up messege 
+                    showModal(modalDialog(
+                    title = "warning",
+                    "No such SVs in current WGS database found and will change Chrom arm or Chrom2 to non-specific ",
+                    easyClose = TRUE,
+                    footer = NULL))
+                    all_input_sv1=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_chr2==sv_chr2 & all_sv$sv_type==sv_type,]
+                    all_input_sv=all_input_sv1
+                    if(dim(all_input_sv1)[1]==0) {
+                          all_input_sv1=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_type==sv_type & ((all_sv$sv_bp_st>=cytoband_range[1] & all_sv$sv_bp_st<=cytoband_range[2]) | (all_sv$sv_bp_end>=cytoband_range[1] & all_sv$sv_bp_end<=cytoband_range[2])),]
+                          all_input_sv=all_input_sv1
+                          if(dim(all_input_sv1)[1]==0) {
+                                all_input_sv1=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_type==sv_type,]  
+                                all_input_sv=all_input_sv1
+                                }
+                          }
+                  }
+            print(dim(all_input_sv)) 
             input_sv=all_input_sv[sample(1:dim(all_input_sv)[1],1),]          
             all_benchmark_sv=all_sv[all_sv$label %in% c('TA','TG','TS'), ]
+            print(dim(all_benchmark_sv)) 
             benchmark_sv=all_benchmark_sv[all_benchmark_sv$sv_chr==sv_chr & all_benchmark_sv$sv_chr2==sv_chr2 & all_benchmark_sv$sv_type==sv_type & ((all_benchmark_sv$sv_bp_st>=cytoband_range[1] & all_benchmark_sv$sv_bp_st<=cytoband_range[2]) | (all_benchmark_sv$sv_bp_end>=cytoband_range[1] & all_benchmark_sv$sv_bp_end<=cytoband_range[2])),]          
             print(dim(benchmark_sv)) 
             if (dim(benchmark_sv)[1]>100)
@@ -116,27 +142,28 @@ server<-function(input, output)
             # p2 <-p2 %>%  add_trace(input_sv, x=~-log(prediction_TA,10), y=~-log(prediction_TG,10),z=~-log(prediction_TS,10), type = "scatter3d", mode = "markers",marker_symbol = 'star', marker_size = 15, color = I("red"), inherit = FALSE)
             p2 <- p2 %>% layout(scene = list(xaxis = list(title ="prediction_TA (-log)"), yaxis = list(title = "prediction_TG (-log)"),zaxis = list(title = "prediction_TS (-log)")))
             p2
-            }) 
-            
+    
+      }) 
+    
     ###################################################################################################################              
     #6. generate pair-plot for sv data
-      output$scatter2 <- renderPlotly({
-            req(input$feature_x,input$feature_y)          
-            input_sv=input_subset_tmp()[[1]]
-            benchmark_sv= input_subset_tmp()[[2]]              
-            sel_sv=rbind(input_sv,benchmark_sv)   
-            rownames(sel_sv)<-c('Unclassified_SV', paste('Benchmark SV_',1:dim(benchmark_sv)[1],sep=''))
-            col_index<<-colnames(input_sv)
-            # re-arrange data.frame for feature X Y Z 
-            x=which(colnames(sel_sv)==input$feature_x)
-            y=which(colnames(sel_sv)==input$feature_y)            
-            x_y=which(1:dim(sel_sv)[2] %nin% c(x,y))
-            all_sv_sel<-sel_sv[,c(x,y,x_y)]            
-
-            #6.3 Plot prediction           
-            p3<- all_sv_sel %>% plot_ly(type = 'scatter',mode = 'markers',x=~all_sv_sel[,1], y=~all_sv_sel[,2],size=~-log(all_sv_sel$predict_max,10)*10, color=~factor(all_sv_sel$label),  colors = c(rgb(169,169,169, alpha = 0.01 * 255, maxColorValue = 255),rgb(127,255,0, alpha = 0.01 * 255, maxColorValue = 255), rgb(30,144,255, alpha = 0.01 * 255, maxColorValue = 255),rgb(255,0,0, alpha = 0.6 * 255, maxColorValue = 255)), hovertemplate = paste("sv_type:",all_sv_sel$sv_type,"<br>sv_chr:",all_sv_sel$sv_chr,"<br>sv_chr2:",all_sv_sel$sv_chr2,"<br>sv_bp_st:",all_sv_sel$sv_bp_st,"<br>sv_bp_end:",all_sv_sel$sv_bp_end,"<br>sv_read_ref:",all_sv_sel$sv_read_r,"<br>sv_read_alt:",all_sv_sel$sv_read_a,"<br>sv_database:",all_sv_sel$sv_database),opacity=0.6)
-            p3 <- p3 %>% layout(xaxis = list(title = as.character(input$feature_x)), yaxis = list(title = as.character(input$feature_y)))
-            p3  
+    output$scatter2 <- renderPlotly({
+      req(input$feature_x,input$feature_y)          
+      input_sv=input_subset_tmp()[[1]]
+      benchmark_sv= input_subset_tmp()[[2]]              
+      sel_sv=rbind(input_sv,benchmark_sv)   
+      rownames(sel_sv)<-c('Unclassified_SV', paste('Benchmark SV_',1:dim(benchmark_sv)[1],sep=''))
+      col_index<<-colnames(input_sv)
+      # re-arrange data.frame for feature X Y Z 
+      x=which(colnames(sel_sv)==input$feature_x)
+      y=which(colnames(sel_sv)==input$feature_y)            
+      x_y=which(1:dim(sel_sv)[2] %nin% c(x,y))
+      all_sv_sel<-sel_sv[,c(x,y,x_y)]            
+      
+      #6.3 Plot prediction           
+      p3<- all_sv_sel %>% plot_ly(type = 'scatter',mode = 'markers',x=~all_sv_sel[,1], y=~all_sv_sel[,2],size=~-log(all_sv_sel$predict_max,10)*10, color=~factor(all_sv_sel$label),  colors = c(rgb(169,169,169, alpha = 0.01 * 255, maxColorValue = 255),rgb(127,255,0, alpha = 0.01 * 255, maxColorValue = 255), rgb(30,144,255, alpha = 0.01 * 255, maxColorValue = 255),rgb(255,0,0, alpha = 0.6 * 255, maxColorValue = 255)), hovertemplate = paste("sv_type:",all_sv_sel$sv_type,"<br>sv_chr:",all_sv_sel$sv_chr,"<br>sv_chr2:",all_sv_sel$sv_chr2,"<br>sv_bp_st:",all_sv_sel$sv_bp_st,"<br>sv_bp_end:",all_sv_sel$sv_bp_end,"<br>sv_read_ref:",all_sv_sel$sv_read_r,"<br>sv_read_alt:",all_sv_sel$sv_read_a,"<br>sv_database:",all_sv_sel$sv_database),opacity=0.6)
+      p3 <- p3 %>% layout(xaxis = list(title = as.character(input$feature_x)), yaxis = list(title = as.character(input$feature_y)))
+      p3   
             })
 
     ###################################################################################################################              
