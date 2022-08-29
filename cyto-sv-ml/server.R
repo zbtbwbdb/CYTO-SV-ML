@@ -134,7 +134,7 @@ server<-function(input, output)
             all_sv_sel<-sel_sv[,c(x,y,x_y)]            
 
             #6.3 Plot prediction           
-            p3<- all_sv_sel %>% plot_ly(type = 'scatter',mode = 'markers',x=~all_sv_sel[,1], y=~all_sv_sel[,2],size=~-log(all_sv_sel$predict_max,10)*10, color=~factor(all_sv_sel$label),  colors = c("grey","green", "red", "purple"), hovertemplate = paste("sv_type:",all_sv_sel$sv_type,"<br>sv_chr:",all_sv_sel$sv_chr,"<br>sv_chr2:",all_sv_sel$sv_chr2,"<br>sv_bp_st:",all_sv_sel$sv_bp_st,"<br>sv_bp_end:",all_sv_sel$sv_bp_end,"<br>sv_read_ref:",all_sv_sel$sv_read_r,"<br>sv_read_alt:",all_sv_sel$sv_read_a,"<br>sv_database:",all_sv_sel$sv_database),opacity=0.6)
+            p3<- all_sv_sel %>% plot_ly(type = 'scatter',mode = 'markers',x=~all_sv_sel[,1], y=~all_sv_sel[,2],size=~-log(all_sv_sel$predict_max,10)*10, color=~factor(all_sv_sel$label),  colors = c(rgb(169,169,169, alpha = 0.01 * 255, maxColorValue = 255),rgb(127,255,0, alpha = 0.01 * 255, maxColorValue = 255), rgb(30,144,255, alpha = 0.01 * 255, maxColorValue = 255),rgb(255,0,0, alpha = 0.6 * 255, maxColorValue = 255)), hovertemplate = paste("sv_type:",all_sv_sel$sv_type,"<br>sv_chr:",all_sv_sel$sv_chr,"<br>sv_chr2:",all_sv_sel$sv_chr2,"<br>sv_bp_st:",all_sv_sel$sv_bp_st,"<br>sv_bp_end:",all_sv_sel$sv_bp_end,"<br>sv_read_ref:",all_sv_sel$sv_read_r,"<br>sv_read_alt:",all_sv_sel$sv_read_a,"<br>sv_database:",all_sv_sel$sv_database),opacity=0.6)
             p3 <- p3 %>% layout(xaxis = list(title = as.character(input$feature_x)), yaxis = list(title = as.character(input$feature_y)))
             p3  
             })
