@@ -79,7 +79,7 @@ server<-function(input, output)
                     # pop up messege 
                     showModal(modalDialog(
                     title = "warning",
-                    "No such SVs in current WGS database found and will change Chrom arm or Chrom2 to non-specific ",
+                    'No such SVs in current WGS database found and will automatically change "Chrom" arm or "Chrom2" to non-specific (ns)!',
                     easyClose = TRUE,
                     footer = NULL))
                     all_input_sv1=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_chr2==sv_chr2 & all_sv$sv_type==sv_type,]
