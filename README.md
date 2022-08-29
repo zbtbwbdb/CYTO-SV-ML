@@ -7,10 +7,12 @@
 
 ## Install R Packages
 
-EFS Calculator Shiny Application requires the following R packages to be installed.
+CYTO-SV-ML Shiny Application requires the following R packages to be installed.
 ```
-RUN install2.r devtools DT ggplot2 ggforce gridExtra remotes DALEX hash cluster stringr shinydashboard plotly shinyWidgets lineupjs shinyjs
-RUN R -e 'remotes::install_github("jcheng5/d3scatter")'
+RUN install2.r remotes
+RUN R -e 'install.packages("lineupjs",dependencies=TRUE, repos="https://cran.r-project.org/")'
+#RUN R -e 'remotes::install_github("tzhang-nmdp/lineup_htmlwidget")'
+RUN install2.r ggforce plotly DT ggplot2 stringr shinydashboard shinyjs shinyWidgets dplyr Hmisc
 ```
 
 # Run App
