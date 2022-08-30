@@ -5,28 +5,28 @@ ui<- dashboardPage(
      ################################################################################################################### 
      
      #1. head information
-     dashboardHeader(title = "The Demonstration of CYTO-SV-ML pipeline for cytogenetic somatic SV classification", titleWidth = 800),
+     dashboardHeader(title = "CYTO-SV-ML pipeline for prediction of somatic cytogenetic results through genomic structural variant classification", titleWidth = 1200),
      
      ###################################################################################################################
      
      #2. set up input widget    
      dashboardSidebar(
      # action button for ploting    
-                actionButton("Make_simulated_SV",'Run_simulation'),
+                actionButton("Make_simulated_SV",'Run_CYTO_SV_ML'),
      # Input: Slider for SV type                    
            selectInput(inputId = "sv_type",
                        label = "SV type:",
-                       choices = c("DEL", "DUP", "INV","BND"),
+                       choices = c("DEL", "DUP", "INV","TRS"),
                        selected = "DEL"),                     
      # Input: Slider for SV chromosome at 1st breakpoint
            selectInput(inputId = "sv_chr",
-                       label = "SV chrom at 1st breakpoint:",
+                       label = "SV chromosome:",
                        choices = paste('chr',c(1:22,'X','Y'),sep=''),
                        selected = "chr1"),        
      # Input: Slider for SV chromosome at 2nd breakpoint
            selectInput(inputId = "sv_chr2",
-                       label = "SV chrom at 2nd breakpoint:",
-                       choices = paste('chr',c(1:22,'X','Y'),sep=''),
+                       label = "SV 2nd chromosome (TRS only):",
+                       choices = c(paste('chr',c(1:22,'X','Y'),sep=''), 'ns'),
                        selected = "chr1"),                     
      # Input: Slider for SV chromosome location                      
            selectInput(inputId = "cytoband",
@@ -89,17 +89,20 @@ ui<- dashboardPage(
                         fluidRow(                 
                         column(width = 6, 
                               box(
-                              title = "SV summary", width = NULL,height=255, solidHeader = TRUE,status = "primary",
-                              wellPanel(htmlOutput("text"),height=255)                         
+                              title = "SV summary", width = NULL,height=280, solidHeader = TRUE,status = "primary",
+                              wellPanel(htmlOutput("text"),height=280),
+                              style = "height:280px; overflow-y: scroll;overflow-x: scroll;"                        
                               ),  
                               box(
                               title = "SV feature pair-plot", width = NULL, solidHeader = TRUE,status = "warning",
-                              plotlyOutput("scatter2", width = 600,height=325)                              
+                              plotlyOutput("scatter2", width = 600,height=325),    
+                              style = "height:280px; overflow-y: scroll;overflow-x: scroll;"                                 
                               )),                               
                         column(width = 6,
                               box(
                               title = "SV prediction plot", width = NULL, solidHeader = TRUE,status = "primary",
-                              plotlyOutput("scatter1", width = 600,height=605)
+                              plotlyOutput("scatter1", width = 620,height=620),
+                              style = "height:280px; overflow-y: scroll;overflow-x: scroll;"                                 
                               ))
                               ),  
                         fluidRow(                                           
