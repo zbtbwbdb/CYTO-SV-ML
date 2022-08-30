@@ -49,7 +49,7 @@ server<-function(input, output)
                         cytoband_range=c(0,cytoband_end)
                   }
       	    print(cytoband_range)  
-#            if (sv_type=='BND')
+#            if (sv_type=='TRS')
 #                  {
 #                  benchmark_sv=read.table("data/cnv_benchmark_all.vcf",sep="\t",header=T)
 #                  sv_simu_database=read.table("data/cnv_simu.vcf",sep="\t",header=T)
@@ -66,7 +66,7 @@ server<-function(input, output)
 #            #3.3 model prediction by system call python script   
 #            pred_sv=system2("python","data/cyto-sv-ml.py","input_sv.vcf",sv_type, stdout = TRUE, stderr = TRUE)
 #            input_sv['prediction']=int(pred_sv)
-            if ( sv_type=='BND')
+            if ( sv_type=='TRS')
                   {
               all_input_sv=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_chr2==sv_chr2 & all_sv$sv_type==sv_type & ((all_sv$sv_bp_st>=cytoband_range[1] & all_sv$sv_bp_st<=cytoband_range[2]) | (all_sv$sv_bp_end>=cytoband_range[1] & all_sv$sv_bp_end<=cytoband_range[2])),]
             } else {
@@ -97,7 +97,12 @@ server<-function(input, output)
             input_sv=all_input_sv[sample(1:dim(all_input_sv)[1],1),]          
             all_benchmark_sv=all_sv[all_sv$label %in% c('TA','TG','TS'), ]
             print(dim(all_benchmark_sv)) 
-            benchmark_sv=all_benchmark_sv[all_benchmark_sv$sv_chr==sv_chr & all_benchmark_sv$sv_chr2==sv_chr2 & all_benchmark_sv$sv_type==sv_type & ((all_benchmark_sv$sv_bp_st>=cytoband_range[1] & all_benchmark_sv$sv_bp_st<=cytoband_range[2]) | (all_benchmark_sv$sv_bp_end>=cytoband_range[1] & all_benchmark_sv$sv_bp_end<=cytoband_range[2])),]          
+            if ( sv_type=='TRS')
+            {
+              benchmark_sv=all_benchmark_sv[all_benchmark_sv$sv_chr==sv_chr & all_benchmark_sv$sv_chr2==sv_chr2 & all_benchmark_sv$sv_type==sv_type & ((all_benchmark_sv$sv_bp_st>=cytoband_range[1] & all_benchmark_sv$sv_bp_st<=cytoband_range[2]) | (all_benchmark_sv$sv_bp_end>=cytoband_range[1] & all_benchmark_sv$sv_bp_end<=cytoband_range[2])),]   
+            } else {
+              benchmark_sv=all_benchmark_sv[all_benchmark_sv$sv_chr==sv_chr & all_benchmark_sv$sv_type==sv_type & ((all_benchmark_sv$sv_bp_st>=cytoband_range[1] & all_benchmark_sv$sv_bp_st<=cytoband_range[2]) | (all_benchmark_sv$sv_bp_end>=cytoband_range[1] & all_benchmark_sv$sv_bp_end<=cytoband_range[2])),]   
+            }
             print(dim(benchmark_sv)) 
             if (dim(benchmark_sv)[1]>100)
                   {
@@ -125,9 +130,9 @@ server<-function(input, output)
     #4. generate summary text for input sv data
       output$text <- renderUI({
             input_sv=input_subset_tmp()[[1]]      
-            input_sv_type=ifelse(input_sv$sv_type=='BND','Translocation', ifelse(input_sv$sv_type=='DEL', "Deletion", ifelse(input_sv$sv_type=='DUP', 'Duplication',ifelse(input_sv$sv_type=='INV', 'Inversion'))))
+            input_sv_type=ifelse(input_sv$sv_type=='TRS','Translocation', ifelse(input_sv$sv_type=='DEL', "Deletion", ifelse(input_sv$sv_type=='DUP', 'Duplication',ifelse(input_sv$sv_type=='INV', 'Inversion'))))
             input_sv_class=ifelse(input_sv$predict_label=='TA','Systematic artifact SV', ifelse(input_sv$predict_label=='TG', "True germline SV", ifelse(input_sv$predict_label=='TS', 'True somatic cytogenetic SV')))
-            HTML(paste(paste0("This SV is <b>", input_sv_type, "</b> with 1st break point at chromsome <b>", input_sv$sv_chr, "</b> position <b>", input_sv$sv_bp_st, "</b> (CI=",input_sv$sv_bp_st_ci0,",",input_sv$sv_bp_st_ci1,") and 2nd break point at chromsome <b>", input_sv$sv_chr2, "</b> position <b>", input_sv$sv_bp_end,"</b> (CI=",input_sv$sv_bp_st_ci0,",",input_sv$sv_bp_st_ci1,"), with the coverage of <b>",input_sv$sv_read_r, "</b> reference reads and <b>",input_sv$sv_read_a, "</b> alternated reads."),paste0("The classification by CYTO-SV-ML pipeline is <b>",input_sv_class,"</b> with prediction probility -- System artifact SV: <b>", round(input_sv$prediction_TA,2),"</b>, True germline SV: <b>", round(input_sv$prediction_TG,2),"</b>, True cytogenetic somatic SV: <b>", round(input_sv$prediction_TS,2),"</b>."), paste0(""), paste0("(<u>The pair-plot and table at below are based on 100 benchmark SVs close to  genomic region of the simulated SV. The 3D dot plot at the right is based on simulated SV and benchmark SVs.</u>)"),sep="<br/>"))
+            HTML(paste(paste0("This SV is <b>", input_sv_type, "</b> with 1st break point at chromosome <b>", input_sv$sv_chr, "</b> position <b>", input_sv$sv_bp_st, "</b> (CI=",input_sv$sv_bp_st_ci0,",",input_sv$sv_bp_st_ci1,") and 2nd break point at chromosome <b>", input_sv$sv_chr2, "</b> position <b>", input_sv$sv_bp_end,"</b> (CI=",input_sv$sv_bp_st_ci0,",",input_sv$sv_bp_st_ci1,"), with the coverage of <b>",input_sv$sv_read_r, "</b> reference reads and <b>",input_sv$sv_read_a, "</b> alternated reads."),paste0("The classification by CYTO-SV-ML pipeline is <b>",input_sv_class,"</b> with prediction probility -- System artifact SV: <b>", round(input_sv$prediction_TA,2),"</b>, True germline SV: <b>", round(input_sv$prediction_TG,2),"</b>, True cytogenetic somatic SV: <b>", round(input_sv$prediction_TS,2),"</b>."), paste0(""), paste0("(<u>The simulated SVs and benchmark SVs are generated based on WGS data of our MDS patient cohort. The pair-plot and table at below are based on 100 benchmark SVs close to  genomic region of the simulated SV. The 3D dot plot at the right is based on simulated SV and benchmark SVs.</u>)"),sep="<br/>"))
             })                       
                                      
     ###################################################################################################################  
@@ -181,7 +186,7 @@ server<-function(input, output)
             x_y=which(1:dim(sel_sv)[2] %nin% c(x,y))
             all_sv_sel<-sel_sv[,c(x,y,x_y)]               
             all_sv_sel2<-all_sv_sel[,match(col_index,colnames(all_sv_sel))]
-            all_sv_sel2<-all_sv_sel2[,colnames(all_sv_sel2) %nin% c('sv_chr','sv_chr2')]            
+            all_sv_sel2<-all_sv_sel2#[,colnames(all_sv_sel2) %nin% c('sv_chr','sv_chr2')]            
             lineup(all_sv_sel2, width = "100%")
              })
              
