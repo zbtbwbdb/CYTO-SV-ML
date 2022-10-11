@@ -46,9 +46,20 @@ else:
     cyto_sv_ml= AutoML(mode="Explain", algorithms=['Xgboost'],results_path="cnv-cyto-sv")
     sv_columns=pd.read_csv("cnv_col.index",sep="\t", header=None, index_col=None, keep_default_na=False)
     data_tf=pickle.load(open('cnv_tf.pickle', 'rb'))
-    
+
+# data transformation setting for data_tf
+# preprocessor = make_column_transformer((OneHotEncoder(drop="if_binary"), categorical_columns),(StandardScaler(), numerical_columns),remainder="passthrough")
+
 # data transformation
 sv_sel=sv.iloc[:,np.r_[np.where(sv.columns.isin(sv_columns.iloc[0,:]))]
 sv_tf=data_tf.transform(sv)
-sv_pred = cyto_sv_ml.predict_all(sv_tf)
-print(sv_pred)
+sv_train_model = cyto_sv_ml.fit(sv_tf)
+print(sv_train_model)
+               
+# model performance metrics
+print("Test accuracy:", accuracy_score(y_test, predictions_test["label"].astype(int)))
+print(predictions_test['label'].value_counts())
+print("Test micro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='micro'))
+print("Test macro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='macro'))
+print("Test micro recall_score:", recall_score(y_test, predictions_test["label"].astype(int),average='micro'))
+print("Test macro recall_score:", recall_score(y_test, predictions_test["label"].astype(int),average='macro'))
