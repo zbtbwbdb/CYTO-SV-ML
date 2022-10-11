@@ -3,12 +3,6 @@ server<-function(input, output)
     ################################################################################################################### 
     
     # 1. load environment with the data below:
-    # label_hash: dictionary for transformation of clinical variable code ( from App widget input or encode3.merge.txt
-    # all_donor_db: data frame with patient ID and age information for all the donor available in our database
-    # optimaldonor: data frame with optimal donor of BART3 model
-    # recipient_db: data frame from encode3.merge.txt simplified with only donors of real transplant (one donor for each recipient)
-    # post: pre-compiled BART3 model
-
      #data("data/cyto_sv_ml")
      load("data/cyto_sv_ml.RData")
      removeModal()
