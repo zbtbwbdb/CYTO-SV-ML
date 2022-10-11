@@ -3,7 +3,7 @@
 ![CYTO-SV-ML PIPELINE WORKFLOW](Workflow.png)
 
 
-# Run Shiny Application Locally
+# Run Shiny Application 
 
 ## Install R Packages
 
@@ -15,7 +15,7 @@ RUN R -e 'install.packages("lineupjs",dependencies=TRUE, repos="https://cran.r-p
 RUN install2.r ggforce plotly DT ggplot2 stringr shinydashboard shinyjs shinyWidgets dplyr Hmisc
 ```
 
-# Run App
+# Local Run
 
 ### Change directory to `cyto-sv-ml`
 ```
@@ -28,5 +28,5 @@ cd cyto-sv-ml
 shiny::runApp()
 ```
 
-### Online web portal
+# Online Web-portal
 http://cyto-sv-ml.b12x.org/
