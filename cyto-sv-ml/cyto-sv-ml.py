@@ -30,11 +30,11 @@ sv=pd.read_csv("input_sv.vcf",sep="\t", header=0, index_col=None, keep_default_n
 sv_type=sv['sv_type']
 
 if (sv_type=='BND'):
-    cyto_sv_ml= AutoML(mode="Explain", algorithms=['Xgboost'],results_path="trs-cyto-sv")
+    cyto_sv_ml= AutoML(mode="Explain", results_path="trs-cyto-sv")
     sv_columns=pd.read_csv("trs_col.index",sep="\t", header=None, index_col=None, keep_default_na=False)
     data_tf=pickle.load(open('trs_tf.pickle', 'rb'))    
 else:
-    cyto_sv_ml= AutoML(mode="Explain", algorithms=['Xgboost'],results_path="cnv-cyto-sv")
+    cyto_sv_ml= AutoML(mode="Explain", results_path="cnv-cyto-sv")
     sv_columns=pd.read_csv("cnv_col.index",sep="\t", header=None, index_col=None, keep_default_na=False)
     data_tf=pickle.load(open('cnv_tf.pickle', 'rb'))
 
