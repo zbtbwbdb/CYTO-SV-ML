@@ -15,7 +15,6 @@ from time import time
 import statistics
 from sklearn.utils import Bunch
 from supervised.automl import AutoML # mljar-supervised
-
 from sklearn import metrics, datasets
 from sklearn.metrics import mean_squared_error, median_absolute_error, roc_curve, auc, accuracy_score, precision_score, recall_score, precision_recall_curve, confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -61,8 +60,6 @@ print("Test micro precision_score:", precision_score(y_test, predictions_test["l
 print("Test macro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='macro'))
 print("Test micro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='micro'))
 print("Test macro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
-
-
 
 ## Display the confusion matrix
 cf_matrix = confusion_matrix(y_test, predictions_test['label'],normalize="true")
