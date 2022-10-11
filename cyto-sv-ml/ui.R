@@ -5,14 +5,14 @@ ui<- dashboardPage(
      ################################################################################################################### 
      
      #1. head information
-     dashboardHeader(title = "CYTO-SV-ML pipeline for prediction of somatic cytogenetic results through genomic structural variant classification", titleWidth = 1200),
+     dashboardHeader(title = "SC-SV-ML pipeline for prediction of somatic cytogenetic results through genomic structural variant classification", titleWidth = 1200),
      
      ###################################################################################################################
      
      #2. set up input widget    
      dashboardSidebar(
      # action button for ploting    
-                actionButton("Make_simulated_SV",'Run_CYTO_SV_ML'),
+                actionButton("Make_simulated_SV",'Run_SC_SV_ML'),
      # Input: Slider for SV type                    
            selectInput(inputId = "sv_type",
                        label = "SV type:",
@@ -36,12 +36,12 @@ ui<- dashboardPage(
      # Input: Slider for SV feature for axis X                     
            selectInput(inputId = "feature_x",
                        label = "Pairplot X-axis:",
-                       choices = c("sv_chr", "sv_chr2", "sv_type","sv_bp_st_ci_range","sv_bp_end_ci_range","sv_read_ratio","sv_read_diff","sv_bp_st_cc1","sv_bp_end_cc1","prediction_TA","prediction_TG","prediction_TS"),
+                       choices = c("sv_chr", "sv_chr2", "sv_type","sv_bp_st_ci_range","sv_bp_end_ci_range","sv_read_ratio","sv_read_diff","sv_bp_st_cc_v1","sv_bp_end_cc_v1","prediction_TA","prediction_TG","prediction_TS"),
                        selected = "sv_read_ratio"),                  
      # Input: Slider for SV feature at axis Y                      
            selectInput(inputId = "feature_y",
                        label = "Pairplot Y-axis:",
-                       choices = c("sv_chr", "sv_chr2", "sv_type","sv_bp_st_ci_range","sv_bp_end_ci_range","sv_read_ratio","sv_read_diff","sv_bp_st_cc1","sv_bp_end_cc1","prediction_TA","prediction_TG","prediction_TS"),
+                       choices = c("sv_chr", "sv_chr2", "sv_type","sv_bp_st_ci_range","sv_bp_end_ci_range","sv_read_ratio","sv_read_diff","sv_bp_st_cc_v1","sv_bp_end_cc_v1","prediction_TA","prediction_TG","prediction_TS"),
                        selected = "sv_bp_st_ci_range"),                  
      # Input: Slider for SV feature at axis Z                      
 #           selectInput(inputId = "feature_z",
@@ -55,10 +55,15 @@ ui<- dashboardPage(
             menuItem(print("st: 1st breakpoint")),
             menuItem(print("ci: confidence interval")),   
             menuItem(print("cc: sequence complexity")),  
-            menuItem(print("TA: True systematic artifact SV")),  
-            menuItem(print("TG: True germline SV")), 
-            menuItem(print("TS: True somatic cytogenetic SV")),    
-            menuItem(print("UC: Unclassified SV"))                                                           
+            menuItem(print("DEL: deletion SV")),  
+            menuItem(print("DUP: duplication SV")), 
+            menuItem(print("INV: inversion SV")),    
+            menuItem(print("TRS: translocation SV")),   
+            menuItem(print("ns: non-specified")),          
+            menuItem(print("TA: true systematic artifact SV")),  
+            menuItem(print("TG: true germline SV")), 
+            menuItem(print("TS: true somatic cytogenetic SV")),    
+            menuItem(print("UC: unclassified SV"))                                                           
             )           
 #           menuItem("Contact", icon = icon("phone"), tabName = "contact")
 #           )
@@ -95,14 +100,12 @@ ui<- dashboardPage(
                               ),  
                               box(
                               title = "SV feature pair-plot", width = NULL, solidHeader = TRUE,status = "warning",
-                              plotlyOutput("scatter2", width = 600,height=325),    
-                              style = "height:280px; overflow-y: scroll;overflow-x: scroll;"                                 
+                              plotlyOutput("scatter2", width = 600,height=325)                              
                               )),                               
                         column(width = 6,
                               box(
                               title = "SV prediction plot", width = NULL, solidHeader = TRUE,status = "primary",
-                              plotlyOutput("scatter1", width = 620,height=620),
-                              style = "height:280px; overflow-y: scroll;overflow-x: scroll;"                                 
+                              plotlyOutput("scatter1", width = 620,height=620)
                               ))
                               ),  
                         fluidRow(                                           
