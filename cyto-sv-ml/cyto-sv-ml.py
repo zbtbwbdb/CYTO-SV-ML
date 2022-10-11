@@ -18,8 +18,8 @@ from sklearn.ensemble import GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.preprocessing import StandardScaler
 from itertools import *
 from sklearn.pipeline import make_pipeline
-from sklearn.linear_model import Ridge
-from sklearn.compose import TransformedTargetRegressor
+#from sklearn.linear_model import Ridge
+#from sklearn.compose import TransformedTargetRegressor
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 from sklearn import preprocessing
 import random
@@ -53,13 +53,15 @@ else:
 # data transformation
 sv_sel=sv.iloc[:,np.r_[np.where(sv.columns.isin(sv_columns.iloc[0,:]))]
 sv_tf=data_tf.transform(sv)
-sv_train_model = cyto_sv_ml.fit(sv_tf)
-print(sv_train_model)
+               
+# AUTOML model fit with training data and validate with testing data              
+sv_train_model = cyto_sv_ml.fit(sv_tf_training)
+predictions_test = automl.predict_all(sv_tf_testing)
                
 # model performance metrics
-print("Test accuracy:", accuracy_score(y_test, predictions_test["label"].astype(int)))
-print(predictions_test['label'].value_counts())
-print("Test micro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='micro'))
-print("Test macro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='macro'))
-print("Test micro recall_score:", recall_score(y_test, predictions_test["label"].astype(int),average='micro'))
-print("Test macro recall_score:", recall_score(y_test, predictions_test["label"].astype(int),average='macro'))
+print("Test accuracy:", accuracy_score(y_testing, predictions_testing["label"].astype(int)))
+print(predictions_testing['label'].value_counts())
+print("Test micro precision_score:", precision_score(y_testing, predictions_testing["label"].astype(int),average='micro'))
+print("Test macro precision_score:", precision_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
+print("Test micro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='micro'))
+print("Test macro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
