@@ -1,5 +1,4 @@
 FROM dockerhub.nmdp.org:8443/nmdp-shiny-base:3.6.1
-
 MAINTAINER "Tao Zhang tzhang@nmdp.org"
 
 RUN apt-get update && apt-get install -y libxtst6
@@ -21,4 +20,3 @@ EXPOSE 80
 COPY shiny-server.sh /usr/bin/shiny-server.sh
 
 CMD ["/usr/bin/shiny-server.sh"]
-
