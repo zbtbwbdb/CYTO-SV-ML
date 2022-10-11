@@ -54,10 +54,53 @@ X_test_tf=data_tf.transform(X_test)
 sv_train_model = cyto_sv_ml.fit(X_train_tf)
 predictions_test = sv_train_model.predict_all(X_test_tf)
                
-# model performance metrics
+# Model performance metrics
 print("Test accuracy:", accuracy_score(y_test, predictions_test["label"].astype(int)))
 print(predictions_test['label'].value_counts())
 print("Test micro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='micro'))
 print("Test macro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='macro'))
 print("Test micro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='micro'))
 print("Test macro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
+
+
+
+## Display the confusion matrix
+cf_matrix = confusion_matrix(y_test, predictions_test['label'],normalize="true")
+tf=np.vectorize(lambda x: round(x,2))
+ax = sns.heatmap(tf(cf_matrix), annot=True, cmap='Blues',fmt='g')               
+ax.set_title('Seaborn Confusion Matrix with labels\n\n');
+ax.set_xlabel('\nPredicted Values')
+ax.set_ylabel('Actual Values ');
+ax.xaxis.set_ticklabels(['-1','1','2'])
+ax.yaxis.set_ticklabels(['-1','1','2'])
+ax.axhline(y=0, color='k',linewidth=1)
+ax.axhline(y=cf_matrix.shape[1], color='k',linewidth=2)
+ax.axvline(x=0, color='k',linewidth=1)
+ax.axvline(x=cf_matrix.shape[0], color='k',linewidth=2)
+sns.set(rc={'figure.figsize':(10,10)})
+plt.show()       
+           
+# AUCROC curve  for model performance evaluation
+y1 = label_binarize(y_test, classes=[-1, 1, 2])
+fpr = dict()
+tpr = dict()
+roc_auc = dict()
+n_classes=y1.shape[1]
+lw=2
+for i in range(n_classes):
+    print(i)
+    fpr[i], tpr[i], _ = metrics.roc_curve(y1[:,i], predictions_test.iloc[:,i])
+    roc_auc[i] = auc(fpr[i], tpr[i])
+colors = cycle(['blue', 'red', 'green'])
+for i, color in zip(range(n_classes), colors):
+    plt.plot(fpr[i], tpr[i], color=color, lw=2,
+             label='ROC curve of class {0} (area = {1:0.2f})'
+             ''.format(i, roc_auc[i]))
+plt.plot([0, 1], [0, 1], 'k--', lw=lw)
+plt.xlim([-0.05, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver operating characteristic for multi-class data')
+plt.legend(loc="lower right")
+plt.show()               
