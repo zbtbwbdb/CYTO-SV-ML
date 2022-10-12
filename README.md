@@ -39,18 +39,13 @@ ChromoSeq: https://github.com/genome/docker-basespace_chromoseq
 
 ## SV database Download
 gnomAD: https://gnomad.broadinstitute.org/downloads
-
 1000g: https://www.internationalgenome.org/phase-3-structural-variant-dataset
-
 CytoAtlas: https://github.com/genome/docker-basespace_chromoseq/blob/master/workflow_files/chromoseq_translocations.bedpe
-
 COSMIC: https://cancer.sanger.ac.uk/cosmic/download
 
 ## SV Tool Download
 SVTyper: https://github.com/hall-lab/svtyper
-
 SeqComplex: https://github.com/caballero/SeqComplex
-
 Komplexity: https://github.com/eclarke/komplexity
 
 ## ML Pipeline Download
