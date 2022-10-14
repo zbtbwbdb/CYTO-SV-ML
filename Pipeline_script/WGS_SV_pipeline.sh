@@ -53,7 +53,7 @@ for sample in $(cat ${main_dir}/${sample_id_list})
 
 
         # SV database label
-        python ../SVCNV_database_filter.py -i ${main_dir}/out/${sample}/${sample}.sv.all.tf.nobnd -t ${main_dir}/SV_database/${SV_database} -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/${sample}.sv.all.tf_${SV_database} 
+        python SVCNV_database_filter.py -i ${main_dir}/out/${sample}/${sample}.sv.all.tf.nobnd -t ${main_dir}/SV_database/${SV_database} -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/${sample}.sv.all.tf_${SV_database} 
         python sv_bnd_info_mapping.py ${main_dir}/SV_database/${SV_database} ${main_dir}/out/${sample}/${sample}.sv.all.tf.bnd  ${SV_database} ${nf} 
 
         # SV info transformation
