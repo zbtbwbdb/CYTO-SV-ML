@@ -37,7 +37,10 @@ else:
     data_tf=pickle.load(open('cnv_tf.pickle', 'rb'))
 
 # data transformation setting for data_tf
+# categorical_columns=[i for i in sv_columns if i in categorical_varaibles]
+# numerical_columns=[i for i in sv_columns if i not in categorical_varaibles +['label']]
 # preprocessor = make_column_transformer((OneHotEncoder(drop="if_binary"), categorical_columns),(StandardScaler(), numerical_columns),remainder="passthrough")
+# data_tf = make_pipeline(preprocessor)
 # Class -1 is for systematic artifact SVs; Class 1 is for true germline SVs; Class 2 is for true cytogenetic somatic SVs
 
 # data transformation
