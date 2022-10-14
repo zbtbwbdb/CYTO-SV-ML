@@ -37,3 +37,4 @@ python sv_bnd_info_mapping.py ${outdir}/SV_database/${SV_database} ${outdir}/${s
 
 # SV AutoML run
 python AutoML.py ${outdir}/${sample}/${sample}.sv.all.tf_all
+# Demo: python AutoML.py example/input.csv
