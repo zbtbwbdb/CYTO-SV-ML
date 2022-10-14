@@ -40,6 +40,7 @@ else:
 
 # data transformation setting for data_tf
 # preprocessor = make_column_transformer((OneHotEncoder(drop="if_binary"), categorical_columns),(StandardScaler(), numerical_columns),remainder="passthrough")
+# Class -1 is for systematic artifact SVs; Class 1 is for true germline SVs; Class 2 is for true cytogenetic somatic SVs
 
 # data transformation
 sv_sel=sv.iloc[:,np.r_[np.where(sv.columns.isin(sv_columns.iloc[0,:]))]
