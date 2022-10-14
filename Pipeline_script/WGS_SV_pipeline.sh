@@ -1,10 +1,10 @@
 # pre-installation
 # Parliment2: docker pull dongwonlee/parliament2-sing:v0.12
 # ChromoSeq: docker pull zatawada/docker-basespace_chromoseq_v2:master
-SURVIVOR: https://github.com/fritzsedlazeck/SURVIVOR
-SVTyper: https://github.com/hall-lab/svtyper
-SeqComplex: https://github.com/caballero/SeqComplex
-Komplexity: https://github.com/eclarke/komplexity
+# SURVIVOR: https://github.com/fritzsedlazeck/SURVIVOR
+# SVTyper: https://github.com/hall-lab/svtyper
+# SeqComplex: https://github.com/caballero/SeqComplex
+# Komplexity: https://github.com/eclarke/komplexity
 #################################################################################################################
 #!/bin/bash
 
