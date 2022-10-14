@@ -1,3 +1,4 @@
+import os, sys, statistics, random, pickle
 import numpy as np
 import scipy as sp
 import pandas as pd
@@ -9,10 +10,7 @@ from numpy import asarray
 from itertools import cycle
 from numpy import sqrt, argmax
 from itertools import *
-import random
-import pickle
 from time import time
-import statistics
 from sklearn.utils import Bunch
 from supervised.automl import AutoML # mljar-supervised
 from sklearn import metrics, datasets
@@ -26,7 +24,7 @@ from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifi
 
 
 # Input data
-sv=pd.read_csv("input_sv.vcf",sep="\t", header=0, index_col=None, keep_default_na=False)
+sv=pd.read_csv(sys.argv[1],sep="\t", header=0, index_col=None, keep_default_na=False)
 sv_type=sv['sv_type']
 
 if (sv_type=='BND'):
