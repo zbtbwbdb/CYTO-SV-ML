@@ -10,6 +10,7 @@
 main_dir=$1
 sample_id_list=$2
 
+# SV preprocess for each sample
 for sample in $(cat ${main_dir}/${sample_id_list})
     do
         # SV Parliment2 run
