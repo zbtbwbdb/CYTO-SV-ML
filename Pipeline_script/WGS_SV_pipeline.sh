@@ -26,19 +26,20 @@ do
 
     # SV sequence complexity run
     for file in ${main_dir}/out/${sample}/${sample}.*.vcf 
-        do
+        do  
+            # make bed file for SV breakpoints
             awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/${sample}.*.vcf | sed 's% %\t%g' > ${file}.bed
-awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $0} else if ($2>c) {$2=c-150;$3=c+150; print $0} else if ($2<150){$2=1;$3=300; print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpst
-awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $0} else {$2=$3-150; $3=$3+150;  print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpend
-bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpst -fo ${file}.bed.bpst.fa.out
-bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpend -fo ${file}.bed.bpend.fa.out
+            awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $0} else if ($2>c) {$2=c-150;$3=c+150; print $0} else if ($2<150){$2=1;$3=300; print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpst
+            awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $0} else {$2=$3-150; $3=$3+150;  print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpend
+            bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpst -fo ${file}.bed.bpst.fa.out
+            bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpend -fo ${file}.bed.bpend.fa.out
         
             export PATH=${main_dir}/software/SeqComplex:$PATH
             cd ${main_dir}/software/SeqComplex
-            # start breakpoint
+            # SV start breakpoint
             perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${file}.bed.bpst.fa.out
             kz --fasta < ${file}.bed.bpst.fa.out > ${file}.bed.bpst.fa.out.kz
-            # end breakpoint            
+            # SV end breakpoint            
             perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${file}.bed.bpend.fa.out
             kz --fasta < ${file}.bed.bpend.fa.out > ${file}.bed.bpend.fa.out.kz            
         done
