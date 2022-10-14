@@ -2,32 +2,26 @@
 #### CYTO-SV-ML PIPELINE WORKFLOW:
 ![CYTO-SV-ML PIPELINE WORKFLOW](Workflow.png)
 
-# Run Shiny Application 
+# Run Shiny Web-portal 
 
-## Install R Packages
-
-CYTO-SV-ML Shiny Application requires the following R packages to be installed.
+### Install Shiny Web-portal
 ```
-RUN install2.r remotes
-RUN R -e 'install.packages("lineupjs",dependencies=TRUE, repos="https://cran.r-project.org/")'
-#RUN R -e 'remotes::install_github("tzhang-nmdp/lineup_htmlwidget")'
-RUN install2.r ggforce plotly DT ggplot2 stringr shinydashboard shinyjs shinyWidgets dplyr Hmisc
+git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
+cd CYTO-SV-ML
+docker build -t CYTO-SV-ML:main .
 ```
 
-# Local Run
-
-### Change directory to `cyto-sv-ml`
+### Start Shiny Web-portal
 ```
-cd cyto-sv-ml
+docker run -d -p 8000:80  CYTO-SV-ML:main
 ```
 
-### Start Shiny Application from R Console
-
+### open Shiny Web-portal
 ```
-shiny::runApp()
+http://127.0.0.1:8000/ # in a web browser 
 ```
 
-# Online Web-portal
+### Online Web-portal
 http://cyto-sv-ml.b12x.org/
 
 # Related Resource Download
