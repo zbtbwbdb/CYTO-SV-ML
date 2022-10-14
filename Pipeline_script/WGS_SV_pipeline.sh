@@ -1,3 +1,4 @@
+#################################################################################################################
 # pre-installation
 # Parliment2: docker pull dongwonlee/parliament2-sing:v0.12
 # ChromoSeq: docker pull zatawada/docker-basespace_chromoseq_v2:master
@@ -6,6 +7,7 @@
 # SeqComplex: https://github.com/caballero/SeqComplex
 # Komplexity: https://github.com/eclarke/komplexity
 #################################################################################################################
+
 #!/bin/bash
 main_dir=$1
 sample_id_list=$2
