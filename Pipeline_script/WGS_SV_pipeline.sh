@@ -52,7 +52,7 @@ for sample in $(cat ${main_dir}/${sample_id_list})
                 kz --fasta < ${file}.bed.bpend.fa.out > ${file}.bed.bpend.fa.out.kz            
             done
 
-        # SV calling consoldation
+        # SV vcf consoldation
         ls ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf.svtyper > ${main_dir}/out/${sample}/vcf_out/${sample}.list
         SURVIVOR merge ${main_dir}/out/${sample}/vcf_out/${sample}.list 1000 1 1 0 0 10  ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all 
 
