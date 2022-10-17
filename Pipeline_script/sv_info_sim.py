@@ -23,10 +23,10 @@ def trs_sv_sim(line):
     info=info_list.split(';')  
     for inf in info:
         if inf.startswith('END'):
-          END=info.split('=')[1]
+          END=inf.split('=')[1]
         if inf.startswith('CHR2'):
-          sv_chr2=info.split('=')[1]          
-    line=str(item[0])+'\t'+str(item[1])+'\t'+str(END)+'\t'+str(sv_chr2)+'\tBND\t'+str(item[0])+':'+str(item[1])+':'+str(END)+':'+str(sv_chr2)+':BND:'+str(item[2])
+          sv_chr2=inf.split('=')[1]          
+    line=str(item[0])+'\t'+str(item[1])+'\t'+str(END)+'\t'+str(sv_chr2)+'\tBND\t'+str(item[0])+':'+str(item[1])+':'+str(END)+':'+str(sv_chr2)+':BND:'+str(item[2]+'\n')
     return line  
   
 def notrs_sv_sim(line):
@@ -36,17 +36,17 @@ def notrs_sv_sim(line):
     info=info_list.split(';')  
     for inf in info:
         if inf.startswith('END'):
-          END=info.split('=')[1]
-    line=str(item[0])+'\t'+str(item[1])+'\t'+str(END)+'\t'+str(item[3])+'\t'+str(item[0])+':'+str(item[1])+':'+str(END)+':'+str(item[3])+':'+str(item[2])
+          END=inf.split('=')[1]
+    line=str(item[0])+'\t'+str(item[1])+'\t'+str(END)+'\t'+str(item[3])+'\t'+str(item[0])+':'+str(item[1])+':'+str(END)+':'+str(item[3])+':'+str(item[2]+'\n')
     return line  
   
 for line in in_vcf:
     item=line.strip().split('\t')    
-    if not line.startswith('##'):
+    if line.startswith('##'):
         continue
-    elif item[0].startswith('#'):      
-        trs_out_vcf.write('sv_chr\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type\tsv_id')
-        non_trs_out_vcf.write('sv_chr\tsv_start_bp\tsv_end_bp\tsv_type\tsv_id')
+    elif item[0].startswith('#CHROM'):      
+        trs_out_vcf.write('sv_chr\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type\tsv_id\n')
+        non_trs_out_vcf.write('sv_chr\tsv_start_bp\tsv_end_bp\tsv_type\tsv_id\n')
     elif item[4]=='BND':
         trs_out_vcf.write(trs_sv_sim(line))        
     else:
