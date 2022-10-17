@@ -24,7 +24,7 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         # SV svtyper run
         cp ${main_dir}/out/${sample}/sv_caller_results/${sample}.*.vcf  ${main_dir}/out/${sample}/vcf_out/
         gunzip -f  ${main_dir}/out/${sample}/${sample}.svs_annotated.vcf.gz | cat > ${main_dir}/out/${sample}/vcf_out/${sample}.manta.vcf
-        python cnv_tf.py ${main_dir}/out/${sample}/${sample}.segs.txt > ${main_dir}/out/${sample}/vcf_out/${sample}.ichnorcnv.vcf
+        python ichnorcnv_tf.py ${main_dir}/out/${sample}/${sample}.segs.txt > ${main_dir}/out/${sample}/vcf_out/${sample}.ichnorcnv.vcf
         
         for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf
             do
