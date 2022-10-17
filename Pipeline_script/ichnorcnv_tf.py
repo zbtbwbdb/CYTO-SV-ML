@@ -1,7 +1,7 @@
 import sys,os,re
 in_vcf=open(sys.argv[1],'r')
 out_vcf=open(sys.argv[2],'w')
-sm_id=(str(sys.argv[1]).split('\')[-1]).split('.')[0]
+sm_id=str(sys.argv[1]).split('\')[-1].split('.')[0]
                               
 def ichnorcnv_tf(line):
     sv_dict={}
