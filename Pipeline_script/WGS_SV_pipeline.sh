@@ -26,16 +26,17 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         gunzip -f  ${main_dir}/out/${sample}/${sample}.svs_annotated.vcf.gz | cat > ${main_dir}/out/${sample}/vcf_out/${sample}.manta.vcf
         python cnv_tf.py ${main_dir}/out/${sample}/${sample}.segs.txt > ${main_dir}/out/${sample}/vcf_out/${sample}.ichnorcnv.vcf
         
-        for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf 
+        for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf
             do
+                python sv_vcf_tf.py ${file} > ${file}.cr
                 svtyper --max_reads 100000 -i ${file} -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${file}.svtyper
             done
 
         # SV sequence complexity run
-        for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf 
+        for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf.cr 
             do  
                 # make bed file for SV breakpoints
-                awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf | sed 's% %\t%g' > ${file}.bed
+                awk '($1!~"#"){print $0}' ${file} | sed 's% %\t%g' > ${file}.bed
                 awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $0} else if ($2>c) {$2=c-150;$3=c+150; print $0} else if ($2<150){$2=1;$3=300; print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpst
                 awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $0} else {$2=$3-150; $3=$3+150;  print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpend
                 bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpst -fo ${file}.bed.bpst.fa.out
