@@ -28,7 +28,7 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         
         for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf
             do
-                python sv_vcf_tf.py ${file} > ${file}.cr
+                python sv_vcf_tf.py ${file}
                 svtyper --max_reads 100000 -i ${file} -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${file}.svtyper
             done
 
@@ -62,11 +62,12 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         # SV database label
         for SV_database_name in gnomad_qc gnomad_ps 1000g cytoatlas cosmic donor_g
             do
-                python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.nobnd -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf_${SV_database_name} 
-                python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.bnd  ${SV_database_name} 
+                python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name} 
+                python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs  ${SV_database_name} 
                 
                 # SV info transformation
-                python sv_mapping_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf_${SV_database_name} 
+                python sv_mapping_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_${SV_database_name} 
+                python sv_mapping_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name}                
             done
             
         # SV info consolidate
