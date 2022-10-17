@@ -2,13 +2,13 @@
 # TRS SV simplified data format
 # ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.nobnd
 # ---example-----------------------------------------------------------------
-# sv_chr sv_start_bp sv_end_bp  sv_chr2 sv_type sv_id
-# chr1   100000      1000000    chr21   BND     chr1:100000:chr21000000:DEL:MANTA***** 
+# sv_chr  sv_start_bp  sv_end_bp  sv_chr2  sv_type  sv_id
+# chr1    100000       1000000    chr21    BND      chr1:100000:chr21000000:DEL:MANTA***** 
 # ----------------------------------------------------------------------------
 # TRS SV simplified database format
 # ---example------------------------------------------------------------------
-# sv_chr1 sv_start_bp sv_end_bp sv_chr2 sv_type database_AF
-# chr1    100000      1000000   chr21   BND     0.05
+# sv_chr1  sv_start_bp  sv_end_bp  sv_chr2  sv_type  database_AF
+# chr1     100000       1000000    chr21    BND      0.05
 # ----------------------------------------------------------------------------
 #################################################################################################################
 
