@@ -17,7 +17,6 @@ def vcf_sv_tf(line):
         item[7]=info_list
         line='\t'.join(str(w) for w in item)+'\n'
         return line  
-
+    
 for line in in_vcf:
-#    if not line.startswith('##'):
     out_vcf.write(vcf_sv_tf(line))
