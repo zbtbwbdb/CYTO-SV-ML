@@ -66,7 +66,6 @@ with open(inFile,'r') as f:
             sv_dict_ori=[]
 
 # read database sv_list in the range into dictionary
-            #print("tabix -f " + chr + ":" + str(start1) + "-" + str(end1) +"|grep "+svtype)
             svcnv_list = commands.getoutput("tabix -f " + template_database +" "+ chr + ":" + str(start1) + "-" + str(end1) +"|grep "+svtype).split("\n")
             if len(svcnv_list)==1 and svcnv_list[0]=="":
                 fp.write(line.strip()+"\tNot_in_database\n")
@@ -76,11 +75,7 @@ with open(inFile,'r') as f:
                 sv_dict_ori=[]    
                 #print(svcnv_list)
                 for svcnvs in svcnv_list:
-                    result = svcnvs.strip().split("\t")
-
-# check additional database cutoff # remove this because it's currently not standardized                    
-#                    if result[4]<=allele_freq or template_database=="/storage/chen/Pipeline/pipeline/pipeline_restructure/trio_cnv/GRCh37_hg19_variants_2016-05-15.txt":
-                    #print(svcnvs)
+                    result = svcnvs.strip().split("\t")                 
                     s = SVCNV_set.SVCNV(svcnvs)
                     sv_dict.append(s)
 
@@ -99,7 +94,6 @@ with open(inFile,'r') as f:
                 sv_dict_sim=[]
                 subtract_list_len=0
                 svcnv_ratio=0                
-                #print(svcnv1.chr + "\t" + str(svcnv1.start_pos) + "\t" + str(svcnv1.end_pos) + "\t" + svcnv1.svcnv_type + "\t" + str(svcnv1.length))
                 
 # check the difference of original sv and total databse svs by mapping out the gap sv          
                 if svtype=="DEL" or svtype=="DUP":
@@ -110,16 +104,12 @@ with open(inFile,'r') as f:
                     sm2 = SVCNV_set.subtract_by_breakpoint(sm1,svcnv1,distance)
                     for sm in sm2:                      
                         subtract_list_len+=svcnv1.start_pos-sm.start_pos
- 
-# calculate the difference of original sv and total databse svs by summing up the gap sv length  
-
 
 # determine whether the diference of original sv and total databse svs is passsing the cutoff
                 if len(sm2)==0 or svcnv1.length==0:    
                     svcnv_ratio=len(filter(None,sm2))
                 else:                        
                     svcnv_ratio=float(1-float(subtract_list_len)/float(svcnv1.length)) 
-                #print("subtract_list_len:"+str(subtract_list_len)+"svcnv_ratio:"+str(svcnv_ratio))
 
 # save the information into file
                 if svcnv_ratio<percent:
