@@ -17,7 +17,6 @@ import sys,getopt,os,commands,SVCNV,SVCNV_sim,SVCNV_set
 wd = sys.path[0]
 opts,args = getopt.getopt(sys.argv[1:],"i:d:p:t:o:")
 inFile = ""
-cutoff = 0
 percent = 0.7
 distance = 1000
 
