@@ -6,6 +6,7 @@
 # chr1    100000       1000000    chr21    BND      chr1:100000:chr21000000:DEL:MANTA***** 
 # ----------------------------------------------------------------------------
 # TRS SV simplified database format
+# ${main_dir}/SV_database/${SV_database_name}.gz
 # ---example------------------------------------------------------------------
 # sv_chr1  sv_start_bp  sv_end_bp  sv_chr2  sv_type  database_AF
 # chr1     100000       1000000    chr21    BND      0.05
