@@ -10,9 +10,9 @@ def vcf_sv_tf(line):
     else:
         info_list=item[7]
         #info=info_list.split(';')
-        if re.search('CIPOS', info_list):
+        if not bool(re.search('CIPOS', info_list)):
             info_list=str(info_list)+";CIPOS=-160,160"
-        if re.search('CIEND', info_list):  
+        if not bool(re.search('CIEND', info_list)):  
             info_list=str(info_list)+";CIEND=-160,160"    
         item[7]=info_list
         line='\t'.join(str(w) for w in item)+'\n'
