@@ -22,16 +22,17 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         docker run --rm --privileged  -v ${main_dir}/:/scratch  --entrypoint /bin/sh docker.io/zatawada/docker-basespace_chromoseq_v2:master -c '/usr/bin/java -Dconfig.file=/scratch/software/docker-${scratch}/${chromoseq_dir}/lsf/application.new.conf -jar /opt/cromwell-36.jar run -t wdl -i ${scratch}/${chromoseq_dir}/lsf/inputs.json.tmp ${scratch}/${chromoseq_dir}/workflow_files/Chromoseq.v17.wdl'
 
         # SV svtyper run
-        for file in ${main_dir}/out/${sample}/${sample}.*.vcf 
+        
+        for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf 
             do
-                svtyper --max_reads 100000 -i ${file} -B ${main_dir}/in/${sample}/${sample}.bam > ${file}.svtyper
+                svtyper --max_reads 100000 -i ${file} -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${file}.svtyper
             done
 
         # SV sequence complexity run
-        for file in ${main_dir}/out/${sample}/${sample}.*.vcf 
+        for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf 
             do  
                 # make bed file for SV breakpoints
-                awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/${sample}.*.vcf | sed 's% %\t%g' > ${file}.bed
+                awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf | sed 's% %\t%g' > ${file}.bed
                 awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $0} else if ($2>c) {$2=c-150;$3=c+150; print $0} else if ($2<150){$2=1;$3=300; print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpst
                 awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $0} else {$2=$3-150; $3=$3+150;  print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpend
                 bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpst -fo ${file}.bed.bpst.fa.out
@@ -39,25 +40,25 @@ for sample in $(cat ${main_dir}/${sample_id_list})
 
                 export PATH=${main_dir}/software/SeqComplex:$PATH
                 cd ${main_dir}/software/SeqComplex
-                # SV start breakpoint
+                # SV start breakpoint complexity
                 perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${file}.bed.bpst.fa.out
                 kz --fasta < ${file}.bed.bpst.fa.out > ${file}.bed.bpst.fa.out.kz
-                # SV end breakpoint            
+                # SV end breakpoint complexity           
                 perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${file}.bed.bpend.fa.out
                 kz --fasta < ${file}.bed.bpend.fa.out > ${file}.bed.bpend.fa.out.kz            
             done
 
         # SV calling consoldation
-        ls ${main_dir}/out/${sample}/${sample}.*.vcf.svtyper > ${main_dir}/out/${sample}/${sample}.list
-        SURVIVOR merge ${main_dir}/out/${sample}/${sample}.list 1000 1 1 0 0 10  ${main_dir}/${sample}/${sample}.sv.all 
+        ls ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf.svtyper > ${main_dir}/out/${sample}/vcf_out/${sample}.list
+        SURVIVOR merge ${main_dir}/out/${sample}/vcf_out/${sample}.list 1000 1 1 0 0 10  ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all 
 
 
         # SV database label
-        python sv_database_mapping.py -i ${main_dir}/out/${sample}/${sample}.sv.all.tf.nobnd -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/${sample}.sv.all.tf_${SV_database_name} 
-        python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/${sample}.sv.all.tf.bnd  ${SV_database_name} 
+        python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.nobnd -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf_${SV_database_name} 
+        python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.bnd  ${SV_database_name} 
 
         # SV info transformation
-
+        
 
     done
 
