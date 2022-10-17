@@ -1,10 +1,10 @@
 ################################################################################################################
-# TRS SV simplified data format
+# TRS SV simplified data output format
 # ---example-----------------------------------------------------------------
 # sv_chr  sv_start_bp  sv_end_bp  sv_chr2  sv_type  sv_id
 # chr1    100000       1000000    chr21    BND      chr1:100000:1000000:chr21:BND:MANTA***** 
 # ---------------------------------------------------------------------------
-# no-TRS SV simplified data format
+# no-TRS SV simplified data output format
 # ---example-----------------------------------------------------------------
 # sv_chr  sv_start_bp  sv_end_bp  sv_type  sv_id
 # chr1    10000        1000000    DEL      chr1:10000:1000000:DEL:DELLY***** 
