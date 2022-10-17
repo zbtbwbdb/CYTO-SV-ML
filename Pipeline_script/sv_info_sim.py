@@ -43,10 +43,10 @@ def notrs_sv_sim(line):
 for line in in_vcf:
     if not line.startswith('##'):
         continue
-    else if item[0].startswith('#'):      
+    elif item[0].startswith('#'):      
         trs_out_vcf.write(str(sv_chr)+'\t'+str(sv_start_bp)+'\t'+str(sv_end_bp)+'\t'+str(sv_chr2)+'\t'+str(sv_type)+'\t'+str(sv_id))
         non_trs_out_vcf.write(str(sv_chr)+'\t'+str(sv_start_bp)+'\t'+str(sv_end_bp)+'\t'+str(sv_type)+'\t'+str(sv_id))
-    else  if item[4]=='BND':
+    elif item[4]=='BND':
         trs_out_vcf.write(trs_sv_sim(line))        
      else:
         non_trs_out_vcf.write(notrs_sv_sim(line))         
