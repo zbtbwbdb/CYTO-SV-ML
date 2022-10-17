@@ -3,7 +3,7 @@
 # ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.nobnd
 # ---example-----------------------------------------------------------------
 # sv_chr  sv_start_bp  sv_end_bp  sv_chr2  sv_type  sv_id
-# chr1    100000       1000000    chr21    BND      chr1:100000:chr21000000:BND:MANTA***** 
+# chr1    100000       1000000    chr21    BND      chr1:100000:1000000:chr21:BND:MANTA***** 
 # ----------------------------------------------------------------------------
 # TRS SV simplified database format
 # ${main_dir}/SV_database/${SV_database_name}.gz
