@@ -2,7 +2,7 @@ import sys,os,re
 in_vcf=open(sys.argv[1],'r')
 out_vcf=open(str(sys.argv[1])+'.cr','w')
 
-def vcf_sv_sim(line):
+def vcf_sv_tf(line):
     sv_dict={}
     item=line.strip().split('\t')
     if item[0].startswith('#'):
@@ -20,4 +20,4 @@ def vcf_sv_sim(line):
 
 for line in in_vcf:
 #    if not line.startswith('##'):
-    out_vcf.write(vcf_sv_sim(line))
+    out_vcf.write(vcf_sv_tf(line))
