@@ -22,6 +22,9 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         docker run --rm --privileged  -v ${main_dir}/:/scratch  --entrypoint /bin/sh docker.io/zatawada/docker-basespace_chromoseq_v2:master -c '/usr/bin/java -Dconfig.file=/scratch/software/docker-${scratch}/${chromoseq_dir}/lsf/application.new.conf -jar /opt/cromwell-36.jar run -t wdl -i ${scratch}/${chromoseq_dir}/lsf/inputs.json.tmp ${scratch}/${chromoseq_dir}/workflow_files/Chromoseq.v17.wdl'
 
         # SV svtyper run
+        cp ${main_dir}/out/${sample}/sv_caller_results/${sample}.*.vcf  ${main_dir}/out/${sample}/vcf_out/
+        cp ${main_dir}/out/${sample}/${sample}.svs_annotated.vcf.gz ${main_dir}/out/${sample}/vcf_out/
+        gunzip -f ${main_dir}/out/${sample}/vcf_out/${sample}.svs_annotated.vcf.gz
         
         for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf 
             do
@@ -54,16 +57,22 @@ for sample in $(cat ${main_dir}/${sample_id_list})
 
 
         # SV database label
-        python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.nobnd -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf_${SV_database_name} 
-        python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.bnd  ${SV_database_name} 
-
-        # SV info transformation
+        for SV_database_name in gnomad_qc gnomad_ps 1000g cytoatlas cosmic donor_g
+            do
+                python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.nobnd -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf_${SV_database_name} 
+                python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.bnd  ${SV_database_name} 
+                
+                # SV info transformation
+                python sv_mapping_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf_${SV_database_name} 
+            done
+            
+        # SV info consolidate
+        python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}
         
-
     done
 
 # combine the sample SV into cohort dataset
-sample_all="cohort_name" # define your own cohort name here
+sample_all="cohort_name" # please create your own cohort name here
 cat ${main_dir}/out/*.sv.all.tf2 > ${main_dir}/out/${sample_all}.sv.all.tf_all
 
 # SV AutoML run
