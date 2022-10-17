@@ -6,6 +6,7 @@
 # chr1    10000        1000000    DEL      chr1:10000:1000000:DEL:DELLY***** 
 # ----------------------------------------------------------------------------
 # no-TRS SV simplified database format
+# ${main_dir}/SV_database/${SV_database_name}.gz 
 # ---example------------------------------------------------------------------
 # sv_chr  sv_start_bp  sv_end_bp  sv_type  database_AF
 # chr1    10000        1000000    DEL      0.001
