@@ -105,13 +105,13 @@ with open(inFile,'r') as f:
                     for sm in sm2:                      
                         subtract_list_len+=svcnv1.start_pos-sm.start_pos
 
-# determine whether the diference of original sv and total databse svs is passsing the cutoff
-                if len(sm2)==0 or svcnv1.length==0:    
+# calculate the sv difference between original sv and total databse svs by summing up the gap sv length 
+		if len(sm2)==0 or svcnv1.length==0:    
                     svcnv_ratio=len(filter(None,sm2))
                 else:                        
                     svcnv_ratio=float(1-float(subtract_list_len)/float(svcnv1.length)) 
 
-# save the information into file
+#  determine whether the sv diference is passsing the cutoff and save the data file
                 if svcnv_ratio<percent:
                     fp.write(svcnv1.chr + "\t" + str(svcnv1.start_pos) + "\t" + str(svcnv1.end_pos) + "\t" + svcnv1.svcnv_type + "\t" + str(svcnv1.length) + "\t" + svcnv1.info + "\t" + "{:.3f}".format(svcnv_ratio) + "\tPASS\t"+ "|".join(sv_dict_ori) + "\n" )
                 if svcnv_ratio>=percent:
