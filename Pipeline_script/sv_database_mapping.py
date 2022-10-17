@@ -3,7 +3,7 @@
 # ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.nobnd
 # ---example-----------------------------------------------------------------
 # sv_chr  sv_start_bp  sv_end_bp  sv_type  sv_id
-# chr1    10000        1000000    DEL      chr1:10000:1000000:DEL:DELLY***** 
+# chr1    10000        1000000    DEL      chr1:10000:1000000:DEL:DellyDEL***** 
 # ----------------------------------------------------------------------------
 # no-TRS SV simplified database format
 # ${main_dir}/SV_database/${SV_database_name}.gz 
