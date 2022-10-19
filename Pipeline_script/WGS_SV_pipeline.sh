@@ -66,8 +66,8 @@ for sample in $(cat ${main_dir}/${sample_id_list})
                 python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs  ${SV_database_name} 
                 
                 # SV info consolidation
-                python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_${SV_database_name} ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano
-                python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name} ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano              
+                python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs
+                python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs  
             done
             
     done
