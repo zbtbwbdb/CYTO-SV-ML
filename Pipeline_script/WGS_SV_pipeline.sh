@@ -61,17 +61,20 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $6"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano
         awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $5"\t"$1"\t"$2"\t"$3"\t"$1"\t"$4}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano
         
-        # SV database label
+        # SV database annotation label
         for SV_database_name in gnomad_qc gnomad_ps 1000g cytoatlas cosmic donor_g
             do
                 python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name} 
                 python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs ${SV_database_name} 
                 
-                # SV info consolidating transformation
+                # SV database annotation consolidation/transformation
                 python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${SV_database_name} 
                 python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano ${SV_database_name}   
             done
             
+        # combine the sv annotation vcf           
+        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano 
+        
     done
 
 # combine the sample SV into cohort dataset
