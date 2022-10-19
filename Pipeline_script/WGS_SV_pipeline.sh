@@ -21,22 +21,20 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         # SV ChromoSeq run
         docker run --rm --privileged  -v ${main_dir}/:/scratch  --entrypoint /bin/sh docker.io/zatawada/docker-basespace_chromoseq_v2:master -c '/usr/bin/java -Dconfig.file=/scratch/software/docker-${scratch}/${chromoseq_dir}/lsf/application.new.conf -jar /opt/cromwell-36.jar run -t wdl -i ${scratch}/${chromoseq_dir}/lsf/inputs.json.tmp ${scratch}/${chromoseq_dir}/workflow_files/Chromoseq.v17.wdl'
 
-        # SV svtyper run
+        # SV vcf preparation
         cp ${main_dir}/out/${sample}/sv_caller_results/${sample}.*.vcf  ${main_dir}/out/${sample}/vcf_out/
         gunzip -f  ${main_dir}/out/${sample}/${sample}.svs_annotated.vcf.gz | cat > ${main_dir}/out/${sample}/vcf_out/${sample}.manta.vcf
         python ichnorcnv_tf.py ${main_dir}/out/${sample}/${sample}.segs.txt ${main_dir}/out/${sample}/vcf_out/${sample}.ichnorcnv.vcf
         
         for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf
             do
+                # SV svtyper run           
                 python sv_vcf_tf.py ${file}
-                svtyper --max_reads 100000 -i ${file} -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${file}.svtyper
-            done
+                svtyper --max_reads 100000 -i ${file}.cr -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${file}.svtyper
 
-        # SV sequence complexity run
-        for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf.cr 
-            do  
+                # SV sequence complexity run 
                 # make bed file for SV breakpoints
-                awk '($1!~"#"){print $0}' ${file} | sed 's% %\t%g' > ${file}.bed
+                awk '($1!~"#"){print $0}' ${file}.cr | sed 's% %\t%g' > ${file}.bed
                 awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $0} else if ($2>c) {$2=c-150;$3=c+150; print $0} else if ($2<150){$2=1;$3=300; print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpst
                 awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $0} else {$2=$3-150; $3=$3+150;  print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpend
                 bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpst -fo ${file}.bed.bpst.fa.out
