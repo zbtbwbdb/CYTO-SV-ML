@@ -65,20 +65,17 @@ for sample in $(cat ${main_dir}/${sample_id_list})
                 python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name} 
                 python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs  ${SV_database_name} 
                 
-                # SV info transformation
-                python sv_mapping_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_${SV_database_name} 
-                python sv_mapping_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name}                
+                # SV info consolidation
+                python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_${SV_database_name} ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano
+                python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name} ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano              
             done
             
-        # SV info consolidate
-        python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}
-        
     done
 
 # combine the sample SV into cohort dataset
 sample_all="cohort_name" # please create your own cohort name here
-cat ${main_dir}/out/*.sv.all.tf2 > ${main_dir}/out/${sample_all}.sv.all.tf_all
+cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano
 
 # SV AutoML run
-python AutoML.py ${main_dir}/out/${sample_all}.sv.all.tf_all
+python AutoML.py ${main_dir}/out/${sample_all}.sv.all.tf.all_ano
 # Demo: python AutoML.py example/input.csv
