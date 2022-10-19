@@ -1,24 +1,21 @@
 import sys,os,re
-in_vcf=open(sys.argv[1],'r')
-out_vcf=open(sys.argv[2],'w')
+import pandas as pd
+from pathlib import Path
 
-def vcf_sv_sim(line):
-    sv_dict={}
-    item=line.strip().split('\t')
-    if item[0].startswith('#'):
-#        line='\t'.join(item)+'\n'
-        return line
-    else:
-        info_list=item[7]
-        info=info_list.split(';')
-        for inf in info:
-            if "=" in inf:
-                sv_dict[inf.split('=')[0]]=inf.split('=')[1]
-        id=':'.join([item[0],item[1],sv_dict['END'],sv_dict['SVTYPE'],item[2]]) 
-        line='\t'.join([item[0],item[1],sv_dict['END'],sv_dict['SVTYPE'],id])+'\n'
-    #        line='\t'.join([item[0],item[1],sv_dict['END'],sv_dict['SVTYPE'],item[7]])+'\n'
-        return line  
+# read the sv input and database vcf
+SV_database_name=str(sys.argv[2])
+in_vcf=pd.read_csv(str(sys.argv[1]),sep='\t',header=True,keep_default_na=False)  
+db_vcf=pd.read_csv(str(sys.argv[1])+'_'+str(sys.argv[2]),sep='\t',header=None)    
+out_vcf=str(sys.argv[1])+'.anno' 
 
-for line in in_vcf:
-#    if not line.startswith('##'):
-    out_vcf.write(vcf_sv_sim(line))
+# simplify the sv database vcf
+db_vcf_sim=db_vcf.iloc[:, 1:(db_vcf.shape[1]-1)]
+db_vcf_sim.columns=['sv_id','db_label']
+db_vcf_sim=db_vcf_sim[db_vcf_sim['db_label']=='FAIL']
+
+# matching database label 
+in_vcf[SV_database_name]='Not_in_database'
+in_vcf[in_vcf['sv_id'].isin(db_vcf_sim['sv_id']),SV_database_name]='In_database'
+
+# export to csv
+in_vcf.to_csv(out_vcf,sep='\t',index=False,header=True)
