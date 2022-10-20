@@ -57,31 +57,31 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         
         # SV vcf simplified transformation
         python sv_vcf_sim.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.cr 
-        awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $6"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_anno
-        awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $5"\t"$1"\t"$2"\t"$3"\t"$1"\t"$4}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_anno
+        awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $6"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.trs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.trs_anno
+        awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $5"\t"$1"\t"$2"\t"$3"\t"$1"\t"$4}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.notrs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.notrs_anno
         
         # SV database annotation label
         for SV_database_name in gnomad_qc gnomad_ps 1000g cytoatlas cosmic donor_g
             do
-                python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs -t ${main_dir}/SV_database/${SV_database_name}.nontrs.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name} 
-                python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.trs.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs ${SV_database_name} 
+                python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.notrs -t ${main_dir}/SV_database/${SV_database_name}.nontrs.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.notrs_${SV_database_name} 
+                python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.trs.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.trs ${SV_database_name} 
                 
                 # SV database annotation consolidation/transformation
-                python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_anno ${SV_database_name} 
-                python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_anno ${SV_database_name}   
+                python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.trs_anno ${SV_database_name} 
+                python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.notrs_anno ${SV_database_name}   
             done
             
         # combine the sv annotation vcf           
-        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_anno ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_anno > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno
+        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.trs_anno ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.notrs_anno > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.all_anno
                 
         # combine the sv annotation and complexity and svtyper info
-        python sv_combine_all.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_combine          
+        python sv_combine_all.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all      
 
         # combine the sample SV into cohort dataset
         sample_all="cohort_name" # please create your own cohort name here
-        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_combine >> ${main_dir}/out/${sample_all}.sv.all.tf.all_combine
+        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.all_combine >> ${main_dir}/out/${sample_all}.sv.all.all_combine
     done
 
 # SV AutoML run
-python AutoML.py ${main_dir}/out/${sample_all}.sv.all.tf.all_combine
+python AutoML.py ${main_dir}/out/${sample_all}.sv.all.all_combine
 # Demo: python AutoML.py example/input.csv
