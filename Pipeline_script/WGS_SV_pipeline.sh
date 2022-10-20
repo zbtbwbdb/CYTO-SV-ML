@@ -32,8 +32,9 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         
         # SV svtyper run           
         python sv_vcf_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all
-        svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.cr -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.svtyper
-
+        svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.cr -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.svtyper
+        python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.svtyper
+        
         # SV sequence complexity run 
         # make bed file for SV breakpoints
         awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.cr | sed 's% %\t%g' > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed
@@ -44,18 +45,20 @@ for sample in $(cat ${main_dir}/${sample_id_list})
 
         export PATH=${main_dir}/software/SeqComplex:$PATH
         cd ${main_dir}/software/SeqComplex
-        # SV start breakpoint complexity
-        perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out
-        kz --fasta < ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out.kz
-        # SV end breakpoint complexity           
-        perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend.fa.out
-        kz --fasta < ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend.fa.out > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend.fa.out.kz    
-
-
+        for bp in bpst bpend
+            do
+                # SV breakpoint complexity
+                perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.${bp}.fa.out
+                kz --fasta < ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.${bp}.fa.out.kz
+                awk 'FNR==NR{a[$1]; b[$1]=$0; next}{c=$1":"$2"-"$3; if (c in a) {print $0"\t"b[c]}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.${bp}.fa.out.kz > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.${bp}.fa.out.kz.index
+                awk 'FNR==NR{a[$1]; b[$1]=$0; next}($8 in a) {print $0"\t"b[$8]}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.${bp}.complex ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.${bp}.fa.out.kz.index > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.${bp}.fa.out.kz.index_complex
+             done
+        awk 'FNR==NR{a[$7];b[$7]=$0;next} ($7 in a){print $0"\t"b[$7]}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out.kz.index_complex ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend.fa.out.kz.index_complex  > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst_bpend.fa.out.kz.index_complex
+        
         # SV vcf simplified transformation
-        python sv_info_sim.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all 
-        awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $6"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano
-        awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $5"\t"$1"\t"$2"\t"$3"\t"$1"\t"$4}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano
+        python sv_vcf_sim.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.cr 
+        awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $6"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_anno
+        awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $5"\t"$1"\t"$2"\t"$3"\t"$1"\t"$4}}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_anno
         
         # SV database annotation label
         for SV_database_name in gnomad_qc gnomad_ps 1000g cytoatlas cosmic donor_g
@@ -64,21 +67,21 @@ for sample in $(cat ${main_dir}/${sample_id_list})
                 python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.trs.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs ${SV_database_name} 
                 
                 # SV database annotation consolidation/transformation
-                python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${SV_database_name} 
-                python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano ${SV_database_name}   
+                python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_anno ${SV_database_name} 
+                python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_anno ${SV_database_name}   
             done
             
         # combine the sv annotation vcf           
-        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano
+        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_anno ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_anno > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno
                 
         # combine the sv annotation and complexity and svtyper info
-        python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano          
+        python sv_anno_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno          
 
         # combine the sample SV into cohort dataset
         sample_all="cohort_name" # please create your own cohort name here
-        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano >> ${main_dir}/out/${sample_all}.sv.all.tf.all_ano
+        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno >> ${main_dir}/out/${sample_all}.sv.all.tf.all_anno
     done
 
 # SV AutoML run
-python AutoML.py ${main_dir}/out/${sample_all}.sv.all.tf.all_ano
+python AutoML.py ${main_dir}/out/${sample_all}.sv.all.tf.all_anno
 # Demo: python AutoML.py example/input.csv
