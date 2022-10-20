@@ -1,21 +1,64 @@
+################################################################################################################
+# TRS SV simplified data output format
+# ---example-----------------------------------------------------------------
+# sv_chr  sv_start_bp  sv_end_bp  sv_chr2  sv_type  sv_id
+# chr1    100000       1000000    chr21    BND      chr1:100000:1000000:chr21:BND:MantaBND***** 
+# ---------------------------------------------------------------------------
+# no-TRS SV simplified data output format
+# ---example-----------------------------------------------------------------
+# sv_chr  sv_start_bp  sv_end_bp  sv_type  sv_id
+# chr1    10000        1000000    DEL      chr1:10000:1000000:DEL:DellyDEL***** 
+# ----------------------------------------------------------------------------
+################################################################################################################
+
 import sys,os,re
-import pandas as pd
-from pathlib import Path
+in_vcf=open(sys.argv[1],'r')
+trs_out_vcf=open(str(sys.argv[1])+'.tf.trs','w')
+non_trs_out_vcf=open(str(sys.argv[1])+'.tf.notrs','w')
 
-# read the sv input and database vcf
-SV_database_name=str(sys.argv[2])
-in_vcf=pd.read_csv(str(sys.argv[1]),sep='\t',header=True,keep_default_na=False)  
-db_vcf=pd.read_csv(str(sys.argv[1])+'_'+str(sys.argv[2]),sep='\t',header=None)    
-out_vcf=str(sys.argv[1])+'.anno' 
-
-# simplify the sv database vcf
-db_vcf_sim=db_vcf.iloc[:, 1:(db_vcf.shape[1]-1)]
-db_vcf_sim.columns=['sv_id','db_label']
-db_vcf_sim=db_vcf_sim[db_vcf_sim['db_label']=='FAIL']
-
-# matching database label 
-in_vcf[SV_database_name]='Not_in_database'
-in_vcf[in_vcf['sv_id'].isin(db_vcf_sim['sv_id']),SV_database_name]='In_database'
-
-# export to csv
-in_vcf.to_csv(out_vcf,sep='\t',index=False,header=True)
+def sv_info_tf(line):
+    sv_dict={}
+    item=line.strip().split('\t')
+    sv_chr=item[0]
+    sv_chr2=sv_chr
+    sv_bp_st=item[1]
+    ci_st='-160,160'
+    ci_end='-160,160'
+    
+    #info column extraction
+    info_list=item[7]
+    info=info_list.split(';')      
+    for inf in info:
+        if inf.startswith('END'):
+          sv_bp_end=inf.split('=')[1]
+        if inf.startswith('CHR2'):
+          sv_chr2=inf.split('=')[1]  
+        if inf.startswith('CIPOS'):
+          ci_st=inf.split('=')[1] 
+        if inf.startswith('CIEND'):
+          ci_end=inf.split('=')[1]  
+    
+    # geno column extraction
+    geno_list=item[9]
+    geno=info_list.split(':')      
+    geno_index=info_list.split(':')      
+    gt==geno[geno_index.index('GT')]
+    rd==geno[geno_index.index('RD')] 
+    rd_pr==geno[geno_index.index('RD')]  
+    rd_sp==geno[geno_index.index('RD')] 
+    
+    sv_id=str(sv_chr)+':'+str(sv_bp_st)+':'+str(sv_bp_end)+':'+str(sv_chr2)          
+    line=sv_id+'\t'+str(sv_chr)+'\t'+str(sv_bp_st)+'\t'+str(sv_bp_end)+'\t'+str(sv_chr2)+'\t'+str(gn)+'\t'+str(rd_pr.split(',')[0])+'\t'+str(rd_pr.split(',')[1])+'\t'+str(rd_sp.split(',')[0])+'\t'+str(rd_sp.split(',')[1])+'\t'+str(ci_st.split(',')[0])+'\t'+str(ci_st.split(',')[1])+'\t'+str(ci_end.split(',')[0])+'\t'+str(ci_end.split(',')[1])+'\n'
+    return line  
+  
+  
+for line in in_vcf:
+    item=line.strip().split('\t')    
+    if line.startswith('##'):
+        continue
+    elif item[0].startswith('#CHROM'):      
+        trs_out_vcf.write('sv_chr\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type\tsv_id\n')
+        non_trs_out_vcf.write('sv_chr\tsv_start_bp\tsv_end_bp\tsv_type\tsv_id\n')
+    else:
+        trs_out_vcf.write(sv_info_tf(line))        
+    
