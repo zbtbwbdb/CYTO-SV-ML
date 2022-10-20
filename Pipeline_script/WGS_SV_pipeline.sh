@@ -75,7 +75,7 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_anno ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_anno > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno
                 
         # combine the sv annotation and complexity and svtyper info
-        python sv_anno_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno          
+        python sv_combine_all.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno          
 
         # combine the sample SV into cohort dataset
         sample_all="cohort_name" # please create your own cohort name here
