@@ -70,12 +70,10 @@ for sample in $(cat ${main_dir}/${sample_id_list})
             
         # combine the sv annotation vcf           
         cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano 
-        
+        # combine the sample SV into cohort dataset
+        sample_all="cohort_name" # please create your own cohort name here
+        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano >> ${main_dir}/out/${sample_all}.sv.all.tf.all_ano
     done
-
-# combine the sample SV into cohort dataset
-sample_all="cohort_name" # please create your own cohort name here
-cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano
 
 # SV AutoML run
 python AutoML.py ${main_dir}/out/${sample_all}.sv.all.tf.all_ano
