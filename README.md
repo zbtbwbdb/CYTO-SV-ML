@@ -1,6 +1,6 @@
 # CYTO-SV-ML
 #### CYTO-SV-ML PIPELINE WORKFLOW:
-![CYTO-SV-ML PIPELINE WORKFLOW](Workflow.png)
+![CYTO-SV-ML PIPELINE WORKFLOW](workflow.png)
 
 # Run Shiny Web-portal 
 
