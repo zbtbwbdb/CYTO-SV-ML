@@ -25,6 +25,7 @@ from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifi
 
 # Input data
 sv=pd.read_csv(sys.argv[1],sep="\t", header=0, index_col=None, keep_default_na=False)
+
 for sv_stype in ['trs','nontrs']:
     if (sv_type=='trs'):
         cyto_sv_ml= AutoML(mode="Explain", results_path="trs-cyto-sv")
@@ -70,7 +71,7 @@ for sv_stype in ['trs','nontrs']:
     pdf.ln()                   
     pdf.write("Test macro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
     pdf.ln()
-    pdf.output(sv_type+'model_metrics.pdf")
+    pdf.output(str(sys.argv[1])+sv_type+'model_metrics.pdf")
 
     ## Display the confusion matrix
     cf_matrix = confusion_matrix(y_test, predictions_test['label'],normalize="true")
@@ -87,7 +88,7 @@ for sv_stype in ['trs','nontrs']:
     ax.axvline(x=cf_matrix.shape[0], color='k',linewidth=2)
     sns.set(rc={'figure.figsize':(10,10)})
     plt.show()       
-    ax.savefig(sv_type+'model_confusion_matrix.pdf")
+    ax.savefig(str(sys.argv[1])+sv_type+'model_confusion_matrix.pdf")
         
     # AUCROC curve  for model performance evaluation
     y1 = label_binarize(y_test, classes=[-1, 1, 2])
@@ -113,4 +114,4 @@ for sv_stype in ['trs','nontrs']:
     plt.title('Receiver operating characteristic for multi-class data')
     plt.legend(loc="lower right")
     plt.show()  
-    plt.savefig(sv_type+'model_aucroc_curve.pdf")
+    plt.savefig(str(sys.argv[1])+sv_type+'model_aucroc_curve.pdf")
