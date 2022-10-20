@@ -1,4 +1,4 @@
-import os, sys, statistics, random, pickle
+import os, sys, fpdf, statistics, random, pickle
 import numpy as np
 import scipy as sp
 import pandas as pd
@@ -57,12 +57,20 @@ for sv_stype in ['trs','nontrs']:
     predictions_test = sv_train_model.predict_all(X_test_tf)
 
     # Model performance metrics
-    print("Test accuracy:", accuracy_score(y_test, predictions_test["label"].astype(int)))
-    print(predictions_test['label'].value_counts())
-    print("Test micro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='micro'))
-    print("Test macro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='macro'))
-    print("Test micro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='micro'))
-    print("Test macro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
+    pdf = fpdf.FPDF(format='letter')
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)               
+    pdf.write("Test accuracy:", accuracy_score(y_test, predictions_test["label"].astype(int)))
+    pdf.ln()                   
+    pdf.write("Test micro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='micro'))
+    pdf.ln()                   
+    pdf.write("Test macro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='macro'))
+    pdf.ln()                   
+    pdf.write("Test micro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='micro'))
+    pdf.ln()                   
+    pdf.write("Test macro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
+    pdf.ln()
+    pdf.output(sv_type+'model_metrics.pdf")
 
     ## Display the confusion matrix
     cf_matrix = confusion_matrix(y_test, predictions_test['label'],normalize="true")
@@ -79,7 +87,8 @@ for sv_stype in ['trs','nontrs']:
     ax.axvline(x=cf_matrix.shape[0], color='k',linewidth=2)
     sns.set(rc={'figure.figsize':(10,10)})
     plt.show()       
-
+    ax.savefig(sv_type+'model_confusion_matrix.pdf")
+        
     # AUCROC curve  for model performance evaluation
     y1 = label_binarize(y_test, classes=[-1, 1, 2])
     fpr = dict()
@@ -104,3 +113,4 @@ for sv_stype in ['trs','nontrs']:
     plt.title('Receiver operating characteristic for multi-class data')
     plt.legend(loc="lower right")
     plt.show()  
+    plt.savefig(sv_type+'model_aucroc_curve.pdf")
