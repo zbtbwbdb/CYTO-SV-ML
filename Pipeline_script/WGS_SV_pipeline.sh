@@ -67,14 +67,13 @@ for sample in $(cat ${main_dir}/${sample_id_list})
                 python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${SV_database_name} 
                 python sv_db_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano ${SV_database_name}   
             done
-        
-        # combine the sv annotation and complexity and svtyper info
-        python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano
-        python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.nontrs_ano        
-        
+            
         # combine the sv annotation vcf           
-        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano_all ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano_all > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano 
-        
+        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_ano > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano
+                
+        # combine the sv annotation and complexity and svtyper info
+        python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano          
+
         # combine the sample SV into cohort dataset
         sample_all="cohort_name" # please create your own cohort name here
         cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_ano >> ${main_dir}/out/${sample_all}.sv.all.tf.all_ano
