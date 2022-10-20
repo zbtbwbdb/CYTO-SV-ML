@@ -75,13 +75,13 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_anno ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_anno > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno
                 
         # combine the sv annotation and complexity and svtyper info
-        python sv_combine_all.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno          
+        python sv_combine_all.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_combine          
 
         # combine the sample SV into cohort dataset
         sample_all="cohort_name" # please create your own cohort name here
-        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_anno >> ${main_dir}/out/${sample_all}.sv.all.tf.all_anno
+        cat ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.all_combine >> ${main_dir}/out/${sample_all}.sv.all.tf.all_combine
     done
 
 # SV AutoML run
-python AutoML.py ${main_dir}/out/${sample_all}.sv.all.tf.all_anno
+python AutoML.py ${main_dir}/out/${sample_all}.sv.all.tf.all_combine
 # Demo: python AutoML.py example/input.csv
