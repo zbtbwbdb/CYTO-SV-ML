@@ -26,33 +26,31 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         gunzip -f  ${main_dir}/out/${sample}/${sample}.svs_annotated.vcf.gz | cat > ${main_dir}/out/${sample}/vcf_out/${sample}.manta.vcf
         python ichnorcnv_tf.py ${main_dir}/out/${sample}/${sample}.segs.txt ${main_dir}/out/${sample}/vcf_out/${sample}.ichnorcnv.vcf
         
-        for file in ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf
-            do
-                # SV svtyper run           
-                python sv_vcf_tf.py ${file}
-                svtyper --max_reads 100000 -i ${file}.cr -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${file}.svtyper
-
-                # SV sequence complexity run 
-                # make bed file for SV breakpoints
-                awk '($1!~"#"){print $0}' ${file}.cr | sed 's% %\t%g' > ${file}.bed
-                awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $0} else if ($2>c) {$2=c-150;$3=c+150; print $0} else if ($2<150){$2=1;$3=300; print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpst
-                awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $0} else {$2=$3-150; $3=$3+150;  print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${file}.bed | sed 's% %\t%g' > ${file}.bed.bpend
-                bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpst -fo ${file}.bed.bpst.fa.out
-                bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${file}.bed.bpend -fo ${file}.bed.bpend.fa.out
-
-                export PATH=${main_dir}/software/SeqComplex:$PATH
-                cd ${main_dir}/software/SeqComplex
-                # SV start breakpoint complexity
-                perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${file}.bed.bpst.fa.out
-                kz --fasta < ${file}.bed.bpst.fa.out > ${file}.bed.bpst.fa.out.kz
-                # SV end breakpoint complexity           
-                perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${file}.bed.bpend.fa.out
-                kz --fasta < ${file}.bed.bpend.fa.out > ${file}.bed.bpend.fa.out.kz            
-            done
-
         # SV vcf consoldation
         ls ${main_dir}/out/${sample}/vcf_out/${sample}.*.vcf.svtyper > ${main_dir}/out/${sample}/vcf_out/${sample}.list
         SURVIVOR merge ${main_dir}/out/${sample}/vcf_out/${sample}.list 1000 1 1 0 0 10  ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all 
+        
+        # SV svtyper run           
+        python sv_vcf_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all
+        svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.cr -B ${main_dir}/in/${sample}/${sample}.bam > ${main_dir}/out/${sample}/vcf_out/${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.svtyper
+
+        # SV sequence complexity run 
+        # make bed file for SV breakpoints
+        awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.cr | sed 's% %\t%g' > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed
+        awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $0} else if ($2>c) {$2=c-150;$3=c+150; print $0} else if ($2<150){$2=1;$3=300; print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed | sed 's% %\t%g' > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst
+        awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $0} else {$2=$3-150; $3=$3+150;  print $0}}' ${main_dir}/reference/hg38_chromosome_size.txt ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed | sed 's% %\t%g' > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend
+        bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst -fo ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out
+        bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend -fo ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend.fa.out
+
+        export PATH=${main_dir}/software/SeqComplex:$PATH
+        cd ${main_dir}/software/SeqComplex
+        # SV start breakpoint complexity
+        perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out
+        kz --fasta < ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpst.fa.out.kz
+        # SV end breakpoint complexity           
+        perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend.fa.out
+        kz --fasta < ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend.fa.out > ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.bed.bpend.fa.out.kz    
+
 
         # SV vcf simplified transformation
         python sv_info_sim.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all 
@@ -62,8 +60,8 @@ for sample in $(cat ${main_dir}/${sample_id_list})
         # SV database annotation label
         for SV_database_name in gnomad_qc gnomad_ps 1000g cytoatlas cosmic donor_g
             do
-                python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs -t ${main_dir}/SV_database/${SV_database_name}.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name} 
-                python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs ${SV_database_name} 
+                python sv_database_mapping.py -i ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs -t ${main_dir}/SV_database/${SV_database_name}.nontrs.gz -d 1000 -p 0.5 -o ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.notrs_${SV_database_name} 
+                python sv_bnd_database_mapping.py ${main_dir}/SV_database/${SV_database_name}.trs.gz ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs ${SV_database_name} 
                 
                 # SV database annotation consolidation/transformation
                 python sv_info_tf.py ${main_dir}/out/${sample}/vcf_out/${sample}.sv.all.tf.trs_ano ${SV_database_name} 
