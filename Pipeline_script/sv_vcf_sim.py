@@ -26,7 +26,7 @@ def trs_sv_sim(line):
           sv_bp_end=inf.split('=')[1]
         if inf.startswith('CHR2'):
           sv_chr2=inf.split('=')[1]          
-    line=str(item[0])+'\t'+str(item[1])+'\t'+str(sv_bp_end)+'\t'+str(sv_chr2)+'\tBND\t'+str(item[0])+':'+str(item[1])+':'+str(sv_bp_end)+':'+str(sv_chr2)+':BND:'+str(item[2]+'\n')
+    line=str(item[0])+'\t'+str(item[1])+'\t'+str(sv_bp_end)+'\t'+str(sv_chr2)+'\tBND\t'+str(item[0])+':'+str(item[1])+':'+str(sv_bp_end)+':'+str(sv_chr2)+':BND:'+str(item[2])+'\n'
     return line  
   
 def notrs_sv_sim(line):
@@ -37,7 +37,7 @@ def notrs_sv_sim(line):
     for inf in info:
         if inf.startswith('END'):
           sv_bp_end=inf.split('=')[1]
-    line=str(item[0])+'\t'+str(item[1])+'\t'+str(sv_bp_end)+'\t'+str(item[3])+'\t'+str(item[0])+':'+str(item[1])+':'+str(sv_bp_end)+':'+str(item[3])+':'+str(item[2]+'\n')
+    line=str(item[0])+'\t'+str(item[1])+'\t'+str(sv_bp_end)+'\t'+str(item[3])+'\t'+str(item[0])+':'+str(item[1])+':'+str(sv_bp_end)+':'+str(item[3])+':'+str(item[2])+'\n'
     return line  
   
 for line in in_vcf:
