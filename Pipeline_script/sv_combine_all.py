@@ -10,11 +10,8 @@ sc_vcf=pd.read_csv(str(sys.argv[1])+'.all_anno',sep='\t',header=None)
 db_vcf=pd.read_csv(str(sys.argv[1])+'.bpst_bpend.fa.out.kz.index_complex',sep='\t',header=None) 
 out_vcf=pd.read_csv(str(sys.argv[1])+'.all_combine',sep='\t',header=None)
 
-# simplify the sv database vcf
-db_vcf_sim=db_vcf.iloc[:, np_r[1,(db_vcf.shape[1]-1):(db_vcf.shape[1]-1)]]
-
 # matching database label 
-all_combine_vcf=pd.merge([info_vcf, sc_vcf, db_vcf_sim])
+all_combine_vcf=pd.merge([info_vcf, sc_vcf, db_vcf],on='sv_id')
 
 # export to csv
 all_combine_vcf.to_csv(out_vcf,sep='\t',index=False,header=True)
