@@ -1,0 +1,34 @@
+################################################################################################################
+#  SV VCF - BED data output format
+# ---example-----------------------------------------------------------------
+# sv_chr  sv_start_bp  sv_end_bp  sv_chr2  sv_type  sv_id
+# chr1    100000       1000000    chr21    BND      chr1:100000:1000000:chr21:BND:MantaBND***** 
+# ---------------------------------------------------------------------------
+################################################################################################################
+
+import sys,os,re
+in_vcf=open(sys.argv[1],'r')
+out_bed=open(str(sys.argv[1])+'.bed','w')
+
+def vcf_bed_tf(line):
+    sv_dict={}
+    item=line.strip().split('\t')
+    info_list=item[7]
+    info=info_list.split(';') 
+    sv_chr2=item[0]
+    for inf in info:
+        if inf.startswith('END'):
+          sv_bp_end=inf.split('=')[1]
+        if inf.startswith('CHR2'):
+          sv_chr2=inf.split('=')[1]           
+    line=str(item[0])+'\t'+str(item[1])+'\t'+str(sv_bp_end)+'\t'+str(sv_chr2)+'\tBND\t'+ str(item[2])+'\n'
+    return line  
+  
+for line in in_vcf:
+    item=line.strip().split('\t')    
+    if line.startswith('#'):
+        continue
+    #elif item[0].startswith('#CHROM'):      
+    #    out_bed.write('sv_chr\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type\tsv_id\n')
+    else:
+        out_bed.write(vcf_bed_tf(line))        
