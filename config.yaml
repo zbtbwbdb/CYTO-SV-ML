@@ -1,0 +1,16 @@
+# cohort name
+cohort_name: 'test'
+
+# directories
+main_dir: '/home/tzhang'
+py27_dir: '/bin/python'
+# reference_dir:
+# software_dir:
+# database_dir:
+
+# files
+sample_file: '/home/tzhang/sample'
+
+# sv settings
+parliment2_sv_callers: ['breakdancer','cnvnator','delly.deletion','delly.duplication','delly.inversion']
+chromoseq_sv_callers: ['ichnorcnv','manta']
