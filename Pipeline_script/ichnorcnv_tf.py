@@ -12,6 +12,7 @@ def ichnorcnv_tf(line):
     else:                  
         genotype='0/1'  
         sv_end=item[3]  
+        sv_type='NA'
 #        print(item[11])
         if item[11]=='GAIN' or item[11]=='AMP':
             sv_type='DUP'
@@ -28,11 +29,11 @@ def ichnorcnv_tf(line):
         sv_cnv=item[10]
         log_RD=item[9]
         sv_info= 'END='+str(sv_end)+';SVTYPE='+sv_type+';SVLEN='+str(sv_len)+';IMPRECISE;natorRD='+str(log_RD)
-        line='\t'.join([str(w) for w in item[1],item[2],sv_id,'.',sv_type,'.\t.',sv_info,sv_format,genotype+':'+str(sv_cnv)])+'\n'
+        line='\t'.join(str(w) for w in [item[1],item[2],sv_id,'.',sv_type,'.\t.',sv_info,sv_format,genotype+':'+str(sv_cnv)])+'\n'
         return line
 
 out_vcf.write('##fileformat=VCFv4.1\n##fileDate=20221013\n##reference=1000GenomesPhase3_decoy-GRCh37\n##source=CNVnator\n##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the variant described in this record">\n##INFO=<ID=IMPRECISE,Number=0,Type=Flag,Description="Imprecise structural variation">\n##INFO=<ID=SVLEN,Number=1,Type=Integer,Description="Difference in length between REF and ALT alleles">\n##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">\n##INFO=<ID=natorRD,Number=1,Type=Float,Description="Normalized RD">\n##INFO=<ID=natorP1,Number=1,Type=Float,Description="e-val by t-test">\n##INFO=<ID=natorP2,Number=1,Type=Float,Description="e-val by Gaussian tail">\n##INFO=<ID=natorP3,Number=1,Type=Float,Description="e-val by t-test (middle)">\n##INFO=<ID=natorP4,Number=1,Type=Float,Description="e-val by Gaussian tail (middle)">\n##INFO=<ID=natorQ0,Number=1,Type=Float,Description="Fraction of reads with 0 mapping quality">\n##INFO=<ID=natorPE,Number=1,Type=Integer,Description="Number of paired-ends support the event">\n##INFO=<ID=SAMPLES,Number=.,Type=String,Description="Sample genotyped to have the variant">\n##ALT=<ID=DEL,Description="Deletion">\n##ALT=<ID=DUP,Description="Duplication">\n##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">\n##FORMAT=<ID=CN,Number=1,Type=Integer,Description="Copy number genotype for imprecise events">\n##FORMAT=<ID=PE,Number=1,Type=Integer,Description="Number of paired-ends that support the event">\n') 
 for line in in_vcf:    
     item=line.strip().split('\t')
-    if item[11]!='NEUT':                         
+    if item[11]!='NEUT' and item[11]!='Corrected_Call':                         
     	out_vcf.write(ichnorcnv_tf(line))

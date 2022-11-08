@@ -23,118 +23,118 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder,
 from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifier, AdaBoostClassifier
 
 
-# Input data
-sv=pd.read_csv(sys.argv[1],sep="\t", header=0, index_col=None, keep_default_na=False)
+# # Input data
+# sv=pd.read_csv(sys.argv[1],sep="\t", header=0, index_col=None, keep_default_na=False)
 
-# benchmark sv summary by type and class 
-sv_by_type=sv.copy()
-sv_by_type.insert(sv_by_type.shape[1], "count", list(repeat(1,sv_by_type.shape[0])), True)
-sv_by_type=sv_by_type.loc[:,['sv_type','label','count']]
-print(sv_by_type.groupby(['sv_type','label']).sum())
-print(sv_by_type.groupby(['sv_type','label']).sum())
-SA=sv_by_type.loc[sv_by_type['label']==-1,['sv_type','count']].groupby(['sv_type']).sum()['count'].values
-UL=sv_by_type.loc[sv_by_type['label']==0,['sv_type','count']].groupby(['sv_type']).sum()['count'].values
-TG=sv_by_type.loc[sv_by_type['label']==1,['sv_type','count']].groupby(['sv_type']).sum()['count'].values
-TC=sv_by_type.loc[sv_by_type['label']==2,['sv_type','count']].groupby(['sv_type']).sum()['count'].values
-index=['TRA','DEL','DUP','INV']
-df1 = pd.DataFrame({'class -1': SA,'class 1': TG,'class 2': TC}, index=index)
-ax = df1.plot.bar(stacked=True, figsize=(3, 7))
-for idx, sv in enumerate(df1.index):
-    df2= df1[df1.index==sv]
-    d0=0
-    for i in range(df2.shape[1]):
-        data=df2.iloc[0,i]
-        ax.text(x=idx-0.15 , y = d0+data/2 , s=f"{data}" , fontdict=dict(fontsize=10))
-        d0=d0+data
-ax.set_ylim([0,10000])
-ax.set_ylabel("SV number")
-#bars = ax.barh(index, df1[index])
-ax.figure.savefig(str(sys.argv[1])+'type_class_summary.pdf", transparent=True)
+# # benchmark sv summary by type and class 
+# sv_by_type=sv.copy()
+# sv_by_type.insert(sv_by_type.shape[1], "count", list(repeat(1,sv_by_type.shape[0])), True)
+# sv_by_type=sv_by_type.loc[:,['sv_type','label','count']]
+# print(sv_by_type.groupby(['sv_type','label']).sum())
+# print(sv_by_type.groupby(['sv_type','label']).sum())
+# SA=sv_by_type.loc[sv_by_type['label']==-1,['sv_type','count']].groupby(['sv_type']).sum()['count'].values
+# UL=sv_by_type.loc[sv_by_type['label']==0,['sv_type','count']].groupby(['sv_type']).sum()['count'].values
+# TG=sv_by_type.loc[sv_by_type['label']==1,['sv_type','count']].groupby(['sv_type']).sum()['count'].values
+# TC=sv_by_type.loc[sv_by_type['label']==2,['sv_type','count']].groupby(['sv_type']).sum()['count'].values
+# index=['TRA','DEL','DUP','INV']
+# df1 = pd.DataFrame({'class -1': SA,'class 1': TG,'class 2': TC}, index=index)
+# ax = df1.plot.bar(stacked=True, figsize=(3, 7))
+# for idx, sv in enumerate(df1.index):
+#     df2= df1[df1.index==sv]
+#     d0=0
+#     for i in range(df2.shape[1]):
+#         data=df2.iloc[0,i]
+#         ax.text(x=idx-0.15 , y = d0+data/2 , s=f"{data}" , fontdict=dict(fontsize=10))
+#         d0=d0+data
+# ax.set_ylim([0,10000])
+# ax.set_ylabel("SV number")
+# #bars = ax.barh(index, df1[index])
+# ax.figure.savefig(str(sys.argv[1])+'type_class_summary.pdf", transparent=True)
                   
-for sv_stype in ['trs','nontrs']:
-    if (sv_type=='trs'):
-        cyto_sv_ml= AutoML(mode="Explain", results_path="trs-cyto-sv")
-        sv_columns=pd.read_csv("trs_col.index",sep="\t", header=None, index_col=None, keep_default_na=False)  
-        sv=sv[sv['sv_type']=='BND']
-    else:
-        cyto_sv_ml= AutoML(mode="Explain", results_path="cnv-cyto-sv")
-        sv_columns=pd.read_csv("cnv_col.index",sep="\t", header=None, index_col=None, keep_default_na=False)
-        sv=sv[sv['sv_type']!='BND']        
+# for sv_stype in ['trs','nontrs']:
+#     if (sv_type=='trs'):
+#         cyto_sv_ml= AutoML(mode="Explain", results_path="trs-cyto-sv")
+#         sv_columns=pd.read_csv("trs_col.index",sep="\t", header=None, index_col=None, keep_default_na=False)  
+#         sv=sv[sv['sv_type']=='BND']
+#     else:
+#         cyto_sv_ml= AutoML(mode="Explain", results_path="cnv-cyto-sv")
+#         sv_columns=pd.read_csv("cnv_col.index",sep="\t", header=None, index_col=None, keep_default_na=False)
+#         sv=sv[sv['sv_type']!='BND']        
 
-    # data transformation setting for data_tf
-    # categorical_columns=[i for i in sv_columns if i in categorical_varaibles]
-    # numerical_columns=[i for i in sv_columns if i not in categorical_varaibles +['label']]
-    # preprocessor = make_column_transformer((OneHotEncoder(drop="if_binary"), categorical_columns),(StandardScaler(), numerical_columns),remainder="passthrough")
-    # data_tf = make_pipeline(preprocessor)
-    # Class -1 is for systematic artifact SVs; Class 1 is for true germline SVs; Class 2 is for true cytogenetic somatic SVs
+#     # data transformation setting for data_tf
+#     # categorical_columns=[i for i in sv_columns if i in categorical_varaibles]
+#     # numerical_columns=[i for i in sv_columns if i not in categorical_varaibles +['label']]
+#     # preprocessor = make_column_transformer((OneHotEncoder(drop="if_binary"), categorical_columns),(StandardScaler(), numerical_columns),remainder="passthrough")
+#     # data_tf = make_pipeline(preprocessor)
+#     # Class -1 is for systematic artifact SVs; Class 1 is for true germline SVs; Class 2 is for true cytogenetic somatic SVs
 
-    # data transformation
-    sv_sel=sv.iloc[:,np.r_[np.where(sv.columns.isin(sv_columns.iloc[0,:]))]
-    X = sv_sel.drop("label", axis=1)               
-    y = sv_sel.label.values
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.5,stratify=X[['label']], random_state=0)
-    X_train_tf=data_tf.transform(X_train)  
-    X_test_tf=data_tf.transform(X_test)                 
+#     # data transformation
+#     sv_sel=sv.iloc[:,np.r_[np.where(sv.columns.isin(sv_columns.iloc[0,:]))]
+#     X = sv_sel.drop("label", axis=1)               
+#     y = sv_sel.label.values
+#     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.5,stratify=X[['label']], random_state=0)
+#     X_train_tf=data_tf.transform(X_train)  
+#     X_test_tf=data_tf.transform(X_test)                 
 
-    # AUTOML model fit with training data and validate with testing data              
-    sv_train_model = cyto_sv_ml.fit(X_train_tf)
-    predictions_test = sv_train_model.predict_all(X_test_tf)
+#     # AUTOML model fit with training data and validate with testing data              
+#     sv_train_model = cyto_sv_ml.fit(X_train_tf)
+#     predictions_test = sv_train_model.predict_all(X_test_tf)
 
-    # Model performance metrics
-    pdf = fpdf.FPDF(format='letter')
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)               
-    pdf.write("Test accuracy:", accuracy_score(y_test, predictions_test["label"].astype(int)))
-    pdf.ln()                   
-    pdf.write("Test micro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='micro'))
-    pdf.ln()                   
-    pdf.write("Test macro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='macro'))
-    pdf.ln()                   
-    pdf.write("Test micro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='micro'))
-    pdf.ln()                   
-    pdf.write("Test macro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
-    pdf.ln()
-    pdf.output(str(sys.argv[1])+sv_type+'model_metrics.pdf")
+#     # Model performance metrics
+#     pdf = fpdf.FPDF(format='letter')
+#     pdf.add_page()
+#     pdf.set_font("Arial", size=12)               
+#     pdf.write("Test accuracy:", accuracy_score(y_test, predictions_test["label"].astype(int)))
+#     pdf.ln()                   
+#     pdf.write("Test micro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='micro'))
+#     pdf.ln()                   
+#     pdf.write("Test macro precision_score:", precision_score(y_test, predictions_test["label"].astype(int),average='macro'))
+#     pdf.ln()                   
+#     pdf.write("Test micro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='micro'))
+#     pdf.ln()                   
+#     pdf.write("Test macro recall_score:", recall_score(y_testing, predictions_testing["label"].astype(int),average='macro'))
+#     pdf.ln()
+#     pdf.output(str(sys.argv[1])+sv_type+'model_metrics.pdf")
 
-    ## Display the confusion matrix
-    cf_matrix = confusion_matrix(y_test, predictions_test['label'],normalize="true")
-    tf=np.vectorize(lambda x: round(x,2))
-    ax = sns.heatmap(tf(cf_matrix), annot=True, cmap='Blues',fmt='g')               
-    ax.set_title('Seaborn Confusion Matrix with labels\n\n');
-    ax.set_xlabel('\nPredicted Values')
-    ax.set_ylabel('Actual Values ');
-    ax.xaxis.set_ticklabels(['-1','1','2'])
-    ax.yaxis.set_ticklabels(['-1','1','2'])
-    ax.axhline(y=0, color='k',linewidth=1)
-    ax.axhline(y=cf_matrix.shape[1], color='k',linewidth=2)
-    ax.axvline(x=0, color='k',linewidth=1)
-    ax.axvline(x=cf_matrix.shape[0], color='k',linewidth=2)
-    sns.set(rc={'figure.figsize':(10,10)})
-    plt.show()       
-    ax.savefig(str(sys.argv[1])+sv_type+'model_confusion_matrix.pdf")
+#     ## Display the confusion matrix
+#     cf_matrix = confusion_matrix(y_test, predictions_test['label'],normalize="true")
+#     tf=np.vectorize(lambda x: round(x,2))
+#     ax = sns.heatmap(tf(cf_matrix), annot=True, cmap='Blues',fmt='g')               
+#     ax.set_title('Seaborn Confusion Matrix with labels\n\n');
+#     ax.set_xlabel('\nPredicted Values')
+#     ax.set_ylabel('Actual Values ');
+#     ax.xaxis.set_ticklabels(['-1','1','2'])
+#     ax.yaxis.set_ticklabels(['-1','1','2'])
+#     ax.axhline(y=0, color='k',linewidth=1)
+#     ax.axhline(y=cf_matrix.shape[1], color='k',linewidth=2)
+#     ax.axvline(x=0, color='k',linewidth=1)
+#     ax.axvline(x=cf_matrix.shape[0], color='k',linewidth=2)
+#     sns.set(rc={'figure.figsize':(10,10)})
+#     plt.show()       
+#     ax.savefig(str(sys.argv[1])+sv_type+'model_confusion_matrix.pdf")
         
-    # AUCROC curve  for model performance evaluation
-    y1 = label_binarize(y_test, classes=[-1, 1, 2])
-    fpr = dict()
-    tpr = dict()
-    roc_auc = dict()
-    n_classes=y1.shape[1]
-    lw=2
-    for i in range(n_classes):
-        print(i)
-        fpr[i], tpr[i], _ = metrics.roc_curve(y1[:,i], predictions_test.iloc[:,i])
-        roc_auc[i] = auc(fpr[i], tpr[i])
-    colors = cycle(['blue', 'red', 'green'])
-    for i, color in zip(range(n_classes), colors):
-        plt.plot(fpr[i], tpr[i], color=color, lw=2,
-                 label='ROC curve of class {0} (area = {1:0.2f})'
-                 ''.format(i, roc_auc[i]))
-    plt.plot([0, 1], [0, 1], 'k--', lw=lw)
-    plt.xlim([-0.05, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver operating characteristic for multi-class data')
-    plt.legend(loc="lower right")
-    plt.show()  
-    plt.savefig(str(sys.argv[1])+sv_type+'model_aucroc_curve.pdf")
+#     # AUCROC curve  for model performance evaluation
+#     y1 = label_binarize(y_test, classes=[-1, 1, 2])
+#     fpr = dict()
+#     tpr = dict()
+#     roc_auc = dict()
+#     n_classes=y1.shape[1]
+#     lw=2
+#     for i in range(n_classes):
+#         print(i)
+#         fpr[i], tpr[i], _ = metrics.roc_curve(y1[:,i], predictions_test.iloc[:,i])
+#         roc_auc[i] = auc(fpr[i], tpr[i])
+#     colors = cycle(['blue', 'red', 'green'])
+#     for i, color in zip(range(n_classes), colors):
+#         plt.plot(fpr[i], tpr[i], color=color, lw=2,
+#                  label='ROC curve of class {0} (area = {1:0.2f})'
+#                  ''.format(i, roc_auc[i]))
+#     plt.plot([0, 1], [0, 1], 'k--', lw=lw)
+#     plt.xlim([-0.05, 1.0])
+#     plt.ylim([0.0, 1.05])
+#     plt.xlabel('False Positive Rate')
+#     plt.ylabel('True Positive Rate')
+#     plt.title('Receiver operating characteristic for multi-class data')
+#     plt.legend(loc="lower right")
+#     plt.show()  
+#     plt.savefig(str(sys.argv[1])+sv_type+'model_aucroc_curve.pdf")
