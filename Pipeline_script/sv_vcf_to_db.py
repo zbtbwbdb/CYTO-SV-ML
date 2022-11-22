@@ -27,7 +27,7 @@ def trs_sv_sim(line):
         if inf.startswith('CHR2'):
             sv_chr2=inf.split('=')[1]          
     line=str(item[0])+'\t'+str(item[1])+'\t'+str(END)+'\t'+str(sv_chr2)+'\t'+str(item[0])+':'+str(item[1])+':'+str(END)+':'+str(sv_chr2)+':TRA:'+str(item[2])+'\tTRA\t'+str(item[-1])+'\n'
-    return line  
+    return line   
   
 def nontrs_sv_sim(line):
     sv_dict={}

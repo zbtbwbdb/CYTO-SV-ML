@@ -98,7 +98,7 @@ with open(inFile,'r') as f:
                 svcnv_ratio=0                
                 
 # check the difference of original sv and total databse svs by mapping out the gap sv          
-                if svtype=="DEL" or svtype=="DUP":
+                if svtype=="DEL" or svtype=="DUP": # or svtype=="INV"
                     sm2= SVCNV_set.subtract_by_overlap(sm1,svcnv1,percent)
                     for sm in sm2:
                         subtract_list_len+=sm.length 
@@ -107,9 +107,9 @@ with open(inFile,'r') as f:
                     for sm in sm2:                      
                         subtract_list_len+=svcnv1.start_pos-sm.start_pos
 
-# calculate the sv difference between original sv and total databse svs by summing up the gap sv length 
+# calculate the sv consensus by 1 - the difference between original sv and total databse svs by summing up the gap sv length 
             if len(sm2)==0 or svcnv1.length==0:
-                svcnv_ratio=len(filter(None,sm2))
+                svcnv_ratio=1-float(len(filter(None,sm2)))
             else:                        
                 svcnv_ratio=float(1-float(subtract_list_len)/float(svcnv1.length)) 
 

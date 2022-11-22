@@ -33,7 +33,7 @@ for bp in bpst bpend
       
        echo "# run SeqComplex and KZ for SV breakpoints" && date
        perl ${main_dir}/software/SeqComplex/profileComplexSeq.pl ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out.lc
-       kz --fasta < ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out > ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out.kz
+       ${main_dir}/mambaforge/envs/py27/bin/kz --fasta < ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out > ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out.kz
        awk 'FNR==NR{a[$1]; b[$1]=$0; next}{c=$1":"$2"-"$3; if (c in a) {print $0"\t"b[c]}}' ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out.kz ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp} > ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out.kz.index
        awk 'FNR==NR{a[$1]; b[$1]=$0; next}($6 in a) {print $0"\t"b[$6]}' ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.complex ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out.kz.index > ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out.kz.index_complex
     done

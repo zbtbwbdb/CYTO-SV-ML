@@ -11,20 +11,41 @@ SV_database_name=str(sys.argv[2])
 out_vcf=str(sys.argv[1])+'_anno' 
 in_vcf=pd.read_csv(out_vcf,sep='\t',header=0,keep_default_na=False)  
 db_vcf=pd.read_csv(str(sys.argv[1])+'.'+str(sys.argv[2]),sep='\t',header=None,names=range(10))    
+try:
+    id_mode=str(sys.argv[3])
+except:
+    id_mode='n'
 
 # simplify the sv database vcf
 db_vcf=db_vcf.rename(columns={db_vcf.columns[6]: SV_database_name})
-db_vcf.loc[db_vcf[SV_database_name]!='Not_in_database',SV_database_name]=db_vcf.iloc[:,8]
+
+if (db_vcf.iloc[:,4]=='TRA').any():
+    db_vcf.loc[db_vcf[SV_database_name]!='Not_in_database',SV_database_name]=db_vcf.iloc[:,6]
+else:
+    db_vcf.loc[db_vcf[SV_database_name]!='Not_in_database',SV_database_name]=db_vcf.iloc[:,8]
 db_vcf_sim=db_vcf.iloc[:, 5:7]
-#print(db_vcf_sim.iloc[0:2,:])
+
 db_vcf_sim.columns=['sv_id',SV_database_name]
+
+
+# merge the sv database vcf
 if SV_database_name not in in_vcf.columns:
     in_db_vcf=pd.merge(in_vcf, db_vcf_sim, on=['sv_id'], how='inner')
-    
-    # label NA database
-    if  in_db_vcf[SV_database_name].isnull().any():
-#    if  db_vcf_sim['db_label'].str.contains('NAN').any():        
-        in_db_vcf[SV_database_name]='Not_in_database' 
 
+    # label NA database
+#    if  in_db_vcf[SV_database_name].isnull().any():
+#    if  db_vcf_sim['db_label'].str.contains('NAN').any():        
+    in_db_vcf.loc[in_db_vcf[SV_database_name].isnull(),SV_database_name]='Not_in_database'   
+elif id_mode=='f':
+    in_vcf=in_vcf.drop(SV_database_name, axis=1) 
+    in_db_vcf=pd.merge(in_vcf, db_vcf_sim, on=['sv_id'], how='inner')
+    in_db_vcf=in_db_vcf.rename(columns={in_db_vcf.columns[in_db_vcf.shape[1]-1]:SV_database_name})
+
+    # label NA database
+#    if  in_db_vcf[SV_database_name].isnull().any():
+#    if  db_vcf_sim['db_label'].str.contains('NAN').any():        
+    in_db_vcf.loc[in_db_vcf[SV_database_name].isnull(),SV_database_name]='Not_in_database'     
+else:
+    in_db_vcf=in_vcf
 # export to csv
 in_db_vcf.to_csv(out_vcf,sep='\t',index=False,header=True)

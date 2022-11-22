@@ -60,4 +60,6 @@ for line in in_vcf:
     elif 'SVTYPE=TRA' in item[7] or 'MantaBND' in item[7]:
         trs_out_vcf.write(trs_sv_sim(line))        
     else:
+        if item[1]=="100500000":
+            print(nontrs_sv_sim(line))
         non_trs_out_vcf.write(nontrs_sv_sim(line))       

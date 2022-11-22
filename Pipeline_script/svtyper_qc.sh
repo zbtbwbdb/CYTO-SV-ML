@@ -14,6 +14,6 @@ svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.1
 python ${main_dir}/software/CYTO-SV-ML/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.10k.nontrs_tf.all.svtyper
 
 echo "# run sytyper for all trs SV" && date
-svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.10k.trs_tf.all -B ${main_dir}/out/${sample}/${sample}.bam > ${main_dir}/out/${sample}/${sample}.10k.trs_tf.svtyper
-python ${main_dir}/software/CYTO-SV-ML/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.10k.trs_tf.svtyper 
+svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.10k.trs_tf.all -B ${main_dir}/out/${sample}/${sample}.bam > ${main_dir}/out/${sample}/${sample}.10k.trs_tf.all.svtyper
+python ${main_dir}/software/CYTO-SV-ML/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.10k.trs_tf.all.svtyper 
  rm -rf ${main_dir}/out/${sample}/${sample}.bam*
