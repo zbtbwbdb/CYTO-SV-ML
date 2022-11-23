@@ -2,8 +2,25 @@
 #### CYTO-SV-ML PIPELINE WORKFLOW:
 ![CYTO-SV-ML PIPELINE WORKFLOW](workflow.png)
 
-# Run Shiny Web-portal 
+# Run CYTO-SV-ML Snakemake pipeline
+### CYTO-SV-ML Snakemake pipeline workflow
+![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_workflow.svg)
+### Install CYTO-SV-ML Snakemake pipeline
+```
+git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
+cd CYTO-SV-ML
+conda env create cyto-sv-ml -f cyto-sv-ml.yaml
+```
 
+### Start CYTO-SV-ML Snakemake pipeline
+change the config.yaml for your own settings
+```
+conda activate cyto-sv-ml
+snakemake --core ${number_of_cores} -s cyto-sv-ml.smk
+```
+
+# Run Shiny Web-portal 
+The summarized visualization of CYTO-SV-ML pipeline 
 ### Install Shiny Web-portal
 ```
 git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
@@ -32,7 +49,7 @@ Parliament: docker pull docker.io/dnanexus/parliament2:latest #https://github.co
 ChromoSeq: docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master #https://github.com/genome/docker-basespace_chromoseq
 ```
 
-## SV database Download (The resource websites contain detailed information)
+## SV database Download (The official websites contain detailed information)
 ```
 gnomAD: https://gnomad.broadinstitute.org/downloads
 1000g: https://www.internationalgenome.org/phase-3-structural-variant-dataset
