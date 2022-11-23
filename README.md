@@ -28,8 +28,8 @@ http://cyto-sv-ml.b12x.org/
 # Related Resource Download
 ## SV Calling Pipeline Download
 ```
-Parliament: docker pull dongwonlee/parliament2-sing:v0.12 #https://github.com/dnanexus/parliament2
-ChromoSeq: https://github.com/genome/docker-basespace_chromoseq
+Parliament: docker pull docker.io/dnanexus/parliament2:latest #https://github.com/dnanexus/parliament2
+ChromoSeq: docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master #https://github.com/genome/docker-basespace_chromoseq
 ```
 
 ## SV database Download
