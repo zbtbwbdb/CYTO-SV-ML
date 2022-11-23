@@ -33,7 +33,7 @@ from itertools import cycle
 from matplotlib.pyplot import *
 from numpy import sqrt, argmax
 from sklearn.metrics import mean_squared_error
-from supervised.automl import AutoML # mljar-supervised
+from supervised.automl import AutoML 
 
 warnings.filterwarnings("ignore")
 #warnings.filterwarnings("ignore", category=DeprecationWarning) 
@@ -84,11 +84,11 @@ for sv_type in sv_type_vector:
     sv_ml_metrics_ts_file=open(outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+'sv_ml_metrics_sub.csv','w')  # open the text file for save model performance metrics 
     sv_ml_metrics_ts={'mic_pre':[],'mac_pre':[],'mic_rec':[],'mac_rec':[]}  
     sampling_step=round( ( (len(y_somatic_sv)*0.9+len(y_false_sv)*0.9)/3 - 2*len(y_germline_sv)*0.9/3 ) /step_no ) 
-    for i in range(step_no):
-        print(str(i)+": "+time.ctime())
-        label_avg=round(len(y_germline_sv)*0.9)+sampling_step*i
-        for j in range(kfolds):
-            np.random.seed(j)
+    for n in range(step_no):
+        print(str(n)+": "+time.ctime())
+        label_avg=round(len(y_germline_sv)*0.9)+sampling_step*n
+        for m in range(kfolds):
+            np.random.seed(m)
             if label_avg<=round(len(y_false_sv)*0.9):
                 false_sv_idx=np.random.choice(np.random.choice(y_false_sv,round(len(y_false_sv)*0.9),replace=False),label_avg,replace=False)    
             else:
@@ -118,7 +118,7 @@ for sv_type in sv_type_vector:
     #         print(np.unique(y12_2,return_counts=True))
 
             # train models with AutoML
-            automl = AutoML(mode="Explain", results_path=outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(i)+'_'+str(j)+'_ts_EXP')
+            automl = AutoML(mode="Explain", results_path=outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(n)+'_'+str(m)+'_ts_EXP')
             # model fitting
             automl.fit(s12, y12)
 
@@ -160,7 +160,7 @@ for sv_type in sv_type_vector:
             ax.axvline(x=cf_matrix.shape[0], color='k',linewidth=2)
             sns.set(rc={'figure.figsize':(10,10)})
             plt.show()
-            plt.savefig(outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(i)+'_'+str(j)+'_ts_model_confusion_matrix.pdf')
+            plt.savefig(outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(n)+'_'+str(m)+'_ts_model_confusion_matrix.pdf')
 
             # compute AUC  for model performance evaluation of multiclass
             y1 = label_binarize(y12_2, classes=[-1, 1, 2])
@@ -232,6 +232,6 @@ for sv_type in sv_type_vector:
             plt.title("Some extension of Receiver operating characteristic to multiclass")
             plt.legend(loc="lower right")
             plt.show()
-            plt.savefig(outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(i)+'_'+str(j)+'_ts_model_aucroc_curve.pdf')
-        for key,value in sv_ml_metrics_ts.items():
-            sv_ml_metrics_ts_file.write(str(key)+'\t'+'\t'.join(str(w) for w in value)+'\n')
+            plt.savefig(outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(n)+'_'+str(m)+'_ts_model_aucroc_curve.pdf')
+    for key,value in sv_ml_metrics_ts.items():
+        sv_ml_metrics_ts_file.write(str(key)+'\t'+'\t'.join(str(w) for w in value)+'\n')
