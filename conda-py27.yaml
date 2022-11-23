@@ -5,3 +5,4 @@ dependencies:
   - pip:
     - numpy
     - pandas
+prefix: /home/tzhang/mambaforge/envs/py27
