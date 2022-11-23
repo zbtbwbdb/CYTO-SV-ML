@@ -32,7 +32,7 @@ Parliament: docker pull docker.io/dnanexus/parliament2:latest #https://github.co
 ChromoSeq: docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master #https://github.com/genome/docker-basespace_chromoseq
 ```
 
-## SV database Download
+## SV database Download (The resource websites contain detailed information)
 ```
 gnomAD: https://gnomad.broadinstitute.org/downloads
 1000g: https://www.internationalgenome.org/phase-3-structural-variant-dataset
