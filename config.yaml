@@ -10,7 +10,7 @@ py27_dir: '/home/tzhang/mambaforge/envs/py27/bin/python'
 
 # files
 parliment_docker: 'docker.io/dnanexus/parliament2:latest'
-chromoseq_docker: 'zatawada/docker-basespace_chromoseq_v2:master'
+chromoseq_docker: 'docker.io/zatawada/docker-basespace_chromoseq_v2:master'
 sample_file: '/home/tzhang/sample'
 
 # sv settings
