@@ -167,5 +167,4 @@ rule sv_all_combine:
         """     
         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/sv_all_combine.sh {main_dir} {params.sm}  
         """
-            
-    
+              
