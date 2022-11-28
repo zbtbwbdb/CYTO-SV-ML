@@ -12,13 +12,13 @@ cd CYTO-SV-ML
 conda env create cyto-sv-ml -f cyto-sv-ml.yaml
 ```
 
-### Start CYTO-SV-ML Snakemake preprocess pipeline
+### Run CYTO-SV-ML Snakemake preprocess pipeline
 change the config.yaml for your own settings
 ```
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml.smk
 ```
-### Start CYTO-SV-ML AUTO-ML pipeline
+### Run CYTO-SV-ML AUTO-ML pipeline
 change the config.yaml for your own settings
 ```
 python CYTO-SV-Auto-ML.py -s ${SV_cohort_name} -o ${output_dir} -k ${kfolds}
