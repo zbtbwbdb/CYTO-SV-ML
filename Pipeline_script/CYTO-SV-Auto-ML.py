@@ -40,13 +40,13 @@ warnings.filterwarnings("ignore")
 
 ############################################################################################################################################################# 
 wd = sys.path[0]
-opts,args = getopt.getopt(sys.argv[1:],"s:o:n:")
+opts,args = getopt.getopt(sys.argv[1:],"s:o:k:")
 for op, value in opts:
 	if op == "-s":
 	    sv_cohort = str(value)
 	if op == "-o":
 	    outdir = str(value)
-	if op == "-n":
+	if op == "-k":
 	    kfolds = int(value)
 sv_type_vector=['CNV']#, 'TRS']
 subprocess.call(["sudo", "rm", "-rf", outdir])
