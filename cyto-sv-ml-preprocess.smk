@@ -167,44 +167,11 @@ rule sv_all_combine:
         expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES)       
     output:
         report(expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES))  
-    params:
-        #sm = expand("{sample}",sample=SAMPLES)     
-        smv = SAMPLES_vector
+    params:     
+        sm = SAMPLES   
     shell:
         """     
-        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/sv_all_combine.sh {main_dir} {params.smv}  
+        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/sv_all_combine.sh {main_dir} {params.sm}  
         """
-        
-#  checkpoint for all sample sv data   
-checkpoint all_sample_sv_ready:
-    input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES)  
-    output: 
-        pathlib.Path(OUTPUT_DIR+"/log_files/sample_sv_ready.out")
-    run: 
-        shell('echo {input} >> {output}')
-
-def check_sample_file(*wildcards):
-     return checkpoints.all_sample_sv_ready.get().output        
-
-# combine all sample sv           
-rule all_sv_combine:
-    input:
-        check_sample_file, 
-        sv_all_combine=expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES) 
-    output:
-        expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)       
-    shell:
-        """        
-         cat {input.sv_all_combine} >> {output}
-        """               
-               
-# run cyto-sv-ml model     
-rule cyto-sv-ml:
-    conda:
-        "conda-py37.yaml"
-    output:
-       report(expand(OUTPUT_DIR+"/{sample}/{sample}.model_{analyses}.pdf", sample=SAMPLES, analyses=["type_class_summary","score_metrics", "confusion_matrix", "aucroc_curve"]))
-    shell:
-        'python {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML_tuning.py -s {sample_all} -o {sample_all}_ts -n 10'           
+            
     
