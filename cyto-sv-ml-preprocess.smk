@@ -17,8 +17,6 @@ SAMPLES = list(samples_information['id'])
 GENDERS = list(samples_information['sex'])
 SAMPLES_vector='@'.join(str(sm) for sm in SAMPLES)
 
-#INPUT_DIR = pathlib.Path(config['main_dir']+'/in')
-#OUTPUT_DIR = pathlib.Path(config['main_dir']+'/out')
 main_dir = config['main_dir']
 INPUT_DIR = config['main_dir']+'/in'
 OUTPUT_DIR = config['main_dir']+'/out'
@@ -30,16 +28,12 @@ parliment2_sv_callers = config['parliment2_sv_callers']
 chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
 all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
-# print(os.path.join(OUTPUT_DIR,"/log_files/sample_sv_ready.out"))
-# print(pathlib.Path(OUTPUT_DIR+"/log_files/sample_sv_ready.out"))
 size=int(config['size'])
 #report: OUTPUT_DIR+"/report/workflow.rst"
     
 rule all:
     input:
         expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES)  
-#        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller= all_callers)          
-#         expand(OUTPUT_DIR+"/{sample}/{sample}.model_{analyses}.pdf", sample=SAMPLES, analyses=["onfusion_matrix.pdf", "aucroc_curve", "metrics"])
         
 # Run chromoseq_sv
 rule chromoseq_sv:
