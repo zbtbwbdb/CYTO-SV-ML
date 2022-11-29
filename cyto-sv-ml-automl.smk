@@ -22,7 +22,7 @@ checkpoint all_sample_sv_ready:
         expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES)  
     output: 
         pathlib.Path(OUTPUT_DIR+"/log_files/sample_sv_ready.out")
-    para:
+    params:
         SAMPLES_vector=SAMPLES_vector
     run: 
         shell('echo {input} >> {output}')
