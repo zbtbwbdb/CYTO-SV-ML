@@ -29,14 +29,12 @@ parliment2_sv_callers = config['parliment2_sv_callers']
 chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
 all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
-# print(os.path.join(OUTPUT_DIR,"/log_files/sample_sv_ready.out"))
-# print(pathlib.Path(OUTPUT_DIR+"/log_files/sample_sv_ready.out"))
 size=int(config['size'])
 #report: OUTPUT_DIR+"/report/workflow.rst"
 
 rule all:
     input:
-        expand(OUTPUT_DIR+"/"+cohort_name+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS'])  
+        expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_{sv_type}_sv_ml_metrics_sub.csv", cohort_name=cohort_name, sv_type=['trs','nontrs'])
         
 #  checkpoint for all sample sv data   
 checkpoint all_sample_sv_ready:
@@ -55,7 +53,7 @@ rule all_sample_sv_combine:
     input:
         check_sample_file
     output:
-        expand(OUTPUT_DIR+"/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)        
+        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)        
     shell:
         """  
         cat {input} && bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {cohort_name} {input} 
@@ -64,14 +62,19 @@ rule all_sample_sv_combine:
 # run cyto-sv-ml model     
 rule cyto_sv_ml:
     input:
-        expand(OUTPUT_DIR+"/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)   
-    params:
-        py39_dir=config['py39_dir']
+        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)   
     output:
-        report(expand(OUTPUT_DIR+"/"+cohort_name+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS']), category="Step 2",
-          subcategory="{model}",labels={"model": "{model}","figure": "some plot" })
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_sv_ml_metrics_sub.csv", cohort_name=cohort_name), category="sv model summary", subcategory="model", labels={"data name" : "model performance metrics","sv type":'trs', "data type": "table" }), 
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_sv_ml_metrics_sub.csv", cohort_name=cohort_name), category="sv model summary", subcategory="model", labels={"data name" : "model performance metrics","sv type":'nontrs', "data type": "table" }), 
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_1_ts_model_confusion_matrix.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix ","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_1_ts_model_confusion_matrix.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix","sv type": "nontrs","data type": "plot" }),
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_1_ts_model_aucroc_curve.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model_aucroc_curve","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_1_ts_model_aucroc_curve.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model aucroc curve","sv type": "nontrs","data type": "plot" })             
+    params:
+        py39_dir=config['py39_dir'] 
+        kfs=config['kfolds_shuffle'] 
     shell:
         """
-        sudo mkdir -p {OUTPUT_DIR}/{cohort_name}_ts/cyto_sv_ml &&
-        {params.py39_dir} {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name}_ts -k 5
+        sudo mkdir -p {OUTPUT_DIR}/{cohort_name}/cyto_sv_ml &&
+        {params.py39_dir} {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs} 
         """             
