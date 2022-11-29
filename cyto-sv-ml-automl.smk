@@ -16,6 +16,28 @@ SAMPLES = list(samples_information['id'])
 GENDERS = list(samples_information['sex'])
 SAMPLES_vector='@'.join(str(sm) for sm in SAMPLES)
 
+#INPUT_DIR = pathlib.Path(config['main_dir']+'/in')
+#OUTPUT_DIR = pathlib.Path(config['main_dir']+'/out')
+main_dir = config['main_dir']
+INPUT_DIR = config['main_dir']+'/in'
+OUTPUT_DIR = config['main_dir']+'/out'
+LOG_DIR = config['main_dir']+'/out/log'
+REF_DIR = config['main_dir']+'/reference'
+SOFTWARE_DIR = config['main_dir']+'/software'
+DATABASE_DIR = config['main_dir']+'/SV_database'
+parliment2_sv_callers = config['parliment2_sv_callers']
+chromoseq_sv_callers = config['chromoseq_sv_callers']
+all_callers=chromoseq_sv_callers+parliment2_sv_callers
+all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
+# print(os.path.join(OUTPUT_DIR,"/log_files/sample_sv_ready.out"))
+# print(pathlib.Path(OUTPUT_DIR+"/log_files/sample_sv_ready.out"))
+size=int(config['size'])
+#report: OUTPUT_DIR+"/report/workflow.rst"
+
+rule all:
+    input:
+        expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS'])  
+        
 #  checkpoint for all sample sv data   
 checkpoint all_sample_sv_ready:
     input:
@@ -23,34 +45,33 @@ checkpoint all_sample_sv_ready:
     output: 
         pathlib.Path(OUTPUT_DIR+"/log_files/sample_sv_ready.out")
     run: 
-        shell('echo {input} >> {output}')
-
+        shell('echo {SAMPLES_vector} >> {output}')
+        
 def check_sample_file(*wildcards):
      return checkpoints.all_sample_sv_ready.get().output        
 
 # combine all sample sv           
 rule all_sample_sv_combine:
     input:
-        check_sample_file, 
-        sv_all_combine=expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES) 
+        check_sample_file
     output:
-        expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)   
-    params:
-        smv=SAMPLES_vector        
+        expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)        
     shell:
-        """        
-         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {sample_all} {params.smv} 
+        """  
+        cat {input} && bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {sample_all} {input} 
         """               
                
 # run cyto-sv-ml model     
-rule cyto-sv-ml:
+rule cyto_sv_ml:
     input:
         expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)   
-#    conda:
-#        "conda-py37.yaml"
+    params:
+        py39_dir=config['py39_dir']
     output:
-       report(expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS']),
-              expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_svtype_class_summary.pdf", sv_type=['TRS','NONTRS']),
-              expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_{k}_{analyses}.pdf", sv_type=['TRS','NONTRS'], k=range(10), analyses=["confusion_matrix", "aucroc_curve"]))
+        report(expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS']), category="Step 2",
+          subcategory="{model}",labels={"model": "{model}","figure": "some plot" })
     shell:
-        'python {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML_tuning.py -s {sample_all} -o {main_dir}/out/{sample_all}_ts -k 10'          
+        """
+        sudo mkdir -p {OUTPUT_DIR}/{sample_all}_ts/cyto_sv_ml &&
+        {py39_dir} {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML.py -s {sample_all} -o {OUTPUT_DIR}/{sample_all}_ts -k 5
+        """             
