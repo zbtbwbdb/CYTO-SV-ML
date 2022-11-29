@@ -13,7 +13,7 @@ parliment_docker: 'docker.io/dnanexus/parliament2:latest'
 chromoseq_docker: 'docker.io/zatawada/docker-basespace_chromoseq_v2:master'
 sample_list: '/home/tzhang/sample'
 sample: 'MDS_patient1'
-gender: 'Male'
+gender: 'male'
 
 # sv settings
 parliment2_sv_callers: ['breakdancer','cnvnator','delly.deletion','delly.duplication','delly.inversion']
