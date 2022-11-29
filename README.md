@@ -13,7 +13,7 @@ conda env create cyto-sv-ml -f cyto-sv-ml.yaml
 ```
 
 ### Run CYTO-SV-ML Snakemake preprocess pipeline
-change the config.yaml for your own settings
+change the config.yaml to your own environment settings
 ```
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk
