@@ -8,14 +8,9 @@ from snakemake.utils import validate
 from typing import Dict, Union, List
 
 configfile: "config.yaml"
-    
-sample_all = config['cohort_name']  
-samples_information = pd.read_csv(config['sample_list'], sep='\t', header=None,index_col=False)
-#print(samples_information)
-samples_information.columns=['id','sex']
-SAMPLES = list(samples_information['id'])
-GENDERS = list(samples_information['sex'])
-SAMPLES_vector='@'.join(str(sm) for sm in SAMPLES)
+
+SAMPLES = config['sample']
+GENDERS = config['gender']
 
 main_dir = config['main_dir']
 INPUT_DIR = config['main_dir']+'/in'
@@ -24,6 +19,8 @@ LOG_DIR = config['main_dir']+'/out/log'
 REF_DIR = config['main_dir']+'/reference'
 SOFTWARE_DIR = config['main_dir']+'/software'
 DATABASE_DIR = config['main_dir']+'/SV_database'
+parliment_docker = config['parliment_docker']
+chromoseq_docker = config['chromoseq_docker']
 parliment2_sv_callers = config['parliment2_sv_callers']
 chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
@@ -45,11 +42,12 @@ rule chromoseq_sv:
         sample_vcf = expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller=chromoseq_sv_callers)
     threads: 8        
     params:
+        chromoseq_docker = chromoseq_docker,        
         sm = SAMPLES,  
         gd = GENDERS
     shell:
         """
-         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/run_chromoseq.sh {main_dir} {params.sm} {params.gd} 
+         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/run_chromoseq.sh {main_dir} {params.chromoseq_docker} {params.sm} {params.gd} 
         """
         
 # Run parliment2_sv
@@ -62,10 +60,11 @@ rule parliment2_sv:
         sample_vcf = expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller= parliment2_sv_callers)  
     threads: 8
     params:
+        parliment_docker = parliment_docker,
         sm = SAMPLES
     shell:   
          """   
-         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/run_parliment2.sh {main_dir} {params.sm} 
+         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/run_parliment2.sh {main_dir} {params.parliment_docker} {params.sm} 
          """    
         
 # #  SV VCF preparation
