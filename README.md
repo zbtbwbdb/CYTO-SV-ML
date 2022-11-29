@@ -20,6 +20,7 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --config sample
 ```
 ### Run CYTO-SV-ML Snakemake modeling pipeline
 ```
+snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk
 snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${out_dir}/${cohort_name}_report.html
 ```
 
