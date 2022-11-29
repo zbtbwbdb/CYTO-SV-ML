@@ -24,7 +24,7 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${out_di
 ```
 
 # Run Shiny Web-portal 
-The summarized visualization of CYTO-SV-ML pipeline 
+The analysis summary of 494 MDS cohort using CYTO-SV-ML pipeline 
 ### Install Shiny Web-portal
 ```
 git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
