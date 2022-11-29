@@ -18,10 +18,9 @@ change the config.yaml to your own environment settings
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --config sample=${sample} gender=${gender}
 ```
-### Run CYTO-SV-ML Snakemake AUTO-ML pipeline
-change the config.yaml for your own settings
+### Run CYTO-SV-ML Snakemake modeling pipeline
 ```
-snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk
+snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${out_dir}/${cohort_name}_report.html
 ```
 
 # Run Shiny Web-portal 
