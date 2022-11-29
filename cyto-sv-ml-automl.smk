@@ -49,7 +49,7 @@ rule cyto-sv-ml:
     output:
        report(expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS']),
               expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_svtype_class_summary.pdf", sv_type=['TRS','NONTRS']),
-              expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_{analyses}.pdf", sv_type=['TRS','NONTRS'], analyses=["confusion_matrix", "aucroc_curve"]))
+              expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_{k}_{analyses}.pdf", sv_type=['TRS','NONTRS'], k=range(10), analyses=["confusion_matrix", "aucroc_curve"]))
     shell:
-        'python {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML_tuning.py -s {sample_all} -o {sample_all}_ts -n 10'           
+        'python {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML_tuning.py -s {sample_all} -o {main_dir}/out/{sample_all}_ts -k 10'           
     
