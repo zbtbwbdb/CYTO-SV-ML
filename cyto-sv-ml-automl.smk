@@ -9,7 +9,7 @@ from typing import Dict, Union, List
 
 configfile: "config.yaml"
     
-sample_all = config['cohort_name']  
+cohort_name = config['cohort_name']  
 samples_information = pd.read_csv(config['sample_list'], sep='\t', header=None,index_col=False)
 samples_information.columns=['id','sex']
 SAMPLES = list(samples_information['id'])
@@ -36,7 +36,7 @@ size=int(config['size'])
 
 rule all:
     input:
-        expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS'])  
+        expand(OUTPUT_DIR+"/"+cohort_name+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS'])  
         
 #  checkpoint for all sample sv data   
 checkpoint all_sample_sv_ready:
@@ -55,23 +55,23 @@ rule all_sample_sv_combine:
     input:
         check_sample_file
     output:
-        expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)        
+        expand(OUTPUT_DIR+"/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)        
     shell:
         """  
-        cat {input} && bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {sample_all} {input} 
+        cat {input} && bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {cohort_name} {input} 
         """               
                
 # run cyto-sv-ml model     
 rule cyto_sv_ml:
     input:
-        expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)   
+        expand(OUTPUT_DIR+"/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)   
     params:
         py39_dir=config['py39_dir']
     output:
-        report(expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS']), category="Step 2",
+        report(expand(OUTPUT_DIR+"/"+cohort_name+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS']), category="Step 2",
           subcategory="{model}",labels={"model": "{model}","figure": "some plot" })
     shell:
         """
-        sudo mkdir -p {OUTPUT_DIR}/{sample_all}_ts/cyto_sv_ml &&
-        {params.py39_dir} {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML.py -s {sample_all} -o {OUTPUT_DIR}/{sample_all}_ts -k 5
+        sudo mkdir -p {OUTPUT_DIR}/{cohort_name}_ts/cyto_sv_ml &&
+        {params.py39_dir} {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name}_ts -k 5
         """             
