@@ -10,7 +10,7 @@ from typing import Dict, Union, List
 configfile: "config.yaml"
     
 sample_all = config['cohort_name']  
-samples_information = pd.read_csv(config['sample_file'], sep='\t', header=None,index_col=False)
+samples_information = pd.read_csv(config['sample_list'], sep='\t', header=None,index_col=False)
 #print(samples_information)
 samples_information.columns=['id','sex']
 SAMPLES = list(samples_information['id'])
