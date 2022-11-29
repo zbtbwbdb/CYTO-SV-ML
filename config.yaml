@@ -1,5 +1,5 @@
 # cohort name
-cohort_name: 'test'
+cohort_name: '{your_cohort_name}'
 
 # directories
 main_dir: '{your_work_dir}'
