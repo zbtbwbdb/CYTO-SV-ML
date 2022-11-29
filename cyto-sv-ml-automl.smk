@@ -29,7 +29,7 @@ def check_sample_file(*wildcards):
      return checkpoints.all_sample_sv_ready.get().output        
 
 # combine all sample sv           
-rule all_sv_combine:
+rule all_sample_sv_combine:
     input:
         check_sample_file, 
         sv_all_combine=expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES) 
@@ -37,7 +37,7 @@ rule all_sv_combine:
         expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)       
     shell:
         """        
-         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sv_combine.sh {main_dir} {sample_all}
+         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {sample_all}
         """               
                
 # run cyto-sv-ml model     
