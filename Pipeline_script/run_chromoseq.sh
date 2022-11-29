@@ -1,8 +1,9 @@
 #!/bin/bash
 main_dir=$1
 chromoseq_docker=$2
-sample=$2   
-gender=$3
+sample=$3  
+gender=$4
+
 echo $sample $gender
 echo "# set up the configure file for chromoseq" && date
 sed "s%/scratch/out/XXXXXX%/scratch/out/${sample}/sv_caller_results/%g" ${main_dir}/software/docker-basespace_chromoseq/lsf/inputs.json | sed "s%XXXXXX%${sample}%g"  | sed "s%Male%${gender}%g" > ${main_dir}/software/docker-basespace_chromoseq/lsf/inputs.json.tmp
