@@ -37,7 +37,7 @@ rule all_sv_combine:
         expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)       
     shell:
         """        
-         cat {input.sv_all_combine} >> {output}
+         cat {input.sv_all_combine} | awk '(FNR==1)||($1!~"sv_id"){print $0}' >> {output}
         """               
                
 # run cyto-sv-ml model     
