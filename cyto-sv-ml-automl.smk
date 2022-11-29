@@ -37,7 +37,7 @@ rule all_sv_combine:
         expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)       
     shell:
         """        
-         cat {input.sv_all_combine} | awk '(FNR==1)||($1!~"sv_id"){print $0}' >> {output}
+         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sv_combine.sh {main_dir} {sample_all}
         """               
                
 # run cyto-sv-ml model     
@@ -45,7 +45,9 @@ rule cyto-sv-ml:
 #    conda:
 #        "conda-py37.yaml"
     output:
-       report(expand(OUTPUT_DIR+"/{sample}/{sample}.model_{analyses}.pdf", sample=SAMPLES, analyses=["type_class_summary","score_metrics", "confusion_matrix", "aucroc_curve"]))
+       report(expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_sv_ml_metrics_sub.csv", sv_type=['TRS','NONTRS']),
+              expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_svtype_class_summary.pdf", sv_type=['TRS','NONTRS']),
+              expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_{analyses}.pdf", sv_type=['TRS','NONTRS'], analyses=["confusion_matrix", "aucroc_curve"]))
     shell:
         'python {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML_tuning.py -s {sample_all} -o {sample_all}_ts -n 10'           
     
