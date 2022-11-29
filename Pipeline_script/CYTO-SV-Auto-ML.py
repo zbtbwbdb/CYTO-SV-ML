@@ -56,15 +56,15 @@ sv_data = pd.read_csv(outdir+'/../'+str(sv_cohort)+'.sv.all.combine_all',sep='\t
 sv_data=sv_data.rename(columns={sv_data.columns[sv_data.shape[1]-2]:'SUPP'})
 for sv_type in sv_type_vector:
     if sv_type=='trs':
-        sv_data=sv_data[~(sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS']))].copy()  
-        sv_data=sv_dataframe_transform.trs_sv_data_transform(sv_data)
+        sv_data_1=sv_data[~(sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS']))].copy()  
+        sv_data_1=sv_dataframe_transform.trs_sv_data_transform(sv_data_1)
     else:
-        sv_data=sv_data[sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS'])].copy()     
-        sv_data=sv_dataframe_transform.nontrs_sv_data_transform(sv_data)        
+        sv_data_1=sv_data[sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS'])].copy()     
+        sv_data_1=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_1)        
     # load sv data matrix with donor label
-    sv_data12_2=sv_data[sv_data['label']!=0].copy()
+    sv_data12_2=sv_data_1[sv_data_1['label']!=0].copy()
     sv_data12_2=sv_data12_2.drop(['sv_type'],axis=1)
-    sv_data12_0 = sv_data[sv_data['label']==0].copy()
+    sv_data12_0 = sv_data_1[sv_data_1['label']==0].copy()
     sv_data12_2.index=range(sv_data12_2.shape[0])
     y_false_sv=np.array(sv_data12_2[sv_data12_2['label']== -1].index)
     y_germline_sv=np.array(sv_data12_2[sv_data12_2['label']== 1].index)
