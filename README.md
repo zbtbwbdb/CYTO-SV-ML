@@ -4,7 +4,7 @@
 
 # Run CYTO-SV-ML Snakemake pipeline
 ### CYTO-SV-ML Snakemake pipeline workflow
-![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_Snakemake_wrorkflow.png)
+![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_Snakemake_workflow.png)
 ### Install CYTO-SV-ML Snakemake pipeline
 ```
 git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
