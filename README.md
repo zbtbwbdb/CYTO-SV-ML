@@ -16,13 +16,12 @@ conda env create cyto-sv-ml -f cyto-sv-ml.yaml
 change the config.yaml to your own environment settings
 ```
 conda activate cyto-sv-ml
-snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk
+snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --config sample=${sample}
 ```
 ### Run CYTO-SV-ML Snakemake AUTO-ML pipeline
 change the config.yaml for your own settings
 ```
 snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk
-python CYTO-SV-Auto-ML.py -s ${SV_cohort_name} -o ${output_dir} -k ${kfolds}
 ```
 
 # Run Shiny Web-portal 
