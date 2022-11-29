@@ -9,40 +9,26 @@ from pandas import read_csv
 from time import time
 from numpy import asarray, sqrt, argmax
 from statistics import median
-import sv_dataframe_transform
-
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import OneHotEncoder
-from sklearn import svm, metrics, datasets, preprocessing
-from sklearn.metrics import median_absolute_error, roc_curve, auc, accuracy_score, precision_score, recall_score, precision_recall_curve, confusion_matrix
-from sklearn.datasets import fetch_openml
-from sklearn.model_selection import train_test_split
-from sklearn.compose import make_column_transformer
-from sklearn.preprocessing import OneHotEncoder, label_binarize
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble import GradientBoostingClassifier, AdaBoostClassifier
-from sklearn.preprocessing import StandardScaler
 from itertools import *
-from sklearn.pipeline import make_pipeline
-from sklearn.linear_model import Ridge
-from sklearn.compose import TransformedTargetRegressor
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
-from sklearn.utils import Bunch
-from sklearn.datasets import fetch_species_distributions
+import sv_dataframe_transform
+from sklearn import svm, metrics, datasets, preprocessing
+from sklearn.preprocessing import LabelEncoder, label_binarize, StandardScaler, OrdinalEncoder, OneHotEncoder 
+from sklearn.ensemble import GradientBoostingRegressor,GradientBoostingClassifier, AdaBoostClassifier
+from sklearn.metrics import mean_squared_error, median_absolute_error, roc_curve, auc, accuracy_score, precision_score, recall_score, precision_recall_curve, confusion_matrix
 from sklearn.multiclass import OneVsRestClassifier
-from itertools import cycle
-from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+from sklearn.compose import make_column_transformer, TransformedTargetRegressor
+from sklearn.pipeline import make_pipeline
 from supervised.automl import AutoML 
 
 warnings.filterwarnings("ignore")
-#warnings.filterwarnings("ignore", category=DeprecationWarning) 
 
 ############################################################################################################################################################# 
 wd = sys.path[0]
 opts,args = getopt.getopt(sys.argv[1:],"s:o:k:")
 for op, value in opts:
 	if op == "-s":
-	    sv_cohort = str(value)
+	    cohort_name = str(value)
 	if op == "-o":
 	    outdir = str(value)
 	if op == "-k":
@@ -52,7 +38,7 @@ sv_type_vector=['trs','nontrs']
 # subprocess.call(["sudo","mkdir", "-p", outdir,'/cyto_sv_ml'])
 
 ############################################################################################################################################################# 
-sv_data = pd.read_csv(outdir+'/../'+str(sv_cohort)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
+sv_data = pd.read_csv(outdir+'/../'+str(cohort_name)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
 sv_data=sv_data.rename(columns={sv_data.columns[sv_data.shape[1]-2]:'SUPP'})
 for sv_type in sv_type_vector:
     if sv_type=='trs':
@@ -87,7 +73,7 @@ for sv_type in sv_type_vector:
     # tune sub-oversampling and split training/testing/validation 
     y = sv_data12_2.label.values
     X = sv_data12_2.drop(["label"], axis=1)
-    sv_ml_metrics_ts_file=open(outdir+'/cyto_sv_ml/'+str(sv_cohort)+'_'+sv_type+'_'+'sv_ml_metrics_sub.csv','w')  # open the text file for save model performance metrics 
+    sv_ml_metrics_ts_file=open(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+'sv_ml_metrics_sub.csv','w')  # open the text file for save model performance metrics 
     sv_ml_metrics_ts={'mic_pre':[],'mac_pre':[],'mic_rec':[],'mac_rec':[]}  
     label_avg=median([round(len(y_somatic_sv)*0.9),round(len(y_germline_sv)*0.9),round(len(y_false_sv)*0.9)])
     for k in range(kfolds):
@@ -124,7 +110,7 @@ for sv_type in sv_type_vector:
         print(np.unique(y12_2,return_counts=True))
 
         # train models with AutoML
-        automl = AutoML(mode="Explain", results_path=outdir+'/cyto_sv_ml/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_EXP')
+        automl = AutoML(mode="Explain", n_jobs= 6, results_path=outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_EXP')
         # model fitting
         automl.fit(s12, y12)
 
@@ -166,7 +152,7 @@ for sv_type in sv_type_vector:
         ax.axvline(x=cf_matrix.shape[0], color='k',linewidth=2)
         sns.set(rc={'figure.figsize':(10,10)})
         plt.show()
-        plt.savefig(outdir+'/cyto_sv_ml/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_model_confusion_matrix.pdf')
+        plt.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_model_confusion_matrix.pdf')
 
         # compute AUC  for model performance evaluation of multiclass
         y1 = label_binarize(y12_2, classes=[-1, 1, 2])
@@ -238,6 +224,6 @@ for sv_type in sv_type_vector:
         plt.title("Some extension of Receiver operating characteristic to multiclass")
         plt.legend(loc="lower right")
         plt.show()
-        plt.savefig(outdir+'/cyto_sv_ml/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_model_aucroc_curve.pdf')
+        plt.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_model_aucroc_curve.pdf')
     for key,value in sv_ml_metrics_ts.items():
-        sv_ml_metrics_ts_file.write(str(key)+'\t'+'\t'.join(str(w) for w in value)+'\n')
+        sv_ml_metrics_ts_file.write(str(key)+','+','.join(str(w) for w in value)+'\n')
