@@ -22,8 +22,6 @@ checkpoint all_sample_sv_ready:
         expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES)  
     output: 
         pathlib.Path(OUTPUT_DIR+"/log_files/sample_sv_ready.out")
-    params:
-        SAMPLES_vector=SAMPLES_vector
     run: 
         shell('echo {input} >> {output}')
 
@@ -36,14 +34,18 @@ rule all_sample_sv_combine:
         check_sample_file, 
         sv_all_combine=expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES) 
     output:
-        expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)       
+        expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)   
+    params:
+        smv=SAMPLES_vector        
     shell:
         """        
-         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {sample_all}
+         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {sample_all} {params.smv} 
         """               
                
 # run cyto-sv-ml model     
 rule cyto-sv-ml:
+    input:
+        expand(OUTPUT_DIR+"/{sample_all}.sv.all.combine_all", sample_all=sample_all)   
 #    conda:
 #        "conda-py37.yaml"
     output:
@@ -51,5 +53,4 @@ rule cyto-sv-ml:
               expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_svtype_class_summary.pdf", sv_type=['TRS','NONTRS']),
               expand(OUTPUT_DIR+"/"+sample_all+"_{sv_type}_{k}_{analyses}.pdf", sv_type=['TRS','NONTRS'], k=range(10), analyses=["confusion_matrix", "aucroc_curve"]))
     shell:
-        'python {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML_tuning.py -s {sample_all} -o {main_dir}/out/{sample_all}_ts -k 10'           
-    
+        'python {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML_tuning.py -s {sample_all} -o {main_dir}/out/{sample_all}_ts -k 10'          
