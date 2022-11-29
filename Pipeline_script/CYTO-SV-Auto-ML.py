@@ -1,13 +1,19 @@
 import numpy as np
 import scipy as sp
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
+import os, sys, subprocess, random, pickle, warnings, getopt, statistics
+from matplotlib.pyplot import *
 from pandas import read_csv
+from time import time
+from numpy import asarray, sqrt, argmax
+from statistics import median
+import sv_dataframe_transform
+
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
-from numpy import asarray
-from sklearn import svm, metrics, datasets
+from sklearn import svm, metrics, datasets, preprocessing
 from sklearn.metrics import median_absolute_error, roc_curve, auc, accuracy_score, precision_score, recall_score, precision_recall_curve, confusion_matrix
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
@@ -21,17 +27,10 @@ from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import Ridge
 from sklearn.compose import TransformedTargetRegressor
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
-from sklearn import preprocessing
-import os, sys, subprocess, random, pickle, warnings, getopt
-
-from time import time
 from sklearn.utils import Bunch
 from sklearn.datasets import fetch_species_distributions
-import statistics
 from sklearn.multiclass import OneVsRestClassifier
 from itertools import cycle
-from matplotlib.pyplot import *
-from numpy import sqrt, argmax
 from sklearn.metrics import mean_squared_error
 from supervised.automl import AutoML 
 
@@ -48,15 +47,21 @@ for op, value in opts:
 	    outdir = str(value)
 	if op == "-k":
 	    kfolds = int(value)
-sv_type_vector=['CNV']#, 'TRS']
-subprocess.call(["sudo", "rm", "-rf", outdir])
-subprocess.call(["mkdir", outdir])
+sv_type_vector=['trs','nontrs']
+# subprocess.call(["sudo", "rm", "-rf", outdir])
+# subprocess.call(["sudo","mkdir", "-p", outdir,'/cyto_sv_ml'])
 
 ############################################################################################################################################################# 
-
+sv_data = pd.read_csv(outdir+'/../'+str(sv_cohort)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
+sv_data=sv_data.rename(columns={sv_data.columns[sv_data.shape[1]-2]:'SUPP'})
 for sv_type in sv_type_vector:
+    if sv_type=='trs':
+        sv_data=sv_data[~(sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS']))].copy()  
+        sv_data=sv_dataframe_transform.trs_sv_data_transform(sv_data)
+    else:
+        sv_data=sv_data[sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS'])].copy()     
+        sv_data=sv_dataframe_transform.nontrs_sv_data_transform(sv_data)        
     # load sv data matrix with donor label
-    sv_data = pd.read_csv(str(sv_cohort)+'_'+sv_type+'.csv',sep='\t', header=0, index_col=None, keep_default_na=False)
     sv_data12_2=sv_data[sv_data['label']!=0].copy()
     sv_data12_2=sv_data12_2.drop(['sv_type'],axis=1)
     sv_data12_0 = sv_data[sv_data['label']==0].copy()
@@ -82,9 +87,9 @@ for sv_type in sv_type_vector:
     # tune sub-oversampling and split training/testing/validation 
     y = sv_data12_2.label.values
     X = sv_data12_2.drop(["label"], axis=1)
-    sv_ml_metrics_ts_file=open(outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+'sv_ml_metrics_sub.csv','w')  # open the text file for save model performance metrics 
+    sv_ml_metrics_ts_file=open(outdir+'/cyto_sv_ml/'+str(sv_cohort)+'_'+sv_type+'_'+'sv_ml_metrics_sub.csv','w')  # open the text file for save model performance metrics 
     sv_ml_metrics_ts={'mic_pre':[],'mac_pre':[],'mic_rec':[],'mac_rec':[]}  
-    label_avg=median(round(len(y_somatic_sv)*0.9),round(len(y_germline_sv)*0.9),round(len(y_false_sv)*0.9))
+    label_avg=median([round(len(y_somatic_sv)*0.9),round(len(y_germline_sv)*0.9),round(len(y_false_sv)*0.9)])
     for k in range(kfolds):
         np.random.seed(k*2)
         if label_avg<=round(len(y_false_sv)*0.9):
@@ -95,7 +100,7 @@ for sv_type in sv_type_vector:
             germline_sv_idx=np.random.choice(np.random.choice(y_germline_sv,round(len(y_germline_sv)*0.9),replace=False),label_avg,replace=False)
         else:
             germline_sv_idx=np.random.choice(np.random.choice(y_germline_sv,round(len(y_germline_sv)*0.9),replace=False),label_avg,replace=True)                   
-        if label_avg<=round(len(y_false_sv)*0.9):
+        if label_avg<=round(len(y_somatic_sv)*0.9):
             somatic_sv_idx=np.random.choice(np.random.choice(y_somatic_sv,round(len(y_somatic_sv)*0.9),replace=False),label_avg,replace=False)
         else:                
             somatic_sv_idx=np.random.choice(np.random.choice(y_somatic_sv,round(len(y_somatic_sv)*0.9),replace=False),label_avg,replace=True)
@@ -119,7 +124,7 @@ for sv_type in sv_type_vector:
         print(np.unique(y12_2,return_counts=True))
 
         # train models with AutoML
-        automl = AutoML(mode="Explain", results_path=outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_EXP')
+        automl = AutoML(mode="Explain", results_path=outdir+'/cyto_sv_ml/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_EXP')
         # model fitting
         automl.fit(s12, y12)
 
@@ -161,7 +166,7 @@ for sv_type in sv_type_vector:
         ax.axvline(x=cf_matrix.shape[0], color='k',linewidth=2)
         sns.set(rc={'figure.figsize':(10,10)})
         plt.show()
-        plt.savefig(outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_model_confusion_matrix.pdf')
+        plt.savefig(outdir+'/cyto_sv_ml/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_model_confusion_matrix.pdf')
 
         # compute AUC  for model performance evaluation of multiclass
         y1 = label_binarize(y12_2, classes=[-1, 1, 2])
@@ -233,6 +238,6 @@ for sv_type in sv_type_vector:
         plt.title("Some extension of Receiver operating characteristic to multiclass")
         plt.legend(loc="lower right")
         plt.show()
-        plt.savefig(outdir+'/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_model_aucroc_curve.pdf')
+        plt.savefig(outdir+'/cyto_sv_ml/'+str(sv_cohort)+'_'+sv_type+'_'+str(k)+'_ts_model_aucroc_curve.pdf')
     for key,value in sv_ml_metrics_ts.items():
         sv_ml_metrics_ts_file.write(str(key)+'\t'+'\t'.join(str(w) for w in value)+'\n')
