@@ -73,5 +73,5 @@ rule cyto_sv_ml:
     shell:
         """
         sudo mkdir -p {OUTPUT_DIR}/{sample_all}_ts/cyto_sv_ml &&
-        {py39_dir} {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML.py -s {sample_all} -o {OUTPUT_DIR}/{sample_all}_ts -k 5
+        {params.py39_dir} {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML.py -s {sample_all} -o {OUTPUT_DIR}/{sample_all}_ts -k 5
         """             
