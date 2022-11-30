@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import random 
 from itertools import repeat
 
@@ -164,3 +165,29 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs_2=sv_data_nontrs_2[sv_data_nontrs_2['sv_type']!='INV']
     sv_data_nontrs_2.loc[sv_data_nontrs_2['svtyper_score']=='.','svtyper_score']=0
     return sv_data_nontrs_2
+
+def sv_data_summary_plot(sv_data):
+    # count labels by  sv type
+    sv_datat2=sv_data.copy()
+    sv_datat2.insert(sv_datat2.shape[1], "count", list(repeat(1,sv_datat2.shape[0])), True)
+    sv_datat2=sv_datat2.loc[:,['sv_type','label','count']]
+    print(sv_datat2.groupby(['label']).sum())
+    SA=sv_datat2.loc[sv_datat2['label']==-1,['count']].sum().values
+    UL=sv_datat2.loc[sv_datat2['label']==0,['count']].sum().values
+    TG=sv_datat2.loc[sv_datat2['label']==1,['count']].sum().values
+    TC=sv_datat2.loc[sv_datat2['label']==2,['count']].sum().values
+    index=sv_datat2['sv_type'].unique()
+    df1 = pd.DataFrame({'class -1': SA,'class 1': TG,'class 2': TC}, index=index)
+    print(df1.iloc[0,:].sum())    
+    ax = df1.plot.bar(stacked=True, figsize=(5, 7),width = 0.2,legend=None)
+    d0=0
+    for i in range(df1.shape[1]):
+        data=df1.iloc[0,i]
+        ax.text(x=-0.05, y = d0+data/2 , s=f"{data}" , fontdict=dict(fontsize=10))
+        d0=d0+data
+    ax.set_yscale('linear')
+    ax.ticklabel_format(style='plain', axis='y')
+    ax.set_ylabel("SV number")
+    ax.set_ylim([0,pow(10,len(str(df1.iloc[0,:].sum())))])
+    fig = ax.figure
+    return fig
