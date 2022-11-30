@@ -34,7 +34,6 @@ for op, value in opts:
 	if op == "-k":
 	    kfolds = int(value)
 sv_type_vector=['trs','nontrs']
-# subprocess.call(["sudo", "rm", "-rf", outdir])
 # subprocess.call(["sudo","mkdir", "-p", outdir,'/cyto_sv_ml'])
 
 ############################################################################################################################################################# 
@@ -46,8 +45,11 @@ for sv_type in sv_type_vector:
         sv_data_1=sv_dataframe_transform.trs_sv_data_transform(sv_data_1)
     else:
         sv_data_1=sv_data[sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS'])].copy()     
-        sv_data_1=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_1)        
-    # load sv data matrix with donor label
+        sv_data_1=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_1)     
+    sv_summary_plot=sv_dataframe_transform.sv_data_summary_plot(sv_data_1)    
+    sv_summary_plot.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+'sv_summary_plot.pdf', transparent=True)  # open the plot file for save sv data summary   
+    
+    # load sv data matrix with label
     sv_data12_2=sv_data_1[sv_data_1['label']!=0].copy()
     sv_data12_2=sv_data12_2.drop(['sv_type'],axis=1)
     sv_data12_0 = sv_data_1[sv_data_1['label']==0].copy()
@@ -113,7 +115,13 @@ for sv_type in sv_type_vector:
         automl = AutoML(mode="Explain", n_jobs= 6, results_path=outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_EXP')
         # model fitting
         automl.fit(s12, y12)
-
+        
+        #copy shap feature importance plot
+        shap_plot=outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_EXP/'+'*_Default_Xgboost/learner_fold_0_shap_summary.png'
+        shap_plot2=outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_EXP/learner_fold_0_shap_summary.png'
+        os. system("sudo cp "+ shap_plot + " " + shap_plot2) 
+        
+        # model performance summary metrics 
         predictions = automl.predict_all(s)
         predictions['label'].value_counts()
         print("Test accuracy:", accuracy_score(y, predictions["label"].astype(int)))
