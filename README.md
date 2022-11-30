@@ -5,11 +5,24 @@
 # Run CYTO-SV-ML Snakemake pipeline
 ### CYTO-SV-ML Snakemake pipeline workflow
 ![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_Snakemake_workflow.png)
+
+### CONDA environment setup
+```
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+~/miniconda3/bin/conda init bash
+~/miniconda3/bin/conda init zsh
+```
+
 ### Install CYTO-SV-ML Snakemake pipeline
 ```
 git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
 cd CYTO-SV-ML
-conda env create cyto-sv-ml -f cyto-sv-ml.yaml
+conda install -n base -c conda-forge mamba
+mamba env create py27 -f py27.yaml
+mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
 ```
 
 ### Run CYTO-SV-ML Snakemake preprocess pipeline
@@ -47,17 +60,7 @@ http://127.0.0.1:8000/ # in a web browser
 http://cyto-sv-ml.b12x.org/
 
 
-# Related Resource Download
-
-## CONDA environment setup
-```
-mkdir -p ~/miniconda3
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-rm -rf ~/miniconda3/miniconda.sh
-~/miniconda3/bin/conda init bash
-~/miniconda3/bin/conda init zsh
-```
+# SV Related Resource Download
 
 ## SV Calling Pipeline Download
 ```
