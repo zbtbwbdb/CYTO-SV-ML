@@ -2,7 +2,8 @@
 main_dir=$1
 cyto_dv_ml_dir=$2
 sample=$3
-size_k=$4
+py27_dir=$4
+size_k=$5
 
 # SV sequence complexity run 
 
@@ -18,7 +19,7 @@ for bp in bpst bpend
     do
        echo ${bp}
        echo "# make bed file for SV breakpoints" && date       
-       bedtools getfasta -fi ${cyto_dv_ml_dir}/reference/hg38/hs38.fasta -bed ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.${bp} -fo ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.${bp}.fa.out
+       ${py27_dir}/bedtools getfasta -fi ${cyto_dv_ml_dir}/reference/hg38/hs38.fasta -bed ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.${bp} -fo ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.${bp}.fa.out
       
        # remove lowcomplex line with "NNNN"+ 1 "A/T/C/G"
        grep NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.${bp}.fa.out -n > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.${bp}.fa.out.cr
