@@ -49,7 +49,7 @@ cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
 ```
 
 ### Run CYTO-SV-ML Snakemake preprocess pipeline
-Please change the config.yaml according to your own environment settings
+Please change the config.yaml according to your own environment settings:
 {your_work_dir} for input/output dir
 {cyto_sv_ml_dir} for cyto_sv_ml dir and software subdir and reference subdir
 ```
