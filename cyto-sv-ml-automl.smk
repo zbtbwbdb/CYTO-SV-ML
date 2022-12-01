@@ -57,7 +57,7 @@ rule all_sample_sv_combine:
         expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)        
     shell:
         """  
-        cat {input} && bash {CYTO_SV_ML_DIR}/Pipeline_script/all_sample_sv_combine.sh {main_dir} {cohort_name} {input} 
+        cat {input} && bash {CYTO_SV_ML_DIR}/Pipeline_script/all_sample_sv_combine.sh {MAIN_DIR} {cohort_name} {input} 
         """               
                
 # run cyto-sv-ml model     
