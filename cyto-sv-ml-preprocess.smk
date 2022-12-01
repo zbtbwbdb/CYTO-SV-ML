@@ -87,7 +87,8 @@ rule svmerge_qc:
     input:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),           
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),    
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", size_k=SIZE_K, sample=SAMPLES)        
     params:
         sm = SAMPLES         
@@ -99,11 +100,11 @@ rule svmerge_qc:
 # run svtyper qc
 rule svtyper_qc:
     input:
-#        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, sv_caller=all_callers_svtyper, size_k=SIZE_K, sv_type=['trs','nontrs'])
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])        
     output:
-#        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])  
-        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=all_callers_svtyper)           
+        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyped.vcf", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']).
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])                       
     params:
         sm = SAMPLES  
     conda:
@@ -145,8 +146,7 @@ rule sv_database_ann:
 rule sv_info_extract:
     input:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers), 
- #       expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),           
-        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=all_callers_svtyper)          
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])            
     output:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_info", sample=SAMPLES, size_k=SIZE_K)
     params:
