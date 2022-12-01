@@ -64,7 +64,7 @@ http://cyto-sv-ml.b12x.org/
 
 ## SV Calling Pipeline Download
 ```
-Parliament: docker pull docker.io/zatawada/parliament2:master # https://github.com/dnanexus/parliament2
+Parliament: docker pull docker.io/dnanexus/parliament2:master # https://github.com/dnanexus/parliament2
 ChromoSeq: docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # https://github.com/genome/docker-basespace_chromoseq
 ```
 
