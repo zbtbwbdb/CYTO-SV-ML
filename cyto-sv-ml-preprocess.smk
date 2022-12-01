@@ -118,10 +118,11 @@ rule sv_seq_complex:
     output:
         expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES, size_k=size_k)
     params:
-        sm = SAMPLES        
+        sm = SAMPLES,
+        py27_dir=config['py27_dir']      
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_seq_complex.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {size_k}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_seq_complex.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir} {size_k}     
         """
 
 # run sv database annotation      
