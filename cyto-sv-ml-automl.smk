@@ -16,15 +16,15 @@ SAMPLES = list(samples_information['id'])
 GENDERS = list(samples_information['sex'])
 SAMPLES_vector='@'.join(str(sm) for sm in SAMPLES)
 
-#INPUT_DIR = pathlib.Path(config['main_dir']+'/in')
-#OUTPUT_DIR = pathlib.Path(config['main_dir']+'/out')
-main_dir = config['main_dir']
+MAIN_DIR = config['main_dir']
 INPUT_DIR = config['main_dir']+'/in'
 OUTPUT_DIR = config['main_dir']+'/out'
 LOG_DIR = config['main_dir']+'/out/log'
-REF_DIR = config['main_dir']+'/reference'
-SOFTWARE_DIR = config['main_dir']+'/software'
-DATABASE_DIR = config['main_dir']+'/SV_database'
+CYTO_SV_ML_DIR = config['cyto_dv_ml_dir']
+SOFTWARE_DIR = config['cyto_dv_ml_dir']+'/software'
+DATABASE_DIR = config['cyto_dv_ml_dir']+'/SV_database'
+parliment_docker = config['parliment_docker']
+chromoseq_docker = config['chromoseq_docker']
 parliment2_sv_callers = config['parliment2_sv_callers']
 chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
@@ -56,7 +56,7 @@ rule all_sample_sv_combine:
         expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)        
     shell:
         """  
-        cat {input} && bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/all_sample_sv_combine.sh {main_dir} {cohort_name} {input} 
+        cat {input} && bash {CYTO_SV_ML_DIR}/Pipeline_script/all_sample_sv_combine.sh {main_dir} {cohort_name} {input} 
         """               
                
 # run cyto-sv-ml model     
@@ -76,5 +76,5 @@ rule cyto_sv_ml:
     shell:
         """
         sudo mkdir -p {OUTPUT_DIR}/{cohort_name}/cyto_sv_ml &&
-        {params.py39_dir} {main_dir}/software/CYTO-SV-ML/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs} 
+        {params.py39_dir} {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs} 
         """             
