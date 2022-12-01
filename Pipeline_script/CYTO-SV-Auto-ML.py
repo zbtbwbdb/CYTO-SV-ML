@@ -96,8 +96,8 @@ for sv_type in sv_type_vector:
 
         y12 = sv_data12_2.iloc[idx,:].label.values
         X12 = sv_data12_2.iloc[idx,:].drop(["label"], axis=1)
-        y12_2 = sv_data12_2.drop(sv_data12_2.index[[idx]]).label.values
-        X12_2 = sv_data12_2.drop(sv_data12_2.index[[idx]]).drop(["label"], axis=1)
+        y12_2 = sv_data12_2.drop(idx).label.values
+        X12_2 = sv_data12_2.drop(idx).drop(["label"], axis=1)
         X12_0 = sv_data12_0.drop(["label"], axis=1)
         s12=model1.fit_transform(X12)
         s=model1.transform(X)
