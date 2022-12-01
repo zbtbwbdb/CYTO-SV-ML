@@ -30,7 +30,7 @@ chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
 all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
 size=int(config['size'])
-size_k=round(size/1000)
+SIZE_K=round(size/1000)
 #report: OUTPUT_DIR+"/report/workflow.rst"
 
 rule all:
@@ -40,7 +40,7 @@ rule all:
 #  checkpoint for all sample sv data   
 checkpoint all_sample_sv_ready:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=size_k)  
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=SIZE_K)  
     output: 
         pathlib.Path(OUTPUT_DIR+"/log_files/sample_sv_ready.out")
     run: 
