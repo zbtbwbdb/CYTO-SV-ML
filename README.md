@@ -16,6 +16,22 @@ rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init zsh
 ```
 
+### Parliament and ChromoSeq Dockfile Download
+```
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install docker-ce docker-ce-cli containerd.io
+sudo systemctl start docker
+sudo docker pull docker.io/dnanexus/parliament2:master # Parliament: https://github.com/dnanexus/parliament2
+sudo docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # ChromoSeq: https://github.com/genome/docker-basespace_chromoseq
+```
+
+### hg38 reference genome Download
+```
+Please donwload hg38 refernece genome into reference folder from Broad Institute Google Cloud: 
+https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/
+```
+
 ### Install CYTO-SV-ML Snakemake pipeline
 ```
 git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
@@ -26,7 +42,7 @@ mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
 ```
 
 ### Run CYTO-SV-ML Snakemake preprocess pipeline
-change the config.yaml to your own environment settings
+Please change the config.yaml according to your own environment settings
 ```
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --config sample=${sample} gender=${gender}
@@ -61,18 +77,6 @@ http://cyto-sv-ml.b12x.org/
 
 
 # SV Related Resource Download
-
-## SV Calling Pipeline Download
-```
-Parliament: docker pull docker.io/dnanexus/parliament2:master # https://github.com/dnanexus/parliament2
-ChromoSeq: docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # https://github.com/genome/docker-basespace_chromoseq
-```
-
-## hg38 reference genome Download
-```
-Please donwload hg38 refernece genome from Broad Institute Google Cloud: 
-https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/
-```
 
 ## SV database Download (The official websites contain detailed information)
 ```
