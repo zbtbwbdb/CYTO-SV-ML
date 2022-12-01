@@ -26,12 +26,12 @@ chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
 all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
 size=int(config['size'])
-size_k=round(size/1000)
+SIZE_K=round(size/1000)
 #report: OUTPUT_DIR+"/report/workflow.rst"
     
 rule all:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES)  
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=SIZE_K)  
         
 # Run chromoseq_sv
 rule chromoseq_sv:
@@ -73,8 +73,8 @@ rule sv_vcf_tf:
     input:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller=all_callers)
     output:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.${size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=size_k, sv_type=['trs','nontrs']),        
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.${size_k}k.sv_info.sim", sample=SAMPLES, sv_caller=all_callers)
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs']),        
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, sv_caller=all_callers)
     params:
         sm = SAMPLES,   
     shell:
@@ -85,10 +85,10 @@ rule sv_vcf_tf:
 # run sv merge
 rule svmerge_qc:
     input:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.${size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=size_k, sv_type=['trs','nontrs'])
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=size_k, sv_type=['trs','nontrs']),
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all", size_k=size_k, sample=SAMPLES)        
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", size_k=SIZE_K, sample=SAMPLES)        
     params:
         sm = SAMPLES         
     shell:
@@ -99,9 +99,9 @@ rule svmerge_qc:
 # run svtyper qc
 rule svtyper_qc:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.{sv_type}_tf.all", sample=SAMPLES, sv_caller=all_callers_svtyper, size_k=size_k, sv_type=['trs','nontrs'])
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, sv_caller=all_callers_svtyper, size_k=SIZE_K, sv_type=['trs','nontrs'])
     output:
-        expand(OUTPUT_DIR+"/{sample}/${sample}.${size_k}k.{sv_type}_tf.all.svtyper.sv_info", sample=SAMPLES, size_k=size_k, sv_type=['trs','nontrs'])  
+        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])  
     params:
         sm = SAMPLES  
     conda:
@@ -114,9 +114,9 @@ rule svtyper_qc:
 # run sv breakpoint sequence complexity       
 rule sv_seq_complex:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all", sample=SAMPLES, size_k=size_k)
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", sample=SAMPLES, size_k=SIZE_K)
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES, size_k=size_k)
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES, size_k=SIZE_K)
     params:
         sm = SAMPLES,
         py27_dir=config['py27_dir']      
@@ -128,9 +128,9 @@ rule sv_seq_complex:
 # run sv database annotation      
 rule sv_database_ann:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=size_k, sv_type=['trs','nontrs'])   
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])   
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=size_k)
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=SIZE_K)
     params:
         sm = SAMPLES,  
         py27_dir=config['py27_dir']
@@ -142,9 +142,9 @@ rule sv_database_ann:
 # run sv vcf info extraction          
 rule sv_info_extract:
     input:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.${size_k}k.sv_info.sim", sample=SAMPLES, size_k=size_k, sv_caller=all_callers)  
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers)  
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.sv_id_mapping.all_info", sample=SAMPLES, size_k=size_k)
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_info", sample=SAMPLES, size_k=SIZE_K)
     params:
         sm = SAMPLES         
     shell:
@@ -155,10 +155,10 @@ rule sv_info_extract:
 # combine all sv features           
 rule sv_all_combine:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.sv_id_mapping.{feature}", sample=SAMPLES, size_k=size_k, feature=['all_anno','all_info']),
-        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES, size_k=size_k)       
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.{feature}", sample=SAMPLES, size_k=SIZE_K, feature=['all_anno','all_info']),
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES, size_k=SIZE_K)       
     output:
-        report(expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=size_k))  
+        report(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=SIZE_K))  
     params:     
         sm = SAMPLES   
     shell:
