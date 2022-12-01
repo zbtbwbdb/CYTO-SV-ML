@@ -93,7 +93,7 @@ rule svmerge_qc:
         sm = SAMPLES         
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/svmerge_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {size_k}       
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/svmerge_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {SIZE_K}       
         """
         
 # run svtyper qc
@@ -108,7 +108,7 @@ rule svtyper_qc:
         "conda-py27.yaml"          
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/svtyper_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {size_k}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/svtyper_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {SIZE_K}     
         """
         
 # run sv breakpoint sequence complexity       
@@ -136,7 +136,7 @@ rule sv_database_ann:
         py27_dir=config['py27_dir']
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_database_ann.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir} {size_k}      
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_database_ann.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir} {SIZE_K}      
         """
 
 # run sv vcf info extraction          
@@ -149,7 +149,7 @@ rule sv_info_extract:
         sm = SAMPLES         
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_info_extract.sh {MAIN_DIR} {params.sm} {size_k}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_info_extract.sh {MAIN_DIR} {params.sm} {SIZE_K}     
         """
 
 # combine all sv features           
@@ -163,5 +163,5 @@ rule sv_all_combine:
         sm = SAMPLES   
     shell:
         """     
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_all_combine.sh {MAIN_DIR} {params.sm} {size_k}  
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_all_combine.sh {MAIN_DIR} {params.sm} {SIZE_K}  
         """
