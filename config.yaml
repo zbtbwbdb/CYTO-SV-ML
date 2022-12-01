@@ -3,7 +3,7 @@ cohort_name: '{your_cohort_name}'
 
 # directories
 main_dir: '{your_work_dir}'
-CYTO_SV_ML_dir: '{CYTO_SV_ML_dir}'
+cyto_dv_ml_dir: '{cyto_dv_ml_dir}'
 py27_dir: '{your_work_dir}/mambaforge/envs/py27/bin/python'
 # reference_dir:
 # software_dir:
