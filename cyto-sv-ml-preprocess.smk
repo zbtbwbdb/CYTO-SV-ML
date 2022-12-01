@@ -122,7 +122,7 @@ rule sv_seq_complex:
         py27_dir=config['py27_dir']      
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_seq_complex.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir} {size_k}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_seq_complex.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir} {SIZE_K}     
         """
 
 # run sv database annotation      
