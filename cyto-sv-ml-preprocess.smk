@@ -26,11 +26,12 @@ chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
 all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
 size=int(config['size'])
+size_k=round(size/1000)
 #report: OUTPUT_DIR+"/report/workflow.rst"
     
 rule all:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES)  
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES)  
         
 # Run chromoseq_sv
 rule chromoseq_sv:
@@ -72,95 +73,94 @@ rule sv_vcf_tf:
     input:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller=all_callers)
     output:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.10k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, sv_type=['trs','nontrs']),        
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.10k.sv_info.sim", sample=SAMPLES, sv_caller=all_callers)
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.${size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, sv_type=['trs','nontrs']),        
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.${size_k}k.sv_info.sim", sample=SAMPLES, sv_caller=all_callers)
     params:
         sm = SAMPLES,   
-        size=size
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_vcf_tf.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.size}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_vcf_tf.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {size}     
         """
         
 # run sv merge
 rule svmerge_qc:
     input:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.10k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, sv_type=['trs','nontrs'])
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.${size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, sv_type=['trs','nontrs'])
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.{sv_type}", sample=SAMPLES, sv_type=['trs','nontrs']),
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all", sample=SAMPLES)        
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.{sv_type}", sample=SAMPLES, sv_type=['trs','nontrs']),
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all", sample=SAMPLES)        
     params:
         sm = SAMPLES         
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/svmerge_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/svmerge_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {size_k}       
         """
         
 # run svtyper qc
 rule svtyper_qc:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.{sv_type}_tf.all", sample=SAMPLES, sv_caller=all_callers_svtyper, sv_type=['trs','nontrs'])
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.{sv_type}_tf.all", sample=SAMPLES, sv_caller=all_callers_svtyper, sv_type=['trs','nontrs'])
     output:
-        expand(OUTPUT_DIR+"/{sample}/${sample}.10k.{sv_type}_tf.all.svtyper.sv_info", sample=SAMPLES, sv_type=['trs','nontrs'])  
+        expand(OUTPUT_DIR+"/{sample}/${sample}.${size_k}k.{sv_type}_tf.all.svtyper.sv_info", sample=SAMPLES, sv_type=['trs','nontrs'])  
     params:
         sm = SAMPLES  
     conda:
         "conda-py27.yaml"          
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/svtyper_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/svtyper_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {size_k}     
         """
         
 # run sv breakpoint sequence complexity       
 rule sv_seq_complex:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all", sample=SAMPLES)
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all", sample=SAMPLES)
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES)
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES)
     params:
         sm = SAMPLES        
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_seq_complex.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_seq_complex.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {size_k}     
         """
 
 # run sv database annotation      
 rule sv_database_ann:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.{sv_type}", sample=SAMPLES, sv_type=['trs','nontrs'])   
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.{sv_type}", sample=SAMPLES, sv_type=['trs','nontrs'])   
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES)
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES)
     params:
         sm = SAMPLES,  
         py27_dir=config['py27_dir']
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_database_ann.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir}      
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_database_ann.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir} {size_k}      
         """
 
 # run sv vcf info extraction          
 rule sv_info_extract:
     input:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.10k.sv_info.sim", sample=SAMPLES, sv_caller=all_callers)  
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.${size_k}k.sv_info.sim", sample=SAMPLES, sv_caller=all_callers)  
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.sv_id_mapping.all_info", sample=SAMPLES)
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.sv_id_mapping.all_info", sample=SAMPLES)
     params:
         sm = SAMPLES         
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_info_extract.sh {MAIN_DIR} {params.sm}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_info_extract.sh {MAIN_DIR} {params.sm} {size_k}     
         """
 
 # combine all sv features           
 rule sv_all_combine:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.sv_id_mapping.{feature}", sample=SAMPLES,feature=['all_anno','all_info']),
-        expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES)       
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.sv_id_mapping.{feature}", sample=SAMPLES,feature=['all_anno','all_info']),
+        expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES)       
     output:
-        report(expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES))  
+        report(expand(OUTPUT_DIR+"/{sample}/{sample}.${size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES))  
     params:     
         sm = SAMPLES   
     shell:
         """     
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_all_combine.sh {MAIN_DIR} {params.sm}  
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_all_combine.sh {MAIN_DIR} {params.sm} {size_k}  
         """
