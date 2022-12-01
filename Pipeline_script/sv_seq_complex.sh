@@ -8,8 +8,8 @@ size_k=$4
 
 echo "# extract SV coordinate information" && date
 python ${cyto_dv_ml_dir}/Pipeline_script/sv_vcf_bed_tf.py ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all
-awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else if ($2>c) {$2=c-150;$3=c+150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else if ($2<150){$2=1;$3=300; print $1"\t"$2"\t"$3"\t"$5"\t"$6}}' ${main_dir}/reference/hg38_chromosome_size.txt ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.bpst
-awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else {$2=$3-150; $3=$3+150;  print $1"\t"$2"\t"$3"\t"$5"\t"$6}}' ${main_dir}/reference/hg38_chromosome_size.txt ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.bpend
+awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else if ($2>c) {$2=c-150;$3=c+150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else if ($2<150){$2=1;$3=300; print $1"\t"$2"\t"$3"\t"$5"\t"$6}}' ${cyto_dv_ml_dir}/reference/hg38_chromosome_size.txt ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.bpst
+awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else {$2=$3-150; $3=$3+150;  print $1"\t"$2"\t"$3"\t"$5"\t"$6}}' ${cyto_dv_ml_dir}/reference/hg38_chromosome_size.txt ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.bpend
 
 
 export PATH=${main_dir}/software/SeqComplex:$PATH
