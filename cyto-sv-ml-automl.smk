@@ -72,10 +72,9 @@ rule cyto_sv_ml:
         report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_1_ts_model_aucroc_curve.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model_aucroc_curve","sv type": "trs","data type": "plot" }),    
         report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_1_ts_model_aucroc_curve.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model aucroc curve","sv type": "nontrs","data type": "plot" })             
     params:
-        py39_dir=config['py39_dir'] 
         kfs=config['kfolds_shuffle'] 
     shell:
         """
         sudo mkdir -p {OUTPUT_DIR}/{cohort_name}/cyto_sv_ml &&
-        {params.py39_dir} {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs} 
+        python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs} 
         """             
