@@ -68,6 +68,12 @@ Parliament: docker pull docker.io/dnanexus/parliament2:latest #https://github.co
 ChromoSeq: docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master #https://github.com/genome/docker-basespace_chromoseq
 ```
 
+## hg38 reference genome Download
+```
+Please donwload hg38 refernece genome from Broad Institute Google Cloud: 
+https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/
+```
+
 ## SV database Download (The official websites contain detailed information)
 ```
 gnomAD: https://gnomad.broadinstitute.org/downloads
