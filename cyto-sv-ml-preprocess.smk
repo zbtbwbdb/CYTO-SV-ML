@@ -99,9 +99,11 @@ rule svmerge_qc:
 # run svtyper qc
 rule svtyper_qc:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, sv_caller=all_callers_svtyper, size_k=SIZE_K, sv_type=['trs','nontrs'])
+#        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, sv_caller=all_callers_svtyper, size_k=SIZE_K, sv_type=['trs','nontrs'])
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])        
     output:
-        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])  
+#        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])  
+        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=all_callers_svtyper)           
     params:
         sm = SAMPLES  
     conda:
@@ -142,7 +144,9 @@ rule sv_database_ann:
 # run sv vcf info extraction          
 rule sv_info_extract:
     input:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers)  
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers), 
+ #       expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),           
+        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyper.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=all_callers_svtyper)          
     output:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_info", sample=SAMPLES, size_k=SIZE_K)
     params:
