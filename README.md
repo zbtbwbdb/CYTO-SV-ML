@@ -14,6 +14,7 @@ bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
 ~/miniconda3/bin/conda init zsh
+conda install -n base -c conda-forge mamba
 ```
 
 ### parliament and chromoseq Dockfile Download
@@ -28,9 +29,10 @@ sudo docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # Chro
 
 ### hg38 reference genome Download
 ```
-Please donwload hg38 refernece genome ( CYTO-SV-ML/reference/hg38/hs38.fasta, CYTO-SV-ML/reference/hg38/hs38.fasta.fai) from Broad Institute Google Cloud: 
-https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/
-# VEP GRCh38
+# hg38 from Broad Institute Google Cloud (https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/)
+CYTO-SV-ML/reference/hg38/hs38.fasta
+CYTO-SV-ML/reference/hg38/hs38.fasta.fai
+# VEP GRCh38 from ensembl
 cd CYTO-SV-ML/reference
 curl -O https://ftp.ensembl.org/pub/release-108/variation/vep/homo_sapiens_vep_104_GRCh38.tar.gz
 tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
@@ -41,7 +43,6 @@ cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
 ```
 git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
 cd CYTO-SV-ML
-conda install -n base -c conda-forge mamba
 mamba env create py27 -f py27.yaml
 mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
 ```
@@ -62,7 +63,6 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${out_di
 The analysis summary of 494 MDS cohort using CYTO-SV-ML pipeline 
 ### Install Shiny Web-portal
 ```
-git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
 cd CYTO-SV-ML
 docker build -t CYTO-SV-ML:main .
 ```
