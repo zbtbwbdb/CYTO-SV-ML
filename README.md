@@ -28,6 +28,14 @@ sudo docker pull docker.io/dnanexus/parliament2:master # Parliament: https://git
 sudo docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # ChromoSeq: https://github.com/genome/docker-basespace_chromoseq
 ```
 
+### Install CYTO-SV-ML Snakemake pipeline
+```
+git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
+cd CYTO-SV-ML
+mamba env create py27 -f py27.yaml
+mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
+```
+
 ### hg38 reference genome Download
 ```
 # hg38 from Broad Institute Google Cloud (https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/)
@@ -38,14 +46,6 @@ cd CYTO-SV-ML/reference
 curl -O https://ftp.ensembl.org/pub/release-108/variation/vep/homo_sapiens_vep_104_GRCh38.tar.gz
 tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
 cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
-```
-
-### Install CYTO-SV-ML Snakemake pipeline
-```
-git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
-cd CYTO-SV-ML
-mamba env create py27 -f py27.yaml
-mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
 ```
 
 ### Run CYTO-SV-ML Snakemake preprocess pipeline
