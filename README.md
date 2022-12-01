@@ -64,8 +64,8 @@ http://cyto-sv-ml.b12x.org/
 
 ## SV Calling Pipeline Download
 ```
-Parliament: docker pull docker.io/zatawada/parliament2:master #https://github.com/dnanexus/parliament2
-ChromoSeq: docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master #https://github.com/genome/docker-basespace_chromoseq
+Parliament: docker pull docker.io/zatawada/parliament2:master # https://github.com/dnanexus/parliament2
+ChromoSeq: docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # https://github.com/genome/docker-basespace_chromoseq
 ```
 
 ## hg38 reference genome Download
