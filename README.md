@@ -34,6 +34,7 @@ git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
 cd CYTO-SV-ML
 mamba env create py27 -f py27.yaml
 mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
+# pip install --upgrade snakemake
 ```
 
 ### hg38 reference genome Download
