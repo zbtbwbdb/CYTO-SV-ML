@@ -65,12 +65,16 @@ rule cyto_sv_ml:
     input:
         expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)   
     output:
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_sv_summary_plot.pdf", cohort_name=cohort_name,k=0), category="sv data summary", subcategory="data",labels={"data name" : "sv type distribution","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_sv_summary_plot.pdf", cohort_name=cohort_name,k=0), category="sv data summary", subcategory="data",labels={"data name" : "sv type distribution","sv type": "nontrs","data type": "plot" }),         
         report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_sv_ml_metrics_sub.csv", cohort_name=cohort_name), category="sv model summary", subcategory="model", labels={"data name" : "model performance metrics","sv type":'trs', "data type": "table" }), 
         report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_sv_ml_metrics_sub.csv", cohort_name=cohort_name), category="sv model summary", subcategory="model", labels={"data name" : "model performance metrics","sv type":'nontrs', "data type": "table" }), 
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_1_ts_model_confusion_matrix.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix ","sv type": "trs","data type": "plot" }),    
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_1_ts_model_confusion_matrix.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix","sv type": "nontrs","data type": "plot" }),
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_1_ts_model_aucroc_curve.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model_aucroc_curve","sv type": "trs","data type": "plot" }),    
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_1_ts_model_aucroc_curve.pdf", cohort_name=cohort_name), category="sv model summary", subcategory="model",labels={"data name" : "model aucroc curve","sv type": "nontrs","data type": "plot" })             
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_EXP/learner_fold_0_shap_summary.png", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "shap feature importance","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_EXP/learner_fold_0_shap_summary.png", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "shap feature importance","sv type": "nontrs","data type": "plot" }),        
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_model_confusion_matrix.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix ","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_model_confusion_matrix.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix","sv type": "nontrs","data type": "plot" }),
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_model_aucroc_curve.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model_aucroc_curve","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_model_aucroc_curve.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model aucroc curve","sv type": "nontrs","data type": "plot" })         
     params:
         kfs=config['kfolds_shuffle'] 
     shell:
