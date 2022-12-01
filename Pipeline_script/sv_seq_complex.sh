@@ -1,22 +1,23 @@
 #!/bin/bash
 main_dir=$1
-sample=$2
+cyto_dv_ml_dir=$2
+sample=$3
 
 # SV sequence complexity run 
 
 echo "# extract SV coordinate information" && date
-python ${main_dir}/software/CYTO-SV-ML/Pipeline_script/sv_vcf_bed_tf.py ${main_dir}/out/${sample}/${sample}.10k.sv.all
+python ${cyto_dv_ml_dir}/Pipeline_script/sv_vcf_bed_tf.py ${main_dir}/out/${sample}/${sample}.10k.sv.all
 awk 'FNR==NR{a[$1];b[$1]=$2;next}{c=b[$1]-150 ; if (($2>=150)&&($2<=c)) {$2=$2-150; $3=$2+150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else if ($2>c) {$2=c-150;$3=c+150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else if ($2<150){$2=1;$3=300; print $1"\t"$2"\t"$3"\t"$5"\t"$6}}' ${main_dir}/reference/hg38_chromosome_size.txt ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.bpst
 awk 'FNR==NR{a[$1];b[$1]=$2;next}{$1=$4; $4=$1; c=b[$1]-150 ; if ($3>=c) {$3=c+150;$2=c-150; print $1"\t"$2"\t"$3"\t"$5"\t"$6} else {$2=$3-150; $3=$3+150;  print $1"\t"$2"\t"$3"\t"$5"\t"$6}}' ${main_dir}/reference/hg38_chromosome_size.txt ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.bpend
 
 
 export PATH=${main_dir}/software/SeqComplex:$PATH
-cd ${main_dir}/software/SeqComplex
+cd ${cyto_dv_ml_dir}/software/SeqComplex
 for bp in bpst bpend
     do
        echo ${bp}
        echo "# make bed file for SV breakpoints" && date       
-       bedtools getfasta -fi ${main_dir}/reference/hg38/hs38.fasta -bed ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp} -fo ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out
+       bedtools getfasta -fi ${cyto_dv_ml_dir}/reference/hg38/hs38.fasta -bed ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp} -fo ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out
       
        # remove lowcomplex line with "NNNN"+ 1 "A/T/C/G"
        grep NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out -n > ${main_dir}/out/${sample}/${sample}.10k.sv.all.bed.${bp}.fa.out.cr
