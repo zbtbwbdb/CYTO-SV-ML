@@ -28,7 +28,7 @@ sudo docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # Chro
 
 ### hg38 reference genome Download
 ```
-Please donwload hg38 refernece genome into reference folder from Broad Institute Google Cloud: 
+Please donwload hg38 refernece genome ( CYTO-SV-ML/reference/hg38.fasta, CYTO-SV-ML/reference/hg38.fasta.fai) from Broad Institute Google Cloud: 
 https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/
 ```
 
