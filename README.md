@@ -52,7 +52,7 @@ cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
 Please change the config.yaml according to your own environment settings
 ```
 conda activate cyto-sv-ml
-snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --config sample=${sample} gender=${gender}
+snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender}
 ```
 ### Run CYTO-SV-ML Snakemake modeling pipeline
 ```
