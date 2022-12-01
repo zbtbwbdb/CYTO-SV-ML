@@ -28,12 +28,13 @@ sudo docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # Chro
 
 ### hg38 reference genome Download
 ```
-Please donwload hg38 refernece genome ( CYTO-SV-ML/reference/hs38.fasta, CYTO-SV-ML/reference/hs38.fasta.fai) from Broad Institute Google Cloud: 
+Please donwload hg38 refernece genome ( CYTO-SV-ML/reference/hg38/hs38.fasta, CYTO-SV-ML/reference/hg38/hs38.fasta.fai) from Broad Institute Google Cloud: 
 https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/
 # VEP GRCh38
 cd CYTO-SV-ML/reference
 curl -O https://ftp.ensembl.org/pub/release-108/variation/vep/homo_sapiens_vep_104_GRCh38.tar.gz
 tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
+cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
 ```
 
 ### Install CYTO-SV-ML Snakemake pipeline
