@@ -12,13 +12,13 @@ configfile: "config.yaml"
 SAMPLES = config['sample']
 GENDERS = config['gender']
 
-main_dir = config['main_dir']
+MAIN_DIR = config['main_dir']
 INPUT_DIR = config['main_dir']+'/in'
 OUTPUT_DIR = config['main_dir']+'/out'
 LOG_DIR = config['main_dir']+'/out/log'
-REF_DIR = config['main_dir']+'/reference'
-SOFTWARE_DIR = config['main_dir']+'/software'
-DATABASE_DIR = config['main_dir']+'/SV_database'
+CYTO_SV_ML_DIR = config['cyto_dv_ml_dir']
+SOFTWARE_DIR = config['cyto_dv_ml_dir']+'/software'
+DATABASE_DIR = config['cyto_dv_ml_dir']+'/SV_database'
 parliment_docker = config['parliment_docker']
 chromoseq_docker = config['chromoseq_docker']
 parliment2_sv_callers = config['parliment2_sv_callers']
@@ -47,7 +47,7 @@ rule chromoseq_sv:
         gd = GENDERS
     shell:
         """
-         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/run_chromoseq.sh {main_dir} {params.chromoseq_docker} {params.sm} {params.gd} 
+         bash {CYTO_SV_ML_DIR}/Pipeline_script/run_chromoseq.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.chromoseq_docker} {params.sm} {params.gd} 
         """
         
 # Run parliment2_sv
@@ -64,7 +64,7 @@ rule parliment2_sv:
         sm = SAMPLES
     shell:   
          """   
-         bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/run_parliment2.sh {main_dir} {params.parliment_docker} {params.sm} 
+         bash {CYTO_SV_ML_DIR}/Pipeline_script/run_parliment2.sh {MAIN_DIR} {params.parliment_docker} {params.sm} 
          """    
         
 # #  SV VCF preparation
@@ -79,7 +79,7 @@ rule sv_vcf_tf:
         size=size
     shell:
         """        
-        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/sv_vcf_tf.sh {main_dir} {params.sm} {params.size}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_vcf_tf.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.size}     
         """
         
 # run sv merge
@@ -93,7 +93,7 @@ rule svmerge_qc:
         sm = SAMPLES         
     shell:
         """        
-        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/svmerge_qc.sh {main_dir} {params.sm}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/svmerge_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm}     
         """
         
 # run svtyper qc
@@ -103,10 +103,12 @@ rule svtyper_qc:
     output:
         expand(OUTPUT_DIR+"/{sample}/${sample}.10k.{sv_type}_tf.all.svtyper.sv_info", sample=SAMPLES, sv_type=['trs','nontrs'])  
     params:
-        sm = SAMPLES         
+        sm = SAMPLES  
+    conda:
+        "conda-py27.yaml"          
     shell:
         """        
-        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/svtyper_qc.sh {main_dir} {params.sm}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/svtyper_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm}     
         """
         
 # run sv breakpoint sequence complexity       
@@ -116,12 +118,10 @@ rule sv_seq_complex:
     output:
         expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES)
     params:
-        sm = SAMPLES   
-    conda:
-        "conda-py27.yaml"        
+        sm = SAMPLES        
     shell:
         """        
-        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/sv_seq_complex.sh {main_dir} {params.sm}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_seq_complex.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm}     
         """
 
 # run sv database annotation      
@@ -130,14 +130,12 @@ rule sv_database_ann:
         expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.{sv_type}", sample=SAMPLES, sv_type=['trs','nontrs'])   
     output:
         expand(OUTPUT_DIR+"/{sample}/{sample}.10k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES)
-#     conda:
-#         "conda-py27.yaml"
     params:
         sm = SAMPLES,  
         py27_dir=config['py27_dir']
     shell:
         """        
-        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/sv_database_ann.sh {main_dir} {params.sm} {params.py27_dir}      
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_database_ann.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir}      
         """
 
 # run sv vcf info extraction          
@@ -150,7 +148,7 @@ rule sv_info_extract:
         sm = SAMPLES         
     shell:
         """        
-        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/sv_info_extract.sh {main_dir} {params.sm}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_info_extract.sh {MAIN_DIR} {params.sm}     
         """
 
 # combine all sv features           
@@ -164,6 +162,5 @@ rule sv_all_combine:
         sm = SAMPLES   
     shell:
         """     
-        bash {SOFTWARE_DIR}/CYTO-SV-ML/Pipeline_script/sv_all_combine.sh {main_dir} {params.sm}  
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_all_combine.sh {MAIN_DIR} {params.sm}  
         """
-              
