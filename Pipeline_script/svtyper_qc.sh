@@ -1,6 +1,6 @@
 #!/bin/bash
 main_dir=$1
-cyto_dv_ml_dir=$2
+cyto_sv_ml_dir=$2
 sample=$3
 sv_caller=$4
 size_k=$5
@@ -23,5 +23,5 @@ python ${main_dir}/software/CYTO-SV-ML/Pipeline_script/sv_info_tf_sim.py ${main_
 
 echo "# run sytyper for all trs SV" && date
 svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all -B ${main_dir}/out/${sample}/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf
-python ${cyto_dv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf
+python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf
  rm -rf ${main_dir}/out/${sample}/${sample}.bam*
