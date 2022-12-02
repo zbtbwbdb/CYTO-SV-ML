@@ -30,13 +30,17 @@ def sv_id_tf(line):
             sv_end=inf.split('=')[1]   
         if 'SVTYPE' in inf:
             sv_type=inf.split('=')[1]  
-    for inf in info_list:          
-        if keep_list in inf.split('=')[0]:
-            keep_var=inf.split('=')[1]              
     if sv_type=='TRA':
         sv_type='BND'
     if info_dict['SVTYPE']=='TRA':
-        info_dict['SVTYPE']='BND'        
+        info_dict['SVTYPE']='BND'     
+        
+    # keep_var extraction            
+    keep_var={}        
+    for inf in info_list:
+        for k in keep_list:
+            if k in inf.split('=')[0]:
+                keep_var[k]=inf.split('=')[1]              
     
     # consolidate sv_id column extraction
     if 'chr' in item[2]:
@@ -56,7 +60,7 @@ def sv_id_tf(line):
             inv_sv_co=re.sub('_|-',':',geno_list[-1].split(',')[0]).split(':')
             inv_sv_id=':'.join(str(w) for w in [inv_sv_co[i] for i in [0,1,3,2]])+':'+sv_type
         if inv_sv_id!='NaN' and inv_sv_id!='.':                   
-            sv_id_list.append(consolidate_sv_id+'\t'+inv_sv_id+'\t'+keep_var)
+            sv_id_list.append(consolidate_sv_id+'\t'+inv_sv_id+'\t'+"\t".join(str(keep_var[k]) for k in keep_list))
 
     # print out mapping consolidate sv_id and inv sv_id
     line='\n'.join(str(sv_id) for sv_id in sv_id_list)+'\n'        
