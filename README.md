@@ -58,7 +58,7 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --c
 ```
 ### Run CYTO-SV-ML Snakemake modeling pipeline
 ```
-snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk
+snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk  --config cohort_name=${cohort_name}
 snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${out_dir}/${cohort_name}_report.html
 ```
 
