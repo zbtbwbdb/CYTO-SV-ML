@@ -21,7 +21,7 @@ def trs_svtyper_tf(line):
     mate_id_cr=mate_id.split(':')[0:-1]  
     print(mate_id)
     if int(mate_id_key)==0:
-      item[2]=mate_id_cr+':1'
+      item[2]=':'.join(str(m) for m in mate_id_cr)++':1'
     elif int(mate_id_key)==1:
       item[2]=':'.join(str(m) for m in mate_id_cr)+':0' 
     else:
