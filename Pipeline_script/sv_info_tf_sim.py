@@ -6,8 +6,7 @@ out_vcf=open(str(sys.argv[1])+'.sv_info.sim','w')
 try:
     keep_list=str(sys.argv[2]).split('|')
 except:
-    keep_list=['END','CHR2','CIPOS','CIEND','SVTYPE','BND_DEPTH','MATE_BND_DEPTH','GT','CN','PR','SR','DR','DV','RR','RV','PE']
-#    keep_list=['END','CHR2','CIPOS','CIEND','SVTYPE','BND_DEPTH','MATE_BND_DEPTH','GT','CN','PR','SR','RP','AP','RS','AS','PE']
+    keep_list=['END','CHR2','CIPOS','CIEND','SVTYPE','BND_DEPTH','MATE_BND_DEPTH','GT','CN','PR','SR','DR','DV','RR','RV','RP','AP','RS','AS','ASC','PE']
     
 def sv_info_tf(line):
     info_dict={}
