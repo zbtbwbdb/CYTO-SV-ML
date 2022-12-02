@@ -1,8 +1,7 @@
 # CYTO-SV-ML
-#### CYTO-SV-ML PIPELINE WORKFLOW:
+#### CYTO-SV-ML design:
 ![CYTO-SV-ML PIPELINE WORKFLOW](workflow.png)
 
-# Run CYTO-SV-ML Snakemake pipeline
 ### CYTO-SV-ML Snakemake pipeline workflow
 ![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_Snakemake_workflow.png)
 
