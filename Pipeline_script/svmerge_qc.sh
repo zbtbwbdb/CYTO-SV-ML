@@ -14,8 +14,8 @@ ls ${main_dir}/out/${sample}/sv_caller_results/${sample}.*.vcf.${size_k}k.*trs_t
 SURVIVOR merge ${main_dir}/out/${sample}/sv_caller_results/${sample}.${size_k}k.all.list 1000 1 1 0 0 10  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all 
 
 echo "# SV caller SUPP info extraction" && date
-python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py  ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all SUPP
+python ${cyto_sv_ml_dir}/Pipeline_script/sv_consolidate_info_tf_sim.py  ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all SUPP
 python ${cyto_sv_ml_dir}/Pipeline_script/sv_consolidate_id_mapping.py ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all 
 
 echo "# SV vcf simplified transformation" && date
-python ${cyto_sv_ml_dir}/Pipeline_script/sv_consolidate_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all
+python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all
