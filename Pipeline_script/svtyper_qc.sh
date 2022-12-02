@@ -12,12 +12,12 @@ for i in $(seq 1 $sc_ln)
    do
        svtype=$(awk -v a="$i" '(FNR==a){print $1}' sv_caller_vector.tmp)  
        echo ${svtype}              
-       svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.trs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf      
-       svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.nontrs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.nontrs_tf.svtyped.vcf      
-       awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf  >${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp
-       cat ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.nontrs_tf.svtyped.vcf ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp > ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.all.svtyped.vcf
-       sudo rm -rf ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp
-       python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.all.svtyped.vcf   
+       svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.trs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf      
+       svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.nontrs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.nontrs_tf.svtyped.vcf      
+       awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf  >${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp
+       cat ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.nontrs_tf.svtyped.vcf ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.all.svtyped.vcf
+       sudo rm -rf ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp
+       python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.all.svtyped.vcf   
     done
 sudo rm -rf sv_caller_vector.tmp 
 
