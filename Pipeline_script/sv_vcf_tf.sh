@@ -18,5 +18,5 @@ for sv_caller in  breakdancer cnvnator delly.deletion delly.duplication delly.in
         echo ${sv_caller} "SV type tf" && date                
         python ${cyto_sv_ml_dir}/Pipeline_script/sv_vcf_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.${size_k}k
         echo ${sv_caller} "SV info tf" && date                 
-        python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.${size_k}k END|CHR2|CIPOS|CIEND|SVTYPE|BND_DEPTH|MATE_BND_DEPTH|GT|CN|PR|SR|DR|DV|RR|RV|PE
+        python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.${size_k}k
     done
