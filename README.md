@@ -1,8 +1,8 @@
 # CYTO-SV-ML
-#### CYTO-SV-ML design:
+#### CYTO-SV-ML pipeline design:
 ![CYTO-SV-ML PIPELINE WORKFLOW](workflow.png)
 
-### CYTO-SV-ML Snakemake pipeline workflow
+### CYTO-SV-ML snakemake workflow
 ![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_Snakemake_workflow.png)
 
 ### conda environment setup
