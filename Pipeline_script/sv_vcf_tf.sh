@@ -19,5 +19,3 @@ for svtype in  breakdancer cnvnator delly.deletion delly.duplication delly.inver
         echo ${svtype} "SV info tf" && date                 
         python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k
     done
-
-cp ${main_dir}/out/${sample}/sv_caller_results/${sample}.manta.vcf.${size_k}k.trs_tf ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all
