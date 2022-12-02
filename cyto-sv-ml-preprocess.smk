@@ -104,7 +104,7 @@ rule svtyper_qc:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])
     output:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K),  
-        expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, size_k=SIZE_K)     
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, size_k=SIZE_K)     
     params:
         sm = SAMPLES,  
         sv_caller='@'.join(str(sc) for sc in all_callers)
