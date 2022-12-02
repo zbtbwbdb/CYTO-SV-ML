@@ -18,4 +18,4 @@ python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py  ${main_dir}/out/${sa
 python ${cyto_sv_ml_dir}/Pipeline_script/sv_consolidate_id_mapping.py ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all 
 
 echo "# SV vcf simplified transformation" && date
-python ${cyto_sv_ml_dir}/Pipeline_script/sv_vcf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all
+python ${cyto_sv_ml_dir}/Pipeline_script/sv_consolidate_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all
