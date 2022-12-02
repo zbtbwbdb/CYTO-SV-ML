@@ -24,7 +24,7 @@ chromoseq_docker = config['chromoseq_docker']
 parliment2_sv_callers = config['parliment2_sv_callers']
 chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
-all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
+# all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
 size=int(config['size'])
 SIZE_K=round(size/1000)
 #report: OUTPUT_DIR+"/report/workflow.rst"
