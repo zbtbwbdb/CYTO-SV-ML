@@ -106,7 +106,7 @@ rule svtyper_qc:
         expand(OUTPUT_DIR+"/{sample}/${sample}.{size_k}k.{sv_type}_tf.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])                       
     params:
-        sm = SAMPLES  
+        sm = SAMPLES,  
         sv_caller='@'.join(str(sc) for sc in all_callers)
     conda:
         "conda-py27.yaml"          
