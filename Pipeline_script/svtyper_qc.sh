@@ -12,8 +12,10 @@ for i in $(seq 1 $sc_ln)
    do
        svtype=$(awk -v a="$i" '(FNR==a){print $1}' sv_caller_vector.tmp)  
        echo ${svtype}              
-       svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${svtype}.svtyped.vcf.${size_k}k      
-       python ${main_dir}/software/CYTO-SV-ML/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${svtype}.svtyped.vcf.${size_k}k  
+       svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.trs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${svtype}.svtyped.vcf.${size_k}k.trs_tf      
+       python ${main_dir}/software/CYTO-SV-ML/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${svtype}.svtyped.vcf.${size_k}k.trs_tf  
+       svtyper-sso --core 8 --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.nontrs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${svtype}.svtyped.vcf.${size_k}k.nontrs_tf      
+       python ${main_dir}/software/CYTO-SV-ML/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${svtype}.svtyped.vcf.${size_k}k.nontrs_tf        
     done
 sudo rm -rf sv_caller_vector.tmp 
 
