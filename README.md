@@ -17,7 +17,7 @@ rm -rf ~/miniconda3/miniconda.sh
 conda install -n base -c conda-forge mamba
 ```
 
-### parliament and chromoseq Dockfile Download
+### Download parliament and chromoseq Docker
 ```
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -36,7 +36,7 @@ mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
 # pip install --upgrade snakemake # in case that snakemake version is old
 ```
 
-### hg38 reference genome Download
+### Download hg38 reference genome 
 ```
 # hg38 from Broad Institute Google Cloud (https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/)
 CYTO-SV-ML/reference/hg38/hs38.fasta
