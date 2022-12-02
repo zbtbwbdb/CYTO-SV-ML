@@ -18,10 +18,11 @@ def trs_svtyper_tf(line):
     # correct mate_id
     mate_id=info_dict['MATEID']   
     mate_id_key=mate_id.split(':')[-1]
-    mate_id_cr=mate_id.split(':')[0:-1]      
-    if mate_id_key==0:
+    mate_id_cr=mate_id.split(':')[0:-1]  
+    print(mate_id)
+    if int(mate_id_key)==0:
       item[2]=mate_id_cr+':1'
-    elif mate_id_key==1:
+    elif int(mate_id_key)==1:
       item[2]=mate_id_cr+':0' 
     else:
       print "error!!!"
