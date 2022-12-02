@@ -1,6 +1,6 @@
 import sys,os,re, collections
 in_vcf=open(sys.argv[1],'r')
-out_vcf=open(str(sys.argv[1])+'.sv_info','w')
+out_vcf=open(str(sys.argv[1])+'.cr','w')
 
 def trs_svtyper_tf(line):
     info_dict={}
