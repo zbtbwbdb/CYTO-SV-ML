@@ -7,7 +7,7 @@ gender=$5
 
 echo $sample $gender
 echo "# set up the configure file for chromoseq" && date
-sed "s%XXXXXX%${sample}%g" ${cyto_sv_ml_dir}/docker-basespace_chromoseq/lsf/inputs.json | sed "s%Male%${gender}%g" > ${cyto_sv_ml_dir}/docker-basespace_chromoseq/lsf/inputs.json.tmp
+sed "s%XXXXXX%${sample}%g" ${cyto_sv_ml_dir}/software/docker-basespace_chromoseq/lsf/inputs.json | sed "s%Male%${gender}%g" > ${cyto_sv_ml_dir}/software/docker-basespace_chromoseq/lsf/inputs.json.tmp
 
 echo "# run chromoseq docker" && date
  
