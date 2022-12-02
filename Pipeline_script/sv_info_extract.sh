@@ -4,7 +4,7 @@ sample=$2
 size_k=$3
 
 echo "# starting SV info extraction" && date   
-cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t
+sed 'S%_%:%g' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping | sed 's%sv:id%sv_id%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t
 n=0
 for sv_callcer in breakdancer cnvnator delly.deletion delly.duplication delly.inversion ichnorcnv manta 
   do
