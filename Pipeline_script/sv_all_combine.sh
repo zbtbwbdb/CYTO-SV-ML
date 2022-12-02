@@ -4,7 +4,7 @@ sample=$2
 size_k=$3
 
 echo ${sample}
-echo "# combine the SV annotation, vcf and svtyper info, complexity, and sv_caller supp-info" && date               
+echo "# combine the SV annotation, sv vcf and svtyper info, sv complexity, and sv caller supp info" && date               
 awk 'FNR==NR{a[$1];b[$1]=$0;next} ($1 in a) {print $0"\t"b[$1]}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_anno
 awk 'FNR==NR{a[$1];b[$1]=$0;next} ($1 in a) {print $0"\t"b[$1]}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_anno > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno.all_info 
 awk 'FNR==NR{a[$6];b[$6]=$0;next} { if ($2 in a){print $0"\t"b[$2]} else {print $0"\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN\tNAN"}}'  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.bed.bpst_bpend.kz.index_complex ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno.all_info >  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno.all_info.all_complex
