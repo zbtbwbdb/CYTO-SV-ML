@@ -7,7 +7,8 @@ try:
     keep_list=str(sys.argv[2]).split('|')
 except:
     keep_list=['END','CHR2','CIPOS','CIEND','SVTYPE','BND_DEPTH','MATE_BND_DEPTH','GT','CN','PR','SR','DR','DV','RR','RV','PE']
-
+#    keep_list=['END','CHR2','CIPOS','CIEND','SVTYPE','BND_DEPTH','MATE_BND_DEPTH','GT','CN','PR','SR','RP','AP','RS','AS','PE']
+    
 def sv_info_tf(line):
     info_dict={}
     item=line.strip().split('\t')
