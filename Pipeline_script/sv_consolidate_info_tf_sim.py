@@ -1,6 +1,6 @@
 import sys,os,re
 in_vcf=open(sys.argv[1],'r')
-out_vcf=open(str(sys.argv[1])+'.sv_id_mapping','w')
+out_vcf=open(str(sys.argv[1])+'.sv_info.sim','w')
 try:
     keep_list=str(sys.argv[2]).split('|')
 except:
