@@ -109,7 +109,7 @@ rule svtyper_qc:
         sm = SAMPLES,  
         sv_caller='@'.join(str(sc) for sc in all_callers)
     conda:
-        "conda-py27.yaml"          
+        "py27.yaml"          
     shell:
         """        
         bash {CYTO_SV_ML_DIR}/Pipeline_script/svtyper_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.sv_caller} {SIZE_K}     
