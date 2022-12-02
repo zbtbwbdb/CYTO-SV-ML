@@ -6,6 +6,7 @@ sv_caller=$4
 size_k=$5
 
 sv_caller_vector= $(echo ${sv_caller} | sed "s%@%\n%g") 
+echo $sv_caller_vector
 sc_ln= $(echo sv_caller_vector | awk '(FNR==1){print NF}')
 echo "# run sytyper for all sv callers" && date
 for i in $(seq 1 $sc_ln)
