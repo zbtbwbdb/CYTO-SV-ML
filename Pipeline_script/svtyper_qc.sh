@@ -16,7 +16,7 @@ for i in $(seq 1 $sc_ln)
        python ${cyto_sv_ml_dir}/Pipeline_script/trs_svtyper_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.trs_tf 
        svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.trs_tf.tmp -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf      
        svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.nontrs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.nontrs_tf.svtyped.vcf     
-       if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp ]; then       
+       if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf ]; then       
             awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf > ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp           
        fi
        if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp ]; then      
