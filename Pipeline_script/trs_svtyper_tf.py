@@ -25,7 +25,7 @@ def trs_svtyper_tf(line):
     elif int(mate_id_key)==1:
       item[2]=':'.join(str(m) for m in mate_id_cr)+':0' 
     else:
-      print "error!!!"
+      print ("error!!!")
     line='\t'.join(str(l) for l in item)+'\n'
     return line
   
