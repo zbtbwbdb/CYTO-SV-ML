@@ -65,7 +65,7 @@ rule parliment2_sv:
         sm = SAMPLES
     shell:   
          """   
-         bash {CYTO_SV_ML_DIR}/Pipeline_script/run_parliment2.sh {MAIN_DIR} {params.parliment_docker} {params.sm} 
+         bash {CYTO_SV_ML_DIR}/Pipeline_script/run_parliment2.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.parliment_docker} {params.sm} 
          """    
         
 # #  SV VCF preparation
