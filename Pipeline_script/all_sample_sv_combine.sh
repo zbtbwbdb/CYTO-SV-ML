@@ -6,6 +6,7 @@ SAMPLES_vector=$3
 echo "# combine all sample sv " && date
 sudo rm -rf ${main_dir}/out/${sample_all}/
 sudo mkdir ${main_dir}/out/${sample_all}/
+sudo chmod 777 -R ${main_dir}/out/${sample_all}/
 sed "s%@%\n%g" ${SAMPLES_vector} > ${SAMPLES_vector}.tmp
 sm_ln=$(wc -l ${SAMPLES_vector}.tmp | awk '{print $1}')
 for i in $(seq 1 $sm_ln)
