@@ -12,8 +12,9 @@ echo "# run sytyper for all sv callers" && date
 for i in $(seq 1 $sc_ln)
    do
        svtype=$(awk -v a="$i" '(FNR==a){print $1}' sv_caller_vector.tmp)  
-       echo ${svtype}              
-       svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.trs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf      
+       echo ${svtype}   
+       python trs_svtyper_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.trs_tf 
+       svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.trs_tf.tmp -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf      
        svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.vcf.${size_k}k.nontrs_tf -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.nontrs_tf.svtyped.vcf     
        if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp ]; then       
             awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf > ${main_dir}/out/${sample}/${sample}.${svtype}.${size_k}k.trs_tf.svtyped.vcf.tmp           
@@ -33,7 +34,8 @@ echo "# run sytyper for all nontrs SV" && date
 svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all.svtyped.vcf
 
 echo "# run sytyper for all trs SV" && date
-svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf
+python trs_svtyper_tf.py ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all
+svtyper --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.tmp -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf
 
 awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf > ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf.tmp 
 cat ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all.svtyped.vcf ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf.tmp > ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
