@@ -107,12 +107,12 @@ rule svtyper_qc:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, size_k=SIZE_K)     
     params:
         sm = SAMPLES,  
-        sv_caller='@'.join(str(sc) for sc in all_callers)
+        sv_caller_vector='@'.join(str(sc) for sc in all_callers)
     conda:
         "py27.yaml"          
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/svtyper_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.sv_caller} {SIZE_K}     
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/svtyper_qc.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.sv_caller_vector} {SIZE_K}     
         """
         
 # run sv breakpoint sequence complexity       
