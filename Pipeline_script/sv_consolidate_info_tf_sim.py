@@ -39,7 +39,7 @@ def sv_id_tf(line):
     keep_var={}        
     for inf in info_list:
         for k in keep_list:
-            if k in inf.split('=')[0]:
+            if k==inf.split('=')[0]:
                 keep_var[k]=inf.split('=')[1]              
     
     # consolidate sv_id column extraction
