@@ -37,7 +37,7 @@ sv_type_vector=['trs','nontrs']
 # subprocess.call(["sudo","mkdir", "-p", outdir,'/cyto_sv_ml'])
 
 ############################################################################################################################################################# 
-sv_data = pd.read_csv(outdir+'/../'+str(cohort_name)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
+sv_data = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
 sv_data=sv_data.rename(columns={sv_data.columns[sv_data.shape[1]-2]:'SUPP'})
 for sv_type in sv_type_vector:
     if sv_type=='trs':
