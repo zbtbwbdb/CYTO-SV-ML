@@ -20,7 +20,7 @@ def sv_id_tf(line):
         if '=' in inf:
             info_dict[inf.split('=')[0]]=inf.split('=')[1]
         else:
-            info_dict[inf]=inf       
+            info_dict[inf]=inf+"&no&id"       
 
     # correct sv info        
     if 'SVTYPE' not in info_list:
@@ -64,7 +64,25 @@ def sv_id_tf(line):
     else:
         sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type
     item[2]=sv_id
-    item[7]=info
+    
+    # re-compose info columns
+    info_new=""
+    m=0
+    for key,value in info_dict.items():
+        if "&no&id" in key and m=0:
+            info_new=value
+            m=1
+        elif "&no&id" in key and m=1:
+            info_new=info_new+";"+value  
+            m=1
+        elif "&no&id" not in key and m=0:
+            info_new=value
+            m=1
+        elif "&no&id" not in key and m=1:
+            info_new=info_new+";"+value
+            m=1            
+    item[7]=info_new
+    
     # print out line
     line='\t'.join(str(w) for w in item)+'\n'        
     return line
