@@ -69,16 +69,16 @@ def sv_id_tf(line):
     info_new=""
     m=0
     for key,value in info_dict.items():
-        if "&no&id" in key and m=0:
+        if "&no&id" in key and m==0:
             info_new=value
             m=1
-        elif "&no&id" in key and m=1:
+        elif "&no&id" in key and m==1:
             info_new=info_new+";"+value  
             m=1
-        elif "&no&id" not in key and m=0:
+        elif "&no&id" not in key and m==0:
             info_new=value
             m=1
-        elif "&no&id" not in key and m=1:
+        elif "&no&id" not in key and m==1:
             info_new=info_new+";"+value
             m=1            
     item[7]=info_new
