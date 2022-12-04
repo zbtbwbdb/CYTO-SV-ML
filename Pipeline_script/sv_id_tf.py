@@ -73,13 +73,13 @@ def sv_id_tf(line):
             info_new=value
             m=1
         elif "&no&id" in key and m==1:
-            info_new=info_new+";"+value  
+            info_new=info_new+";"+value
             m=1
         elif "&no&id" not in key and m==0:
-            info_new=value
+            info_new=str(key)+"="+str(value) 
             m=1
         elif "&no&id" not in key and m==1:
-            info_new=info_new+";"+value
+            info_new=info_new+";"+str(key)+"="+str(value) 
             m=1            
     item[7]=info_new
     
