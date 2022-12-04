@@ -42,8 +42,8 @@ ${svtyper} --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.${size_k}k.
 awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf > ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf.tmp 
 cat ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all.svtyped.vcf ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf.tmp > ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
 sudo rm -rf ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf.tmp
-       python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
-       sudo mv ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf.re_id ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
+python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
+sudo mv ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf.re_id ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
 python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
 
 sudo rm -rf ${main_dir}/in/${sample}.bam*
