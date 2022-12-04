@@ -69,19 +69,19 @@ def sv_id_tf(line):
     info_new=""
     m=0
     for key,value in info_dict.items():
-        if "&no&id" in key and m==0:
+        if "&no&id" in key and m==0 and key!="CSQ":
             info_new=value
             m=1
-        elif "&no&id" in key and m==1:
+        elif "&no&id" in key and m==1 and key!="CSQ":
             info_new=info_new+";"+value
             m=1
-        elif "&no&id" not in key and m==0:
+        elif "&no&id" not in key and m==0 and key!="CSQ":
             info_new=str(key)+"="+str(value) 
             m=1
-        elif "&no&id" not in key and m==1:
+        elif "&no&id" not in key and m==1 and key!="CSQ":
             info_new=info_new+";"+str(key)+"="+str(value) 
             m=1            
-    item[7]=info_new
+    item[7]=info_new+';CSQ='+info_dict['CSQ']
     
     # print out line
     line='\t'.join(str(w) for w in item)+'\n'        
