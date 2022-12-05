@@ -71,8 +71,8 @@ def sv_id_tf(line):
 for line in in_vcf:
     item=line.strip().split('\t')
     if line.startswith('#CHROM'):
-        if len(idx)!=0:
-            keep_var.update(zip(idx_k,[item[x] for x in idx]))        
+        idx= [x for x, v in enumerate (item) if v in keep_list]
+        idx_k=[item[x] for x in idx]   
         out_vcf.write("sv_id\tID\t"+"\t".join(str(k) for k in keep_list)+"\n")           
     elif line.startswith('#'):
         continue       
