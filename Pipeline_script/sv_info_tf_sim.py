@@ -47,6 +47,9 @@ def sv_info_tf(line):
         else:
             info_dict['END']=item[1]
             
+    if len(idx)!=0:
+        keep_var.update(zip(idx_k,[item[x] for x in idx]))
+        
     # geno column extraction
     geno_index=item[8].split(':')     
     geno_list=item[9].split(':') 
@@ -110,6 +113,8 @@ for line in in_vcf:
             item=line.strip().split(' ')        
         col_head=item[0:6]
         col_head[0]=re.sub("#", "", col_head[0])
+        idx= [x for x, v in enumerate (item) if v in keep_list]
+        idx_k=[item[x] for x in idx]           
         continue    
     elif line.startswith('#'):
         continue           
