@@ -32,6 +32,8 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs['SR_alt']=0
     sv_data_trs['ci_pos0']=sv_data_trs['CIPOS'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
     sv_data_trs['ci_pos1']=sv_data_trs['CIPOS'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
+    sv_data_trs['sv_bp_end_POS']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
+    sv_data_trs['sv_bp_end_END']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)    
     if 'RP' in sv_data_trs.columns:
         sv_data_trs.loc[sv_data_trs['AS']=='NA' ,'AS']=0         
         sv_data_trs['PR_ref']=sv_data_trs['RP'].astype(int)
