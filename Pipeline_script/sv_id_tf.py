@@ -57,7 +57,7 @@ def sv_id_tf(line):
             sv_type=inf.split('=')[1]   
             
     # fix sv_id column extraction
-    if id_mode=='f':
+    if id_mode=='f' or id_mode=='sf':
         sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type
     elif 'chr' in item[2] or re.findall('DEL|DUP|INV|INS|TRA|BND',item[2]) or re.findall('del|dup|inv|ins|tra|bnd',item[2]) or ':' in item[2]:
         sv_id=item[2]
@@ -81,7 +81,7 @@ def sv_id_tf(line):
         elif "&no&id" not in key and m==1 and key!="CSQ":
             info_new=info_new+";"+str(key)+"="+str(value) 
             m=1   
-    if ';CSQ=' in item[7]: 
+    if ';CSQ=' in item[7] and id_mode!='sf': 
         item[7]=info_new+';CSQ='+info_dict['CSQ']
     
     # print out line
