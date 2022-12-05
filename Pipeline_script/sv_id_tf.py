@@ -31,7 +31,7 @@ def sv_id_tf(line):
             
     alt_info=re.sub('\[|\]',':',item[4])     
     if 'CHR2=' not in info_list:
-        if info_dict['SVTYPE']=='BND':
+        if info_dict['SVTYPE']=='BND' or info_dict['SVTYPE']=='TRA':
             for ai in alt_info.split(':'):
                 if re.findall('chr',ai):
                     info_dict['CHR2']=ai
@@ -39,8 +39,8 @@ def sv_id_tf(line):
         else:
             info_dict['CHR2']=item[0]   
             
-    if 'END=' not in info_list:
-        if info_dict['SVTYPE']=='BND':
+    if ';END=' not in info:
+        if info_dict['SVTYPE']=='BND' or info_dict['SVTYPE']=='TRA':
             for ai in alt_info.split(':'):
                 if ai.isdigit():
                     info_dict['END']=ai
@@ -48,14 +48,10 @@ def sv_id_tf(line):
         else:
             info_dict['END']=item[1]
             
-    for inf in info_list:        
-        if 'CHR2=' in inf:
-            sv_chr2=inf.split('=')[1]
-        if 'END=' in inf and 'CI' not in inf:
-            sv_end=inf.split('=')[1]   
-        if 'SVTYPE=' in inf:
-            sv_type=inf.split('=')[1]   
-            
+    sv_end=info_dict['END']   
+    sv_chr2=info_dict['CHR2']
+    sv_type=info_dict['SVTYPE']  
+    print(str(item[1])+":"+str(sv_end))        
     # fix sv_id column extraction
     if id_mode=='f' or id_mode=='sf':
         sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type
@@ -81,9 +77,11 @@ def sv_id_tf(line):
         elif "&no&id" not in key and m==1 and key!="CSQ":
             info_new=info_new+";"+str(key)+"="+str(value) 
             m=1   
-    print(info_new)
+#    print(info_new)
     if ';CSQ=' in item[7] and id_mode!='sf': 
         item[7]=info_new+';CSQ='+info_dict['CSQ']
+    else:
+        item[7]=info_new
     
     # print out line
     line='\t'.join(str(w) for w in item)+'\n'        
