@@ -5,7 +5,7 @@
 ### CYTO-SV-ML snakemake workflow
 ![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_Snakemake_workflow.png)
 
-### conda environment setup
+### Installconda environment
 ```
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
@@ -17,7 +17,7 @@ rm -rf ~/miniconda3/miniconda.sh
 conda install -n base -c conda-forge mamba
 ```
 
-### Download parliament and chromoseq Docker
+### Install parliament and chromoseq Docker
 ```
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
