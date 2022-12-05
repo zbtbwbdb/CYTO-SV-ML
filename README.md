@@ -13,8 +13,8 @@ bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
 ~/miniconda3/bin/conda init zsh
-conda update -n base -c defaults conda # in case that conda version is old
 conda install -n base -c conda-forge mamba
+# conda update -n base -c defaults conda # in case that conda version is old
 ```
 
 ### Download parliament and chromoseq Docker
@@ -32,6 +32,7 @@ sudo docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # Chro
 git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
 cd CYTO-SV-ML
 mamba env create py27 -f py27.yaml
+mamba env create py39 -f py39.yaml
 mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
 pip install --upgrade snakemake # in case that snakemake version is old
 ```
