@@ -49,7 +49,7 @@ tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
 cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
 ```
 
-### Run CYTO-SV-ML Snakemake preprocess pipeline
+### Run CYTO-SV-ML Snakemake preprocess pipeline for each sample
 Please change the config.yaml according to your own environment settings:                                                    
 {your_work_dir} for input/output dir                                                  
 {cyto_sv_ml_dir} for cyto_sv_ml dir and software subdir and reference subdir
@@ -57,7 +57,7 @@ Please change the config.yaml according to your own environment settings:
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender}
 ```
-### Run CYTO-SV-ML Snakemake modeling pipeline
+### Run CYTO-SV-ML Snakemake modeling pipeline for whole cohort
 ```
 snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk  --config cohort_name=${cohort_name}
 snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${out_dir}/${cohort_name}_report.html
