@@ -13,7 +13,7 @@ bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
 ~/miniconda3/bin/conda init zsh
-# conda update conda # in case that conda version is old
+conda update conda # in case that conda version is old
 conda install -n base -c conda-forge mamba
 ```
 
@@ -33,7 +33,7 @@ git clone https://github.com/tzhang-nmdp/CYTO-SV-ML.git
 cd CYTO-SV-ML
 mamba env create py27 -f py27.yaml
 mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
-# pip install --upgrade snakemake # in case that snakemake version is old
+pip install --upgrade snakemake # in case that snakemake version is old
 ```
 
 ### Download hg38 reference genome 
