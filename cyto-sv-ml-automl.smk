@@ -9,7 +9,7 @@ from typing import Dict, Union, List
 
 configfile: "config.yaml"
     
-cohort_name = config['cohort_name']  
+COHORT_NAME = config['cohort_name']  
 samples_information = pd.read_csv(config['sample_list'], sep='\t', header=None,index_col=False)
 samples_information.columns=['id','sex']
 SAMPLES = list(samples_information['id'])
@@ -20,9 +20,9 @@ MAIN_DIR = config['main_dir']
 INPUT_DIR = config['main_dir']+'/in'
 OUTPUT_DIR = config['main_dir']+'/out'
 LOG_DIR = config['main_dir']+'/out/log'
-CYTO_SV_ML_DIR = config['cyto_sv_ml_dir']
-SOFTWARE_DIR = config['cyto_sv_ml_dir']+'/software'
-DATABASE_DIR = config['cyto_sv_ml_dir']+'/SV_database'
+CYTO_SV_ML_DIR = config['cyto_dv_ml_dir']
+SOFTWARE_DIR = config['cyto_dv_ml_dir']+'/software'
+DATABASE_DIR = config['cyto_dv_ml_dir']+'/SV_database'
 parliment_docker = config['parliment_docker']
 chromoseq_docker = config['chromoseq_docker']
 parliment2_sv_callers = config['parliment2_sv_callers']
@@ -54,31 +54,31 @@ rule all_sample_sv_combine:
     input:
         check_sample_file
     output:
-        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)        
+        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=COHORT_NAME)        
     shell:
         """  
-        cat {input} && bash {CYTO_SV_ML_DIR}/Pipeline_script/all_sample_sv_combine.sh {MAIN_DIR} {cohort_name} {input} 
+        cat {input} && bash {CYTO_SV_ML_DIR}/Pipeline_script/all_sample_sv_combine.sh {MAIN_DIR} {COHORT_NAME} {input} 
         """               
                
 # run cyto-sv-ml model     
 rule cyto_sv_ml:
     input:
-        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)   
+        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=COHORT_NAME)   
     output:
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_sv_summary_plot.pdf", cohort_name=cohort_name,k=0), category="sv data summary", subcategory="data",labels={"data name" : "sv type distribution","sv type": "trs","data type": "plot" }),    
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_sv_summary_plot.pdf", cohort_name=cohort_name,k=0), category="sv data summary", subcategory="data",labels={"data name" : "sv type distribution","sv type": "nontrs","data type": "plot" }),         
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_sv_ml_metrics_sub.csv", cohort_name=cohort_name), category="sv model summary", subcategory="model", labels={"data name" : "model performance metrics","sv type":'trs', "data type": "table" }), 
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_sv_ml_metrics_sub.csv", cohort_name=cohort_name), category="sv model summary", subcategory="model", labels={"data name" : "model performance metrics","sv type":'nontrs', "data type": "table" }), 
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_EXP/learner_fold_0_shap_summary.png", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "shap feature importance","sv type": "trs","data type": "plot" }),    
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_EXP/learner_fold_0_shap_summary.png", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "shap feature importance","sv type": "nontrs","data type": "plot" }),        
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_model_confusion_matrix.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix ","sv type": "trs","data type": "plot" }),    
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_model_confusion_matrix.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix","sv type": "nontrs","data type": "plot" }),
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_model_aucroc_curve.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model_aucroc_curve","sv type": "trs","data type": "plot" }),    
-        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_model_aucroc_curve.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model aucroc curve","sv type": "nontrs","data type": "plot" })         
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_sv_summary_plot.pdf", cohort_name=COHORT_NAME), category="sv data summary", subcategory="data",labels={"data name" : "sv type distribution","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_sv_summary_plot.pdf", cohort_name=COHORT_NAME), category="sv data summary", subcategory="data",labels={"data name" : "sv type distribution","sv type": "nontrs","data type": "plot" }),         
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_sv_ml_metrics_sub.csv", cohort_name=COHORT_NAME), category="sv model summary", subcategory="model", labels={"data name" : "model performance metrics","sv type":'trs', "data type": "table" }), 
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_sv_ml_metrics_sub.csv", cohort_name=COHORT_NAME), category="sv model summary", subcategory="model", labels={"data name" : "model performance metrics","sv type":'nontrs', "data type": "table" }), 
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_EXP/learner_fold_0_shap_summary.png", cohort_name=COHORT_NAME,k=0), category="sv model summary", subcategory="model",labels={"data name" : "shap feature importance","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_EXP/learner_fold_0_shap_summary.png", cohort_name=COHORT_NAME,k=0), category="sv model summary", subcategory="model",labels={"data name" : "shap feature importance","sv type": "nontrs","data type": "plot" }),        
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_model_confusion_matrix.pdf", cohort_name=COHORT_NAME,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix ","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_model_confusion_matrix.pdf", cohort_name=COHORT_NAME,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model confusion matrix","sv type": "nontrs","data type": "plot" }),
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_model_aucroc_curve.pdf", cohort_name=COHORT_NAME,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model_aucroc_curve","sv type": "trs","data type": "plot" }),    
+        report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_model_aucroc_curve.pdf", cohort_name=COHORT_NAME,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model aucroc curve","sv type": "nontrs","data type": "plot" })         
     params:
         kfs=config['kfolds_shuffle'] 
     shell:
         """
         sudo mkdir -p {OUTPUT_DIR}/{cohort_name}/cyto_sv_ml &&
-        python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs} 
+        python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML.py -s {COHORT_NAME} -o {OUTPUT_DIR}/{COHORT_NAME} -k {params.kfs} 
         """             
