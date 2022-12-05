@@ -158,8 +158,8 @@ dependencies:
   - six=1.16.0=pyh6c4a22f_0
   - smart_open=6.2.0=pyha770c72_0
   - smmap=3.0.5=pyh44b312d_0
-  - snakemake=7.18.1=hdfd78af_0
-  - snakemake-minimal=7.18.1=pyhdfd78af_0
+  - snakemake
+  - snakemake-minimal
   - sqlite=3.40.0=h5082296_0
   - stopit=1.1.2=py_0
   - survivor=1.0.7=hd03093a_2
