@@ -43,13 +43,15 @@ for sv_type in sv_type_vector:
     if sv_type=='trs':
         sv_data_1=sv_data[~(sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS']))].copy()  
         sv_data_1=sv_dataframe_transform.trs_sv_data_transform(sv_data_1)
+        sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=True, index=None)
     else:
         sv_data_1=sv_data[sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS'])].copy()     
-        sv_data_1=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_1)     
+        sv_data_1=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_1)
+        sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs',sep='\t', header=True, index=None)        
     sv_summary_plot=sv_dataframe_transform.sv_data_summary_plot(sv_data_1)    
     sv_summary_plot.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+'sv_summary_plot.pdf', transparent=True)  # open the plot file for save sv data summary   
     
-    # load sv data matrix with label
+    print("# load sv data matrix with label")
     sv_data12_2=sv_data_1[sv_data_1['label']!=0].copy()
     sv_data12_2=sv_data12_2.drop(['sv_type'],axis=1)
     sv_data12_0 = sv_data_1[sv_data_1['label']==0].copy()
@@ -58,12 +60,12 @@ for sv_type in sv_type_vector:
     y_germline_sv=np.array(sv_data12_2[sv_data12_2['label']== 1].index)
     y_somatic_sv=np.array(sv_data12_2[sv_data12_2['label']== 2].index)
 
-    # define catagorical and continous features
+    print("# define catagorical and continous features")
     enc = preprocessing.LabelEncoder()
     categorical_varaibles=[] #['Chrom','sv_type','chr2']
     categorical_columns=[i for i in sv_data12_2.columns if i in categorical_varaibles]
     numerical_columns=[i for i in sv_data12_2.columns if i not in categorical_varaibles +['label']]
-    # set up the pipeline for data transformation and modelling
+    print("# set up the pipeline for data transformation and modelling")
     preprocessor = make_column_transformer(
          (OneHotEncoder(drop="if_binary"), categorical_columns),
         (StandardScaler(), numerical_columns),
@@ -72,7 +74,7 @@ for sv_type in sv_type_vector:
                    
 ############################################################################################################################################################# 
                     
-    # tune sub-oversampling and split training/testing/validation 
+    print("# tune sub-oversampling and split training/testing/validation") 
     y = sv_data12_2.label.values
     X = sv_data12_2.drop(["label"], axis=1)
     sv_ml_metrics_ts_file=open(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+'sv_ml_metrics_sub.csv','w')  # open the text file for save model performance metrics 
@@ -111,17 +113,17 @@ for sv_type in sv_type_vector:
         print(np.unique(y12,return_counts=True))
         print(np.unique(y12_2,return_counts=True))
 
-        # train models with AutoML
+        print("# train models with AutoML")
         automl = AutoML(mode="Explain", n_jobs= 6, results_path=outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_EXP')
         # model fitting
         automl.fit(s12, y12)
         
-        #copy shap feature importance plot
+        print(" #copy shap feature importance plot")
         shap_plot=outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_EXP/'+'*_Default_Xgboost/learner_fold_0_shap_summary.png'
         shap_plot2=outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_EXP/learner_fold_0_shap_summary.png'
         os. system("sudo cp "+ shap_plot + " " + shap_plot2) 
         
-        # model performance summary metrics 
+        print("# model performance summary metrics") 
         predictions = automl.predict_all(s)
         predictions['label'].value_counts()
         print("Test accuracy:", accuracy_score(y, predictions["label"].astype(int)))
@@ -144,7 +146,7 @@ for sv_type in sv_type_vector:
         sv_ml_metrics_ts['mic_rec'].append(recall_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
         sv_ml_metrics_ts['mac_rec'].append(recall_score(y12_2, predictions12_2["label"].astype(int),average='macro'))
 
-        ## Display the visualization of the Confusion Matrix.
+        print("## Display the visualization of the Confusion Matrix.")
         cf_matrix = confusion_matrix(y12_2, predictions12_2['label'])
         tf=np.vectorize(lambda x: round(x,2))
         ax = sns.heatmap(tf(cf_matrix), annot=True, cmap='Blues',fmt='g')
@@ -162,7 +164,7 @@ for sv_type in sv_type_vector:
         plt.show()
         plt.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_model_confusion_matrix.pdf')
 
-        # compute AUC  for model performance evaluation of multiclass
+        print("# compute AUC  for model performance evaluation of multiclass")
         y1 = label_binarize(y12_2, classes=[-1, 1, 2])
         y1
         fpr = dict()
@@ -194,7 +196,7 @@ for sv_type in sv_type_vector:
         tpr["macro"] = mean_tpr
         roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
 
-        # Plot all ROC curves
+        print("# Plot all ROC curves")
         plt.figure()
         plt.plot(
             fpr["micro"],
