@@ -33,19 +33,24 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs['ci_pos0']=sv_data_trs['CIPOS'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
     sv_data_trs['ci_pos1']=sv_data_trs['CIPOS'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
     sv_data_trs['sv_bp_end_POS']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
-    sv_data_trs['sv_bp_end_END']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)    
-    if 'RP' in sv_data_trs.columns:
+    sv_data_trs['sv_bp_end_END']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0) 
+    if 'PR' in sv_data_trs.columns:
+        sv_data_trs.loc[sv_data_trs['RP']=='NA' ,'RP']=0  
+        sv_data_trs.loc[sv_data_trs['AP']=='NA' ,'AP']=0  
+        sv_data_trs.loc[sv_data_trs['RS']=='NA' ,'RS']=0          
+        sv_data_trs.loc[sv_data_trs['AS']=='NA' ,'AS']=0           
+        sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'PR']=str(sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'RP'])+','+str(sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'AP'])
+        sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'SR']=str(sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'RS'])+','+str(sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'AS'])   
+        sv_data_trs['PR_ref']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
+        sv_data_trs['PR_alt']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
+        sv_data_trs['SR_ref']=sv_data_trs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
+        sv_data_trs['SR_alt']=sv_data_trs['SR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)        
+    else:
         sv_data_trs.loc[sv_data_trs['AS']=='NA' ,'AS']=0         
         sv_data_trs['PR_ref']=sv_data_trs['RP'].astype(int)
         sv_data_trs['PR_alt']=sv_data_trs['AP'].astype(int)
         sv_data_trs['SR_ref']=sv_data_trs['RS'].astype(int)
         sv_data_trs['SR_alt']=sv_data_trs['AS'].astype(int) 
-    else:
-        sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'SR']='0,0'          
-        sv_data_trs['PR_ref']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
-        sv_data_trs['PR_alt']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
-        sv_data_trs['SR_ref']=sv_data_trs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
-        sv_data_trs['SR_alt']=sv_data_trs['SR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
     
     # filter low quality sv
     sv_data_trs=sv_data_trs[(sv_data_trs['PR_alt']>1) & (sv_data_trs['SR_alt']>1) & ( sv_data_trs['BND_DEPTH'].astype(int) > 1) & ( sv_data_trs['MATE_BND_DEPTH'].astype(int) > 1) & (sv_data_trs['sv_bp_end_POS']!='NAN') & (sv_data_trs['sv_bp_end_POS']!='chrY')]
@@ -123,18 +128,23 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs['ci_pos1']=sv_data_nontrs['CIPOS'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
     sv_data_nontrs['sv_bp_end_POS']=sv_data_nontrs['CIEND'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
     sv_data_nontrs['sv_bp_end_END']=sv_data_nontrs['CIEND'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
-    if 'RP' in sv_data_nontrs.columns:    
-        sv_data_nontrs.loc[sv_data_nontrs['AS']=='NA' ,'AS']=0        
-        sv_data_nontrs['PR_ref']=sv_data_nontrs['RP'].astype(int)
-        sv_data_nontrs['PR_alt']=sv_data_nontrs['AP'].astype(int)
-        sv_data_nontrs['SR_ref']=sv_data_nontrs['RS'].astype(int)
-        sv_data_nontrs['SR_alt']=sv_data_nontrs['AS'].astype(int)  
-    else:
-        sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'SR']='0,0'          
+    if 'PR' in sv_data_nontrs.columns:
+        sv_data_nontrs.loc[sv_data_nontrs['RP']=='NA' ,'RP']=0  
+        sv_data_nontrs.loc[sv_data_nontrs['AP']=='NA' ,'AP']=0  
+        sv_data_nontrs.loc[sv_data_nontrs['RS']=='NA' ,'RS']=0          
+        sv_data_nontrs.loc[sv_data_nontrs['AS']=='NA' ,'AS']=0           
+        sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'PR']=str(sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'RP'])+','+str(sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'AP'])
+        sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'SR']=str(sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'RS'])+','+str(sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'AS'])   
         sv_data_nontrs['PR_ref']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
         sv_data_nontrs['PR_alt']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
         sv_data_nontrs['SR_ref']=sv_data_nontrs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
-        sv_data_nontrs['SR_alt']=sv_data_nontrs['SR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
+        sv_data_nontrs['SR_alt']=sv_data_nontrs['SR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)        
+    else:
+        sv_data_nontrs.loc[sv_data_nontrs['AS']=='NA' ,'AS']=0         
+        sv_data_nontrs['PR_ref']=sv_data_nontrs['RP'].astype(int)
+        sv_data_nontrs['PR_alt']=sv_data_nontrs['AP'].astype(int)
+        sv_data_nontrs['SR_ref']=sv_data_nontrs['RS'].astype(int)
+        sv_data_nontrs['SR_alt']=sv_data_nontrs['AS'].astype(int) 
     
     # filter low quality sv
     sv_data_nontrs['sv_length']=sv_data_nontrs['sv_start_bp'].astype(int)-sv_data_nontrs['sv_end_bp'].astype(int)
