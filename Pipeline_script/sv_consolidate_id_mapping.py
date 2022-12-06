@@ -44,7 +44,7 @@ def sv_id_tf(line):
     id_len=len(id_index_list)-id_index-1
     for i in range(9,len(item)):
         geno_list=item[i].split(':')           
-        inv_sv_id=':'.join(str(w) for w in geno_list[id_index:(len(geno_list)-id_len)])     
+        inv_sv_id=':'.join(str(w) for w in geno_list[id_index:(len(geno_list)-id_len)])   
         if (inv_sv_id=='NaN' or inv_sv_id=='.') and geno_list[-1]!='NAN':
             inv_sv_co=re.sub('_|-',':',geno_list[-1].split(',')[0]).split(':')
             inv_sv_id=':'.join(str(w) for w in [inv_sv_co[i] for i in [0,1,3,2]])+':'+sv_type
