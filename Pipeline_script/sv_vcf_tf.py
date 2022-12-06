@@ -34,14 +34,15 @@ def vcf_bnd_tf(line):
     geno_index=item[8].split(':') 
 #    print(geno_index)
     gt=geno[geno_index.index('GT')]
+    pr=geno[geno_index.index('PR')]
     rd_pr=geno[geno_index.index('PR')].split(',')[1]  
     if 'SR' in item[8]:
         rd_sp=geno[geno_index.index('SR')].split(',')[1] 
     else:
         rd_sp=0
     su=int(rd_pr)+int(rd_sp)
-    item[8]="GT:SU:PE:SR"
-    item[9]=geno[0]+":"+str(su)+":"+str(rd_pr)+":"+str(rd_sp)
+    item[8]="GT:PR:SU:PE:SR"
+    item[9]=geno[0]+":"+str(pr)+":"+str(su)+":"+str(rd_pr)+":"+str(rd_sp)
     
     # modify info dict and list
     info_dict.update({'SU':su,'PE':rd_pr,'SP':rd_sp})
