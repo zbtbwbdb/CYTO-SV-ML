@@ -67,7 +67,7 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${out_di
 The analysis summary of 494 MDS cohort using CYTO-SV-ML pipeline 
 ### Online Web-portal
 http://cyto-sv-ml.b12x.org/
-
+![CYTO-SV-ML Rshiny web-portal](cyto-sv-ml web-portal.png)
 
 # SV Related Resource Download
 
