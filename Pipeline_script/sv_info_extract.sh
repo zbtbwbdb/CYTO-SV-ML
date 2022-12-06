@@ -1,43 +1,75 @@
 #!/bin/bash
 main_dir=$1
 sample=$2   
-size_k=$3
+sv_caller_vector=$3
+size_k=$4
 
 echo "# starting SV info extraction" && date   
-sed 's%_%:%g' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping | sed 's%sv:id%sv_id%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t
+cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0
+echo ${sv_caller_vector} | sed "s%@%\n%g" > sv_caller_vector.tmp
+sc_ln=$(wc -l sv_caller_vector.tmp | awk '{print $1}')
+
+# combine the sv_caller annotation vcf 
 n=0
-for sv_callcer in breakdancer cnvnator delly.deletion delly.duplication delly.inversion ichnorcnv manta 
-  do
-      if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_callcer}.${size_k}k.all.svtyped.vcf.sv_info.sim ]; then             
-          echo ${sv_callcer} "svtype ok" && date   
+for i in $(seq 1 $sc_ln)
+   do
+       sv_caller=$(awk -v a="$i" '(FNR==a){print $1}' sv_caller_vector.tmp)  
+          echo $ sv_caller "ok"      
+      if [ "${n}" == 0 ]; then
+          awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ($2 in a) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.10k.sv_info.sim ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 > ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp1
+          n=1
+      else
+          awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ((FNR!=1)&&($2 in a)) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.10k.sv_info.sim ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 > ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp1    
+      fi
+      cp ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp1 ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 
+   done
+awk '{print NF}'  ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 | awk '!a[$1]++'   
+
+
+cp ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0  ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0t
+# combine the svtyper annotation vcf 
+n=0
+for i in $(seq 1 $sc_ln)
+   do
+       sv_caller=$(awk -v a="$i" '(FNR==a){print $1}' sv_caller_vector.tmp)  
+      if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf.sv_info.sim ]; then             
+          echo ${sv_caller} "svtype ok" && date   
           if [ "${n}" == 0 ]; then                
-              awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ($2 in a) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_callcer}.${size_k}k.all.svtyped.vcf.sv_info.sim ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t 
+              awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ($2 in a) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf.sv_info.sim ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t 
               n=1                        
           else                    
-              awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ((FNR!=1)&&($2 in a)) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_callcer}.${size_k}k.all.svtyped.vcf.sv_info.sim ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t 
+              awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ((FNR!=1)&&($2 in a)) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf.sv_info.sim ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t 
           fi
       else   
-          echo ${sv_callcer} "svtype pass" && date     
-          if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_callcer}.vcf.${size_k}k.sv_info.sim ]; then                     
-              cp ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_callcer}.vcf.${size_k}k.sv_info.sim ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_callcer}.${size_k}k.all.svtyped.vcf.sv_info.sim.tmp
+          echo ${sv_caller} "svtype pass" && date     
+          if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.${size_k}k.sv_info.sim ]; then                     
+              cp ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.${size_k}k.sv_info.sim ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf.sv_info.sim.tmp
               if [ "${n}" == 0 ]; then
-                  awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ($2 in a) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_callcer}.${size_k}k.svtyped.vcf.sv_info.sim.tmp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t 
+                  awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ($2 in a) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.svtyped.vcf.sv_info.sim.tmp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t 
                   n=1
               else
-                  awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ((FNR!=1)&&($2 in a)) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_callcer}.${size_k}k.svtyped.vcf.sv_info.sim.tmp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t 
+                  awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ((FNR!=1)&&($2 in a)) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.svtyped.vcf.sv_info.sim.tmp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t 
               fi   
           else
-              echo ${sv_callcer} "all pass" && date   
+              echo ${sv_caller} "all pass" && date   
           fi
       fi
       cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp1t ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t          
 done
     
-echo "# consolidate SV info" && date    
-awk '{if (NF==24){print $0"\t."} else{print $0}}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info
-rm ${main_dir}/out/${sample}/${sample}.*tmp*                 
- 
-# check the complete status of sv_info extraction
-awk '{print NF}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info | awk '!a[$1]++'       
-info_check=$(awk '{print NF}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info | awk '!a[$1]++'  | wc -l | awk '{print $1}')
-if (($info_check>1)); then echo "sv_info missing !!!"; fi    
+echo "#check the complete status of sv_info extraction" && date  
+awk '{print NF}'  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t | awk '!a[$1]++'   
+info_check=$(awk '{print NF}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t | awk '!a[$1]++' | wc -l )
+if (( $info_check>1 )); then 
+    echo "sv_info missing !!!"
+    awk '{if (NF==2){print $0"\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t.\t."} else{print $0}}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info   
+    info_check2=$(awk '{print NF}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info | awk '!a[$1]++' | wc -l )
+    if (( $info_check2>1 )); then   
+        awk '{print NF}'  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info  | awk '!a[$1]++'       
+        echo "sv_info2 missing !!!"    
+        exit
+    fi
+else
+    cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info
+    rm ${main_dir}/out/${sample}/${sample}.*tmp*                 
+fi
