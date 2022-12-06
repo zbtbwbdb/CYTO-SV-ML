@@ -65,17 +65,6 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${out_di
 
 # Run Shiny Web-portal 
 The analysis summary of 494 MDS cohort using CYTO-SV-ML pipeline 
-### Install Shiny Web-portal
-```
-cd CYTO-SV-ML
-docker build -t CYTO-SV-ML:main .
-```
-
-### Start Shiny Web-portal
-```
-docker run -d -p 8000:80  CYTO-SV-ML:main
-```
-
 ### open Shiny Web-portal
 ```
 http://127.0.0.1:8000/ # in a web browser 
