@@ -39,7 +39,7 @@ def sv_id_tf(line):
         else:
             info_dict['CHR2']=item[0]   
             
-    if ';END=' not in info:
+    if 'END=' not in info:
         if info_dict['SVTYPE']=='BND' or info_dict['SVTYPE']=='TRA':
             for ai in alt_info.split(':'):
                 if ai.isdigit():
