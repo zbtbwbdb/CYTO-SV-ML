@@ -53,6 +53,8 @@ def sv_id_tf(line):
     # fix sv_id column extraction
     if id_mode=='f' or id_mode=='sf':
         sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type+":"+item[2]
+    elif id_mode=='c' and 'chr' not in item[2]:
+        sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type+":"+item[2]        
     elif 'chr' in item[2] or re.findall('DEL|DUP|INV|INS|TRA|BND',item[2]) or re.findall('del|dup|inv|ins|tra|bnd',item[2]) or ':' in item[2]:
         sv_id=item[2]
     else:
