@@ -35,7 +35,6 @@ def sv_id_tf(line):
             for ai in alt_info.split(':'):
                 if re.findall('chr',ai):
                     info_dict['CHR2']=ai
-                    sv_chr2=ai
         else:
             info_dict['CHR2']=item[0]   
             
@@ -44,21 +43,20 @@ def sv_id_tf(line):
             for ai in alt_info.split(':'):
                 if ai.isdigit():
                     info_dict['END']=ai
-                    sv_end=ai
         else:
             info_dict['END']=item[1]
             
     sv_end=info_dict['END']   
     sv_chr2=info_dict['CHR2']
     sv_type=info_dict['SVTYPE']  
-    print(str(item[1])+":"+str(sv_end))        
+ #   print(str(item[1])+":"+str(sv_end))        
     # fix sv_id column extraction
     if id_mode=='f' or id_mode=='sf':
-        sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type
+        sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type+":"+item[2]
     elif 'chr' in item[2] or re.findall('DEL|DUP|INV|INS|TRA|BND',item[2]) or re.findall('del|dup|inv|ins|tra|bnd',item[2]) or ':' in item[2]:
         sv_id=item[2]
     else:
-        sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type
+        sv_id=item[0]+':'+item[1] +':'+sv_end+':'+sv_chr2 +':'+sv_type+":"+item[2]
     item[2]=sv_id
     
     # re-compose info columns
@@ -94,3 +92,4 @@ for line in in_vcf:
         out_vcf.write(line)        
     else:
         out_vcf.write(sv_id_tf(line))   
+ 
