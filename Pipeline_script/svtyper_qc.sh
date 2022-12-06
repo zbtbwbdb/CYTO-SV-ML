@@ -5,6 +5,7 @@ sample=$3
 sv_caller_vector=$4
 size_k=$5
 svtyper="svtyper-sso --core 8"
+#svtyper=${main_dir}"/mambaforge/envs/py27/bin/svtyper-sso --core 8"
 
 echo ${sv_caller_vector} | sed "s%@%\n%g" > sv_caller_vector.tmp
 sc_ln=$(wc -l sv_caller_vector.tmp | awk '{print $1}')
@@ -25,7 +26,7 @@ for i in $(seq 1 $sc_ln)
        else
             cp ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.nontrs_tf.svtyped.vcf ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf 
        fi
-       python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf f
+       python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf c
        sudo mv ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf.re_id ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf
        python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf   
     done
@@ -42,8 +43,8 @@ ${svtyper} --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.${size_k}k.
 awk '($1!~"#"){print $0}' ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf > ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf.tmp 
 cat ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all.svtyped.vcf ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf.tmp > ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
 sudo rm -rf ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf.tmp
-python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf f
+python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf c
 sudo mv ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf.re_id ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
 python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
 
-sudo rm -rf ${main_dir}/in/${sample}.bam*
+#sudo rm -rf ${main_dir}/in/${sample}.bam*
