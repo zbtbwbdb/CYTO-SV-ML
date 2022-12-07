@@ -24,7 +24,7 @@ chromoseq_docker = config['chromoseq_docker']
 parliment2_sv_callers = config['parliment2_sv_callers']
 chromoseq_sv_callers = config['chromoseq_sv_callers']
 all_callers=chromoseq_sv_callers+parliment2_sv_callers
-# all_callers_svtyper=['manta', 'delly', 'cnvnator', 'breakdancer']
+SV_DB=config['sv_db']
 size=int(config['size'])
 SIZE_K=round(size/1000)
 #report: OUTPUT_DIR+"/report/workflow.rst"
@@ -136,11 +136,12 @@ rule sv_database_ann:
     output:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=SIZE_K)
     params:
-        sm = SAMPLES,  
+        sm = SAMPLES, 
+        sv_db=SV_DB,
         py27_dir=config['py27_dir']
     shell:
         """        
-        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_database_ann.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.py27_dir} {SIZE_K}      
+        bash {CYTO_SV_ML_DIR}/Pipeline_script/sv_database_ann.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.sm} {params.sv_db} {params.py27_dir} {SIZE_K}      
         """
 
 # run sv vcf info extraction          
