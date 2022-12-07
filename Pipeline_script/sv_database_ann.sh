@@ -30,18 +30,18 @@ for SV_database_name in uwstl_s
    done
    
 # SV database annotation label
-for SV_database_name in  1000_g 1000_gall control_g control_gall cosmic_s cytoatlas_s gnomad_g2ab gnomad_gall gnomad_g gnomad_qc centromere_qc dgv_g
+for SV_database_name in 1000_g 1000_gall control_g control_gall cosmic_s cytoatlas_s gnomad_g2ab gnomad_gall gnomad_g gnomad_qc centromere_qc dgv_g
     do
         echo ${SV_database_name} "ok" && date  
         if [ -s ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.nontrs.gz ]; then
-            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_database_mapping.py -i ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs -t ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.nontrs.gz -d 1000 -p 0.7 -o ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs.${SV_database_name}
+            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_database_mapping.py -i ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs -t ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.nontrs.gz -d 1000 -p 0.7 -o ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs.${SV_database_name}  
         else
             awk 'FNR!=1{$4=$1"\t"$4; print $0"\tNAN"}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs.${SV_database_name}
         fi
         if [ -s ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.bp.trs ]; then
             ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_bnd_database_mapping.bp.py ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.bp.trs ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs ${SV_database_name}_1000 
         elif [ -s ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.trs ]; then
-            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_bnd_database_mapping.py ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.trs ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs ${SV_database_name}_1000              
+            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_bnd_database_mapping.py ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.trs ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs ${SV_database_name}_1000                 
         else
             awk 'FNR!=1{print $0"\tNAN"}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs | sed 's% %\t%g' >  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs.${SV_database_name}_1000 
         fi
@@ -50,6 +50,6 @@ for SV_database_name in  1000_g 1000_gall control_g control_gall cosmic_s cytoat
             ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_db_tf.py ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs ${SV_database_name}_1000 f 
     done           
 
-echo "# prepare SV DB annotation file" && date
+# echo "# prepare SV DB annotation file" && date
 cat ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs_anno ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs_anno > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno 
-awk 'FNR==NR{a[$1];b[$1]=$2;next} ($1 in a) {print b[$1]"\t"$0}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_anno            
+awk 'FNR==NR{a[$1];b[$1]=$0;next} ($1 in a) {print $0"\t"b[$1]}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_anno            
