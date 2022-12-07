@@ -19,5 +19,6 @@ gender: '{Male}'
 # sv settings
 parliment2_sv_callers: ['breakdancer','cnvnator','delly.deletion','delly.duplication','delly.inversion']
 chromoseq_sv_callers: ['ichnorcnv','manta']
+sv_db: ['1000_g', '1000_gall', 'cosmic_s', 'cytoatlas_s', 'gnomad_g2ab', 'gnomad_gall', 'gnomad_g', 'gnomad_qc', 'centromere_qc', 'dgv_g', 'control_g', 'control_gall']
 size: 10000
 kfolds_shuffle: 5
