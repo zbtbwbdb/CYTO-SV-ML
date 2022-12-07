@@ -54,12 +54,12 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs['sv_bp_end_POS']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
     sv_data_trs['sv_bp_end_END']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0) 
     if 'PR' in sv_data_trs.columns:
-        sv_data_trs.loc[np.r_[np.where(sv_data_trs['RP'].isnull()) ],'RP']=0  
-        sv_data_trs.loc[np.r_[np.where(sv_data_trs['AP'].isnull()) ],'AP']=0  
-        sv_data_trs.loc[np.r_[np.where(sv_data_trs['RS'].isnull()) ],'RS']=0          
-        sv_data_trs.loc[np.r_[np.where(sv_data_trs['AS'].isnull()) ],'AS']=0          
-        sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'PR']=str(sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'RP'])+','+str(sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'AP'])
-        sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'SR']=str(sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'RS'])+','+str(sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'AS'])   
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['RP'].isnull())],'RP']=0  
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['AP'].isnull())],'AP']=0  
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['RS'].isnull())],'RS']=0          
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['AS'].isnull())],'AS']=0          
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull())] ,'PR']=str(sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull())] ,'RP'])+','+str(sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull())] ,'AP'])
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull())] ,'SR']=str(sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull())]  ,'RS'])+','+str(sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],'AS'])   
         sv_data_trs['PR_ref']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
         sv_data_trs['PR_alt']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
         sv_data_trs['SR_ref']=sv_data_trs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
@@ -191,8 +191,8 @@ def nontrs_sv_data_transform(sv_data_nontrs):
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['AP'].isnull()) ],'AP']=0  
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['RS'].isnull()) ],'RS']=0          
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['AS'].isnull()) ],'AS']=0           
-        sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'PR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['PR'].isnull()) ],['RP','AP']].apply(lambda x: x['RP'].astype(str)+','+x['AP'].astype(str), axis=1)
-        sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'SR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR'].isnull()) ],['RS','AS']].apply(lambda x: x['RS'].astype(str)+','+x['AS'].astype(str), axis=1)  
+        sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['PR'].isnull()) ] ,'PR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['PR'].isnull()) ],['RP','AP']].apply(lambda x: x['RP'].astype(str)+','+x['AP'].astype(str), axis=1)
+        sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR'].isnull()) ],'SR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR'].isnull()) ],['RS','AS']].apply(lambda x: x['RS'].astype(str)+','+x['AS'].astype(str), axis=1)  
         sv_data_nontrs['PR_ref']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
         sv_data_nontrs['PR_alt']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
         sv_data_nontrs['SR_ref']=sv_data_nontrs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
@@ -239,10 +239,11 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs.loc[(sv_data_nontrs['gnomad_qc'].astype(float)>0.9) | (sv_data_nontrs['control_g'].astype(float)>0.9) | (sv_data_nontrs['centromere_qc'].astype(float)>0.9),'label']=-1
     sv_data_nontrs.loc[(sv_data_nontrs['1000_g'].astype(float)>0.7) | (sv_data_nontrs['gnomad_g'].astype(float)>0.7) | (sv_data_nontrs['dgv_g'].astype(float)>0.7) | (sv_data_nontrs['1000_gall'].astype(float)>0.7) | (sv_data_nontrs['gnomad_gall'].astype(float)>0.7),'label']=1
     sv_data_nontrs.loc[( (sv_data_nontrs['cytoatlas_s'].astype(float)>0.9) | (sv_data_nontrs['cosmic_s'].astype(float)>0.9)) & (sv_data_nontrs['1000_gall'].astype(float)<0.9) & (sv_data_nontrs['gnomad_gall'].astype(float)<0.9) & (sv_data_nontrs['control_gall'].astype(float)<0.9) ,'label']=2
+    print(sv_data_nontrs['label'].value_counts())  
     
     # drop columns wih rebundant variables
     sv_data_nontrs_2=sv_data_nontrs.copy()
-    sv_data_nontrs_2=sv_data_nontrs_2.rename(columns={'QUAL.1':'svtyper_score','SUPP':'sv_caller_supp'})    
+    sv_data_nontrs_2=sv_data_nontrs_2.rename(columns={'QUAL':'svtyper_score','SUPP':'sv_caller_supp'})    
     sv_data_nontrs_2=sv_data_nontrs_2.loc[:,['sv_type', 'svtyper_score', 'sv_bp_end_cc1', 'sv_bp_end_cc_v1','sv_bp_end_cc_v2', 'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4','sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11', 'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14', 'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16','sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2', 'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6', 'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24', 'sv_caller_supp', 'cipos_range', 'ciend_range', 'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'PR_read_ratio_diff',  'SR_read_ratio_diff', 'read_ratio_diff', 'label']]
     sv_data_nontrs_2.columns
     
