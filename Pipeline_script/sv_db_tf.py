@@ -23,7 +23,7 @@ if (db_vcf.iloc[:,4]=='TRA').any():
     db_vcf.loc[db_vcf[SV_database_name]!='Not_in_database',SV_database_name]=db_vcf.iloc[:,6]
 else:
     db_vcf.loc[db_vcf[SV_database_name]!='Not_in_database',SV_database_name]=db_vcf.iloc[:,8]
-db_vcf_sim=db_vcf.iloc[:, 5:7]
+db_vcf_sim=db_vcf.iloc[:, [5,6]]
 
 db_vcf_sim.columns=['sv_id',SV_database_name]
 
