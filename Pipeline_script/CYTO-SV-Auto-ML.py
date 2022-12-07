@@ -38,7 +38,6 @@ sv_type_vector=['trs','nontrs']
 
 ############################################################################################################################################################# 
 sv_data = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
-sv_data=sv_data.rename(columns={sv_data.columns[sv_data.shape[1]-2]:'SUPP'})
 for sv_type in sv_type_vector:
     if sv_type=='trs':
         sv_data_1=sv_data[~(sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS']))].copy()  
@@ -50,7 +49,7 @@ for sv_type in sv_type_vector:
         sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs',sep='\t', header=True, index=None)        
     sv_summary_plot=sv_dataframe_transform.sv_data_summary_plot(sv_data_1)    
     sv_summary_plot.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+'sv_summary_plot.pdf', transparent=True)  # open the plot file for save sv data summary   
-    
+
     print("# load sv data matrix with label")
     sv_data12_2=sv_data_1[sv_data_1['label']!=0].copy()
     sv_data12_2=sv_data12_2.drop(['sv_type'],axis=1)
@@ -100,11 +99,11 @@ for sv_type in sv_type_vector:
         X12 = sv_data12_2.iloc[idx,:].drop(["label"], axis=1)
         y12_2 = sv_data12_2.drop(idx).label.values
         X12_2 = sv_data12_2.drop(idx).drop(["label"], axis=1)
-        X12_0 = sv_data12_0.drop(["label"], axis=1)
+        #X12_0 = sv_data12_0.drop(["label"], axis=1)
         s12=model1.fit_transform(X12)
         s=model1.transform(X)
         s12_2=model1.transform(X12_2)
-        s12_0=model1.transform(X12_0)
+        #s12_0=model1.transform(X12_0)
 
         print(s.shape)
         print(s12.shape)
