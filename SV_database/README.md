@@ -1,6 +1,6 @@
 1000 genome SVs
 ├── 1000_gall.bp.trs               1000 genome database all trs SVs with CI info   <br />            
-├── 1000_gall.nontrs.gz            1000 genome database all nontrs SVs         <br />     
+├── 1000_gall.nontrs.gz            1000 genome database all nontrs SVs  <br /> 
 ├── 1000_gall.nontrs.gz.tbi    <br />
 ├── 1000_gall.trs                  1000 genome database all trs SVs                    
 ├── 1000_g.bp.trs                  1000 genome database trs SVs >=2 hits with CI info  <br />
