@@ -8,7 +8,7 @@ def trs_sv_data_transform(sv_data_trs):
     # transform database label
     sv_db_list=['1000_gall','1000_g','gnomad_gall','gnomad_g','control_gall', 'control_g', 'cytoatlas_s','cosmic_s','gnomad_qc', 'dgv_g', 'centromere_qc','uwstl_s' ]
     for sv_db in sv_db_list:
-        sv_data_trs.loc[sv_data_trs[sv_db]=='NAN',sv_db]="Not_in_database"
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs[sv_db].isnull()) ],sv_db]="Not_in_database"
     sv_data_trs.loc[sv_data_trs['1000_gall']!='Not_in_database','1000_gall']="YVID"
     sv_data_trs.loc[sv_data_trs['1000_g']!='Not_in_database','1000_g']="YVID"
     sv_data_trs.loc[sv_data_trs['gnomad_gall']!='Not_in_database','gnomad_gall']="YVID"
@@ -35,10 +35,10 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs['sv_bp_end_POS']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
     sv_data_trs['sv_bp_end_END']=sv_data_trs['CIEND'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0) 
     if 'PR' in sv_data_trs.columns:
-        sv_data_trs.loc[sv_data_trs['RP']=='NA' ,'RP']=0  
-        sv_data_trs.loc[sv_data_trs['AP']=='NA' ,'AP']=0  
-        sv_data_trs.loc[sv_data_trs['RS']=='NA' ,'RS']=0          
-        sv_data_trs.loc[sv_data_trs['AS']=='NA' ,'AS']=0           
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['RP'].isnull()) ],'RP']=0  
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['AP'].isnull()) ],'AP']=0  
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['RS'].isnull()) ],'RS']=0          
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['AS'].isnull()) ],'AS']=0          
         sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'PR']=str(sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'RP'])+','+str(sv_data_trs.loc[sv_data_trs['PR']=='NA' ,'AP'])
         sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'SR']=str(sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'RS'])+','+str(sv_data_trs.loc[sv_data_trs['SR']=='NA' ,'AS'])   
         sv_data_trs['PR_ref']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
@@ -129,12 +129,12 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs['sv_bp_end_POS']=sv_data_nontrs['CIEND'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
     sv_data_nontrs['sv_bp_end_END']=sv_data_nontrs['CIEND'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
     if 'PR' in sv_data_nontrs.columns:
-        sv_data_nontrs.loc[sv_data_nontrs['RP']=='NA' ,'RP']=0  
-        sv_data_nontrs.loc[sv_data_nontrs['AP']=='NA' ,'AP']=0  
-        sv_data_nontrs.loc[sv_data_nontrs['RS']=='NA' ,'RS']=0          
-        sv_data_nontrs.loc[sv_data_nontrs['AS']=='NA' ,'AS']=0           
-        sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'PR']=str(sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'RP'])+','+str(sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'AP'])
-        sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'SR']=str(sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'RS'])+','+str(sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'AS'])   
+        sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['RP'].isnull()) ],'RP']=0  
+        sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['AP'].isnull()) ],'AP']=0  
+        sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['RS'].isnull()) ],'RS']=0          
+        sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['AS'].isnull()) ],'AS']=0           
+        sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'PR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull()) ],['RP','AP']].apply(lambda x: x['RP'].astype(str)+','+x['AP'].astype(str), axis=1)
+        sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'SR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],['RS','AS']].apply(lambda x: x['RS'].astype(str)+','+x['AS'].astype(str), axis=1)  
         sv_data_nontrs['PR_ref']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
         sv_data_nontrs['PR_alt']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
         sv_data_nontrs['SR_ref']=sv_data_nontrs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
