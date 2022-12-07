@@ -2,8 +2,12 @@
 main_dir=$1
 cyto_sv_ml_dir=$2
 sample=$3   
-py27_dir=$4
-size_k=$5
+sv_db_vector=$4
+py27_dir=$5
+size_k=$6
+
+echo ${sv_db_vector} | sed "s%@%\n%g" > sv_db_vector.tmp
+sd_ln=$(wc -l sv_db_vector.tmp | awk '{print $1}')
 
 echo "# intiate the touch of SV anno files" && date
 awk '{if (FNR==1) {print "sv_id\tsv_chr1\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type"} else {print $6"\t"$1"\t"$2"\t"$3"\t"$4"\t"$5}}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs_anno
@@ -30,8 +34,9 @@ for SV_database_name in uwstl_s
    done
    
 # SV database annotation label
-for SV_database_name in 1000_g 1000_gall control_g control_gall cosmic_s cytoatlas_s gnomad_g2ab gnomad_gall gnomad_g gnomad_qc centromere_qc dgv_g
-    do
+for i in $(seq 1 $sd_ln)
+   do
+        SV_database_name=$(awk -v a="$i" '(FNR==a){print $1}' sv_db_vector.tmp)  
         echo ${SV_database_name} "ok" && date  
         if [ -s ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.nontrs.gz ]; then
             ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_database_mapping.py -i ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs -t ${cyto_sv_ml_dir}/SV_database/${SV_database_name}.nontrs.gz -d 1000 -p 0.7 -o ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs.${SV_database_name}  
@@ -53,3 +58,4 @@ for SV_database_name in 1000_g 1000_gall control_g control_gall cosmic_s cytoatl
 # echo "# prepare SV DB annotation file" && date
 cat ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs_anno ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs_anno > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno 
 awk 'FNR==NR{a[$1];b[$1]=$0;next} ($1 in a) {print $0"\t"b[$1]}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.all_anno ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_anno            
+rm -rf  sv_db_vector.tmp
