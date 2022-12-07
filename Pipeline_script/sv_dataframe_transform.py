@@ -191,8 +191,8 @@ def nontrs_sv_data_transform(sv_data_nontrs):
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['AP'].isnull()) ],'AP']=0  
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['RS'].isnull()) ],'RS']=0          
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['AS'].isnull()) ],'AS']=0           
-        sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'PR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull()) ],['RP','AP']].apply(lambda x: x['RP'].astype(str)+','+x['AP'].astype(str), axis=1)
-        sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'SR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],['RS','AS']].apply(lambda x: x['RS'].astype(str)+','+x['AS'].astype(str), axis=1)  
+        sv_data_nontrs.loc[sv_data_nontrs['PR']=='NA' ,'PR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['PR'].isnull()) ],['RP','AP']].apply(lambda x: x['RP'].astype(str)+','+x['AP'].astype(str), axis=1)
+        sv_data_nontrs.loc[sv_data_nontrs['SR']=='NA' ,'SR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR'].isnull()) ],['RS','AS']].apply(lambda x: x['RS'].astype(str)+','+x['AS'].astype(str), axis=1)  
         sv_data_nontrs['PR_ref']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
         sv_data_nontrs['PR_alt']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
         sv_data_nontrs['SR_ref']=sv_data_nontrs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
