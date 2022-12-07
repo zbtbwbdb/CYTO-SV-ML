@@ -5,6 +5,13 @@ import random
 from itertools import repeat
 
 def trs_sv_data_transform(sv_data_trs):
+    # re-arrange the data
+    random.seed(0)
+    new_index=random.sample(list(range(sv_data_trs.shape[0])), k=sv_data_trs.shape[0]) 
+    sv_data_trs=sv_data_trs.reset_index(drop=True)
+    sv_data_trs=sv_data_trs.reindex(new_index)
+    sv_data_trs=sv_data_trs.reset_index(drop=True)   
+    
     # transform database label
     sv_db_list=['1000_gall','1000_g','gnomad_gall','gnomad_g','control_gall', 'control_g', 'cytoatlas_s','cosmic_s','gnomad_qc', 'dgv_g', 'centromere_qc','uwstl_s' ]
     for sv_db in sv_db_list:
@@ -21,6 +28,18 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs.loc[sv_data_trs['dgv_g']!='Not_in_database','dgv_g']="YVID"
     sv_data_trs.loc[sv_data_trs['centromere_qc']!='Not_in_database','centromere_qc']="YVID"
     sv_data_trs.loc[sv_data_trs['uwstl_s']!='Not_in_database','uwstl_s']="YVID"
+    print(sv_data_trs['1000_gall'].value_counts())
+    print(sv_data_trs['1000_g'].value_counts())
+    print(sv_data_trs['gnomad_gall'].value_counts())
+    print(sv_data_trs['gnomad_g'].value_counts())
+    print(sv_data_trs['control_gall'].value_counts())
+    print(sv_data_trs['control_g'].value_counts())
+    print(sv_data_trs['cytoatlas_s'].value_counts())
+    print(sv_data_trs['cosmic_s'].value_counts())
+    print(sv_data_trs['gnomad_qc'].value_counts())
+    print(sv_data_trs['centromere_qc'].value_counts())
+    print(sv_data_trs['dgv_g'].value_counts())
+    print(sv_data_trs['uwstl_s'].value_counts())
     
     # transform sv_info variables
     sv_data_trs['ci_pos0']=0
@@ -53,8 +72,8 @@ def trs_sv_data_transform(sv_data_trs):
         sv_data_trs['SR_alt']=sv_data_trs['AS'].astype(int) 
     
     # filter low quality sv
-    sv_data_trs=sv_data_trs[(sv_data_trs['PR_alt']>1) & (sv_data_trs['SR_alt']>1) & ( sv_data_trs['BND_DEPTH'].astype(int) > 1) & ( sv_data_trs['MATE_BND_DEPTH'].astype(int) > 1) & (sv_data_trs['sv_bp_end_POS']!='NAN') & (sv_data_trs['sv_bp_end_POS']!='chrY')]
-    
+    sv_data_trs=sv_data_trs[(sv_data_trs['PR_alt']>=1) & (sv_data_trs['SR_alt']>=1) & ( sv_data_trs['BND_DEPTH'].astype(int) >=1) & ( sv_data_trs['MATE_BND_DEPTH'].astype(int) >=1) & (sv_data_trs['sv_bp_end_POS']!='NAN') & (sv_data_trs['sv_bp_end_POS']!='chrY')]
+    print(sv_data_trs.shape)   
     # generate sv_info variables (length=bp_st-bp_end; range=ci_st-ci_end; ratio=read_alt/read_ref; diff=read_alt-read_ref)
     sv_data_trs['cipos_range']=sv_data_trs['ci_pos0'].astype(int) -sv_data_trs['ci_pos1'].astype(int)
     sv_data_trs['ciend_range']=sv_data_trs['sv_bp_end_POS'].astype(int) -sv_data_trs['sv_bp_end_END'].astype(int)
@@ -68,17 +87,23 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs['read_ratio_diff']=(abs(sv_data_trs['PR_alt'])+ abs(sv_data_trs['SR_alt'])-abs(sv_data_trs['PR_ref'])-abs(sv_data_trs['SR_ref']))/(abs(sv_data_trs['PR_alt'])+ abs(sv_data_trs['SR_alt'])+abs(sv_data_trs['PR_ref'])+abs(sv_data_trs['SR_ref']))
     sv_data_trs['bnd_depth_ratio_diff']=(abs(sv_data_trs['MATE_BND_DEPTH'].astype(float))-abs(sv_data_trs['BND_DEPTH'].astype(float)))/(abs(sv_data_trs['MATE_BND_DEPTH'].astype(float))+abs(sv_data_trs['BND_DEPTH'].astype(float)))
     
+    # re-arrange the data
+    random.seed(0)
+    new_index=random.sample(list(range(sv_data_trs.shape[0])), k=sv_data_trs.shape[0]) 
+    sv_data_trs=sv_data_trs.reset_index(drop=True)
+    sv_data_trs=sv_data_trs.reindex(new_index)
+    sv_data_trs=sv_data_trs.reset_index(drop=True)       
     # replace na
     sv_data_trs=sv_data_trs.fillna(0)
     # replace infinite value
     sv_data_trs.replace([np.inf, -np.inf], 0, inplace=True)
-    
+   
     # label benchmark sv 
     sv_data_trs.insert(sv_data_trs.shape[1], "label", list(repeat(0,sv_data_trs.shape[0])), True)
     sv_data_trs.loc[(sv_data_trs['gnomad_qc']=="YVID") | (sv_data_trs['control_g']=="YVID") | (sv_data_trs['centromere_qc']=="YVID"),'label']=-1
-    sv_data_trs.loc[(sv_data_trs['1000_g']=="YVID") | (sv_data_trs['gnomad_g']=="YVID") | (sv_data_trs['dgv_g']=="YVID") | (sv_data_trs['1000_gall']=="YVID") | (sv_data_trs['gnomad_gall']=="YVID"),'label']=1
-    sv_data_trs.loc[((sv_data_trs['cytoatlas_s']=="YVID") | (sv_data_trs['cosmic_s']=="YVID")) & (sv_data_trs['1000_gall']!="YVID") & (sv_data_trs['gnomad_gall']!="YVID") & (sv_data_trs['control_gall']!="YVID") ,'label']=2
-    
+    sv_data_trs.loc[(sv_data_trs['1000_g']=="YVID") | (sv_data_trs['gnomad_g']=="YVID") | (sv_data_trs['dgv_g']=="YVID") | (sv_data_trs['1000_gall']=="YVID") | (sv_data_trs['gnomad_gall']=="YVID"),'label']=1   
+    sv_data_trs.loc[((sv_data_trs['cytoatlas_s']=="YVID") | (sv_data_trs['cosmic_s']=="YVID")) ,'label']=2
+    print(sv_data_trs['label'].value_counts())    
     
     # make summary plot / table
     sv_data_trs['sv_start_bp0']=0
@@ -91,6 +116,20 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs_2=sv_data_trs.copy()
     sv_data_trs_2=sv_data_trs_2.loc[:,['sv_type','sv_bp_end_cc1', 'sv_bp_end_cc_v1', 'sv_bp_end_cc_v2',  'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4', 'sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11',  'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14',   'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16', 'sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2',  'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6',  'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24', 'cipos_range', 'ciend_range',  'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'bnd_depth_ratio',  'PR_read_ratio_diff', 'SR_read_ratio_diff', 'read_ratio_diff', 'bnd_depth_ratio_diff', 'label']]
     sv_data_trs_2.columns
+     
+    #  replace false values from data transformation  
+    a=sv_data_trs_2.drop(['sv_type','label'],axis=1).apply(pd.to_numeric, errors="ignore").applymap(lambda x: isinstance(x, float), na_action='ignore')
+    str_cell=[]
+    for i in a.columns:
+        if not a[i].all():
+            for n in range(sv_data_trs_2.shape[0]):
+                try:
+                    b=float(sv_data_trs_2.loc[n,i])
+                except:
+                    str_cell.append(str(i)+'&'+str(n))
+    for m in str_cell:
+        print(m)
+        sv_data_trs_2.loc[int(m.split('&')[1]), m.split('&')[0]]=0   
     
     # re-arrange the data
     random.seed(0)
@@ -101,6 +140,13 @@ def trs_sv_data_transform(sv_data_trs):
     return sv_data_trs_2
 
 def nontrs_sv_data_transform(sv_data_nontrs):
+    # re-arrange the data
+    random.seed(0)
+    new_index=random.sample(list(range(sv_data_nontrs.shape[0])), k=sv_data_nontrs.shape[0]) 
+    sv_data_nontrs=sv_data_nontrs.reset_index(drop=True)
+    sv_data_nontrs=sv_data_nontrs.reindex(new_index)
+    sv_data_nontrs=sv_data_nontrs.reset_index(drop=True)   
+        
     # transform database label
     sv_data_nontrs.loc[sv_data_nontrs['1000_gall']=='Not_in_database','1000_gall']=0
     sv_data_nontrs.loc[sv_data_nontrs['1000_g']=='Not_in_database','1000_g']=0
@@ -114,7 +160,19 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs.loc[sv_data_nontrs['dgv_g']=='Not_in_database','dgv_g']=0
     sv_data_nontrs.loc[sv_data_nontrs['centromere_qc']=='Not_in_database','centromere_qc']=0
     sv_data_nontrs.loc[sv_data_nontrs['uwstl_s']=='Not_in_database','uwstl_s']=0
-    
+    print(sv_data_nontrs['1000_gall'].value_counts())
+    print(sv_data_nontrs['1000_g'].value_counts())
+    print(sv_data_nontrs['gnomad_gall'].value_counts())
+    print(sv_data_nontrs['gnomad_g'].value_counts())
+    print(sv_data_nontrs['control_gall'].value_counts())
+    print(sv_data_nontrs['control_g'].value_counts())
+    print(sv_data_nontrs['cytoatlas_s'].value_counts())
+    print(sv_data_nontrs['cosmic_s'].value_counts())
+    print(sv_data_nontrs['gnomad_qc'].value_counts())
+    print(sv_data_nontrs['centromere_qc'].value_counts())
+    print(sv_data_nontrs['dgv_g'].value_counts())
+    print(sv_data_nontrs['uwstl_s'].value_counts())
+        
     # transform sv_info variables
     sv_data_nontrs['ci_pos0']=0
     sv_data_nontrs['ci_pos1']=0
@@ -165,6 +223,12 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs['SR_read_ratio_diff']=(abs(sv_data_nontrs['SR_alt'])-abs(sv_data_nontrs['SR_ref']))/(abs(sv_data_nontrs['SR_alt'])+ abs(sv_data_nontrs['SR_ref']))
     sv_data_nontrs['read_ratio_diff']=(abs(sv_data_nontrs['PR_alt'])+ abs(sv_data_nontrs['SR_alt'])-abs(sv_data_nontrs['PR_ref'])-abs(sv_data_nontrs['SR_ref']))/(abs(sv_data_nontrs['PR_alt'])+ abs(sv_data_nontrs['SR_alt'])+abs(sv_data_nontrs['PR_ref'])+abs(sv_data_nontrs['SR_ref']))
     
+    # re-arrange the data
+    random.seed(0)
+    new_index=random.sample(list(range(sv_data_nontrs.shape[0])), k=sv_data_nontrs.shape[0]) 
+    sv_data_nontrs=sv_data_nontrs.reset_index(drop=True)
+    sv_data_nontrs=sv_data_nontrs.reindex(new_index)
+    sv_data_nontrs=sv_data_nontrs.reset_index(drop=True)       
     # replace na
     sv_data_nontrs=sv_data_nontrs.fillna(0)
     # replace infinite value
@@ -181,6 +245,20 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs_2=sv_data_nontrs_2.rename(columns={'QUAL.1':'svtyper_score','SUPP':'sv_caller_supp'})    
     sv_data_nontrs_2=sv_data_nontrs_2.loc[:,['sv_type', 'svtyper_score', 'sv_bp_end_cc1', 'sv_bp_end_cc_v1','sv_bp_end_cc_v2', 'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4','sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11', 'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14', 'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16','sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2', 'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6', 'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24', 'sv_caller_supp', 'cipos_range', 'ciend_range', 'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'PR_read_ratio_diff',  'SR_read_ratio_diff', 'read_ratio_diff', 'label']]
     sv_data_nontrs_2.columns
+    
+    #  replace false values from data transformation  
+    a=sv_data_nontrs_2.drop(['sv_type','label'],axis=1).apply(pd.to_numeric, errors="ignore").applymap(lambda x: isinstance(x, float), na_action='ignore')
+    str_cell=[]
+    for i in a.columns:
+        if not a[i].all():
+            for n in range(sv_data_nontrs_2.shape[0]):
+                try:
+                    b=float(sv_data_nontrs_2.loc[n,i])
+                except:
+                    str_cell.append(str(i)+'&'+str(n))
+    for m in str_cell:
+        print(m)
+        sv_data_nontrs_2.loc[int(m.split('&')[1]), m.split('&')[0]]=0     
     
     # re-arrange the data 
     random.seed(0)
