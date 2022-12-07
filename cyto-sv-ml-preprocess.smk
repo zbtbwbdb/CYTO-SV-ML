@@ -29,9 +29,9 @@ size=int(config['size'])
 SIZE_K=round(size/1000)
 #report: OUTPUT_DIR+"/report/workflow.rst"
     
-#rule all:
-#    input:
-#        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=SIZE_K)  
+rule all:
+    input:
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=SIZE_K)  
         
 # Run chromoseq_sv
 rule chromoseq_sv:
@@ -137,7 +137,7 @@ rule sv_database_ann:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=SIZE_K)
     params:
         sm = SAMPLES, 
-        sv_db=SV_DB,
+        sv_db='@'.join(str(sd) for sd in SV_DB),
         py27_dir=config['py27_dir']
     shell:
         """        
