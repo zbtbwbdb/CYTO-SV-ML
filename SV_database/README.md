@@ -7,6 +7,7 @@
 ├── 1000_g.nontrs.gz               1000 genome database nontrs SVs >=2 hits  <br />
 ├── 1000_g.nontrs.gz.tbi  <br />
 ├── 1000_g.trs                     1000 genome database trs SVs >=2 hits  <br />
+├──    <br />
 centromere genomic range SVs  <br />
 ├── centromere_qc.nontrs.gz        centromere genomic range for nontrs SVs  <br />
 ├── centromere_qc.nontrs.gz.tbi  <br />
@@ -23,6 +24,7 @@ COSMIC database SVs  <br />
 ├── cosmic_s.nontrs.gz             COSMIC database nontrs SVs with CI info  <br />
 ├── cosmic_s.nontrs.gz.tbi  <br />
 ├── cosmic_s.trs                    COSMIC database trs SVs  <br />
+├──    <br />
 CytoAtlas database SVs  <br />
 ├── cytoatlas_s.bp.trs              CytoAtlas database trs SVs with CI info  <br />
 ├── cytoatlas_s.nontrs.gz           CytoAtlas database nontrs SVs  <br />
@@ -30,9 +32,11 @@ CytoAtlas database SVs  <br />
 ├── cytoatlas_s.trs                 CytoAtlas database trs SVs  <br />
 ├── CYTO-SV-Auto-ML.py  <br />
 ├── CYTO-SV-Auto-ML_tuning.py  <br />
+├──    <br />
 DGV database SVs  <br />
 ├── dgv_g.nontrs.gz                 DGV database nontrs SVs  <br /> 
 ├── dgv_g.nontrs.gz.tbi  <br />
+├──    <br />
 gnomAD database SVs  <br />
 ├── gnomad_g2ab.nontrs.gz           gnomAD database nontrs SVs >=2 hits  <br />
 ├── gnomad_g2ab.nontrs.gz.tbi  <br />
