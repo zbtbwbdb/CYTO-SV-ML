@@ -78,7 +78,7 @@ def sv_id_tf(line):
             info_new=info_new+";"+str(key)+"="+str(value) 
             m=1   
 #    print(info_new)
-    if ';CSQ=' in item[7] and (id_mode!='sf' or  id_mode=='sc'): 
+    if ';CSQ=' in item[7] and (id_mode!='sf' or  id_mode!='sc'): 
         item[7]=info_new+';CSQ='+info_dict['CSQ']
     else:
         item[7]=info_new
