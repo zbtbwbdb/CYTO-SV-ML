@@ -12,10 +12,10 @@
 ├── centromere_qc.trs              centromere genomic range for trs SVs
 ├──
 ├── (DB files normal donor WGS are considered as sequencing technical controls and not provided here)
-├── control_gall.nontrs.gz         all nontrs SVs >=10 hits in normal donor WGS
-├── control_g.nontrs.gz            trs SVs >=100 hits in normal donor WGS
-├── control_gall.trs               all trs SVs >=2 hits in normal donor WGS
-├── control_g.trs                  trs SVs >=20 hits in normal donor WGS
+├── ~~control_gall.nontrs.gz         all nontrs SVs >=10 hits in normal donor WGS~~
+├── ~~control_g.nontrs.gz            trs SVs >=100 hits in normal donor WGS~~
+├── ~~control_gall.trs               all trs SVs >=2 hits in normal donor WGS~~
+├── ~~control_g.trs                  trs SVs >=20 hits in normal donor WGS~~
 ├── 
 ├── cosmic_s.bp.trs                COSMIC database trs SVs with CI info
 ├── cosmic_s.nontrs.gz             COSMIC database nontrs SVs with CI info
