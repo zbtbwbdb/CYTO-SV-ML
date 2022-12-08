@@ -60,7 +60,7 @@ def trs_sv_data_transform(sv_data_trs):
             sv_data_trs.loc[np.r_[np.where(sv_data_trs['RS'].isnull())],'RS']=0          
             sv_data_trs.loc[np.r_[np.where(sv_data_trs['AS'].isnull())],'AS']=0             
             sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull()) ] ,'PR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull()) ],['RP','AP']].apply(lambda x: x['RP'].astype(str)+','+x['AP'].astype(str), axis=1)
-            sv_data_trs.loc[np.r_[np.where(sva_data_trs['SR'].isnull()) ],'SR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],['RS','AS']].apply(lambda x: x['RS'].astype(str)+','+x['AS'].astype(str), axis=1)  
+            sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],'SR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],['RS','AS']].apply(lambda x: x['RS'].astype(str)+','+x['AS'].astype(str), axis=1)  
         sv_data_trs.loc[np.r_[np.where(sv_data_trs['DR'].isnull())],'DR']=0    
         sv_data_trs.loc[np.r_[np.where(sv_data_trs['DV'].isnull())],'DV']=0  
         sv_data_trs.loc[np.r_[np.where(sv_data_trs['RR'].isnull())],'RR']=0          
