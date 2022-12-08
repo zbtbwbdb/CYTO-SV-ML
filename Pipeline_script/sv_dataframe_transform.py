@@ -61,14 +61,17 @@ def trs_sv_data_transform(sv_data_trs):
             sv_data_trs.loc[np.r_[np.where(sv_data_trs['AS'].isnull())],'AS']=0             
             sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull()) ] ,'PR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull()) ],['RP','AP']].apply(lambda x: x['RP'].astype(str)+','+x['AP'].astype(str), axis=1)
             sv_data_trs.loc[np.r_[np.where(sva_data_trs['SR'].isnull()) ],'SR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],['RS','AS']].apply(lambda x: x['RS'].astype(str)+','+x['AS'].astype(str), axis=1)  
-        sv_data_trs.loc[np.r_[np.where(sv_data_trs['DR'].isnull())],'DR']=0  
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['DR'].isnull())],'DR']=0    
         sv_data_trs.loc[np.r_[np.where(sv_data_trs['DV'].isnull())],'DV']=0  
         sv_data_trs.loc[np.r_[np.where(sv_data_trs['RR'].isnull())],'RR']=0          
         sv_data_trs.loc[np.r_[np.where(sv_data_trs['RV'].isnull())],'RV']=0          
         sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull())] ,'PR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR'].isnull()) ],['DR','DV']].apply(lambda x: x['DR'].astype(str)+','+x['DV'].astype(str), axis=1)
-        sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull())] ,'SR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],['RR','RV']].apply(lambda x: x['RR'].astype(str)+','+x['RV'].astype(str), axis=1)      
-        sv_data_trs.loc[sv_data_trs['PR']=='0,0','PR']=sv_data_trs.loc[sv_data_trs['PR']=='0,0',['DR','DV']].apply(lambda x: x['DR'].astype(str)+','+x['DV'].astype(str), axis=1)
-        sv_data_trs.loc[sv_data_trs['SR']=='0,0','SR']=sv_data_trs.loc[sv_data_trs['SR']=='0,0',['RR','RV']].apply(lambda x: x['RR'].astype(str)+','+x['RV'].astype(str), axis=1)           
+        sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull())] ,'SR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR'].isnull()) ],['RR','RV']].apply(lambda x: x['RR'].astype(str)+','+x['RV'].astype(str), axis=1)   
+        try:
+            sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR']=='0,0')],'PR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['PR']=='0,0')],['DR','DV']].apply(lambda x: x['DR'].astype(str)+','+x['DV'].astype(str), axis=1)
+            sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR']=='0,0')],'SR']=sv_data_trs.loc[np.r_[np.where(sv_data_trs['SR']=='0,0')],['RR','RV']].apply(lambda x: x['RR'].astype(str)+','+x['RV'].astype(str), axis=1)      
+        except: 
+            pass            
         sv_data_trs['PR_ref']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
         sv_data_trs['PR_alt']=sv_data_trs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
         sv_data_trs['SR_ref']=sv_data_trs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
@@ -109,9 +112,9 @@ def trs_sv_data_transform(sv_data_trs):
    
     # label benchmark sv 
     sv_data_trs.insert(sv_data_trs.shape[1], "label", list(repeat(0,sv_data_trs.shape[0])), True)
-    sv_data_trs.loc[(sv_data_trs['gnomad_qc']=="YVID") | (sv_data_trs['control_g']=="YVID") | (sv_data_trs['centromere_qc']=="YVID"),'label']=-1
     sv_data_trs.loc[(sv_data_trs['1000_g']=="YVID") | (sv_data_trs['gnomad_g']=="YVID") | (sv_data_trs['dgv_g']=="YVID") | (sv_data_trs['1000_gall']=="YVID") | (sv_data_trs['gnomad_gall']=="YVID"),'label']=1   
     sv_data_trs.loc[((sv_data_trs['cytoatlas_s']=="YVID") | (sv_data_trs['cosmic_s']=="YVID")) ,'label']=2
+    sv_data_trs.loc[(sv_data_trs['gnomad_qc']=="YVID") | (sv_data_trs['control_g']=="YVID") | (sv_data_trs['centromere_qc']=="YVID"),'label']=-1    
     print(sv_data_trs['label'].value_counts())    
     
     # make summary plot / table
@@ -208,9 +211,12 @@ def nontrs_sv_data_transform(sv_data_nontrs):
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['RR'].isnull())],'RR']=0          
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['RV'].isnull())],'RV']=0          
         sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['PR'].isnull())] ,'PR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['PR'].isnull()) ],['DR','DV']].apply(lambda x: x['DR'].astype(str)+','+x['DV'].astype(str), axis=1)
-        sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR'].isnull())] ,'SR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR'].isnull()) ],['RR','RV']].apply(lambda x: x['RR'].astype(str)+','+x['RV'].astype(str), axis=1)      
-        sv_data_nontrs.loc[sv_data_nontrs['PR']=='0,0','PR']=sv_data_nontrs.loc[sv_data_nontrs['PR']=='0,0',['DR','DV']].apply(lambda x: x['DR'].astype(str)+','+x['DV'].astype(str), axis=1)
-        sv_data_nontrs.loc[sv_data_nontrs['SR']=='0,0','SR']=sv_data_nontrs.loc[sv_data_nontrs['SR']=='0,0',['RR','RV']].apply(lambda x: x['RR'].astype(str)+','+x['RV'].astype(str), axis=1)            
+        sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR'].isnull())] ,'SR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR'].isnull()) ],['RR','RV']].apply(lambda x: x['RR'].astype(str)+','+x['RV'].astype(str), axis=1)  
+        try:
+            sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['PR']=='0,0')],'PR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['PR']=='0,0')],['DR','DV']].apply(lambda x: x['DR'].astype(str)+','+x['DV'].astype(str), axis=1)
+            sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR']=='0,0')],'SR']=sv_data_nontrs.loc[np.r_[np.where(sv_data_nontrs['SR']=='0,0')],['RR','RV']].apply(lambda x: x['RR'].astype(str)+','+x['RV'].astype(str), axis=1)   
+        except: 
+            pass            
         sv_data_nontrs['PR_ref']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
         sv_data_nontrs['PR_alt']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
         sv_data_nontrs['SR_ref']=sv_data_nontrs['SR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
