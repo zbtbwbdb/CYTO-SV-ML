@@ -5,7 +5,7 @@
 ### CYTO-SV-ML snakemake workflow
 ![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_Snakemake_workflow.png)
 
-### Installconda environment
+### Install conda environment
 ```
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
