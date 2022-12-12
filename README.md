@@ -19,10 +19,12 @@ conda install -n base -c conda-forge mamba
 
 ### Install parliament and chromoseq Docker
 ```
+# install docker in the linux system
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 sudo yum install docker-ce docker-ce-cli containerd.io
 sudo systemctl start docker
+# download parliament and chromoseq Docker
 sudo docker pull docker.io/dnanexus/parliament2:latest # Parliament: https://github.com/dnanexus/parliament2
 sudo docker pull  docker.io/zatawada/docker-basespace_chromoseq_v2:master # ChromoSeq: https://github.com/genome/docker-basespace_chromoseq
 ```
