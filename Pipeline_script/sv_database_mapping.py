@@ -13,7 +13,7 @@
 # ----------------------------------------------------------------------------
 #################################################################################################################
 
-import sys,getopt,os,commands,subprocess,SVCNV,SVCNV_sim,SVCNV_set
+import sys,getopt,os,commands,copy,subprocess,SVCNV,SVCNV_sim,SVCNV_set
 #parameter setting
 wd = sys.path[0]
 opts,args = getopt.getopt(sys.argv[1:],"i:d:p:t:o:")
@@ -53,16 +53,16 @@ with open(inFile,'r') as f:
             sub_len=int(start-end)
 
 # prepare mapping sv range
-            start1 = min(int(start-(end-start)*percent),int(start-1000))
+            start1 = max(0,int(start-1000)) # min(int(start-(end-start)*percent),int(start-1000))
             if start1<0:
                 start1=0
-            end1 = max(int(end+(end-start)*percent),int(end+1000))
+            end1 = int(end+1000) # max(int(end+(end-start)*percent),int(end+1000))
 
 # initiate sv 
             svcnv1=SVCNV_set.SVCNV(line)
             svcnv_list=[]
             sv_dict_ori=[]
-#            print(template_database)
+#            print(svcnv1.chr + "\t" + str(svcnv1.start_pos) + "\t" + str(svcnv1.end_pos))
 # read database sv_list in the range into dictionary
             svcnv_list = commands.getoutput("tabix -f " + template_database +" "+ chr + ":" + str(start1) + "-" + str(end1) +"|grep "+svtype).split("\n")
 #             #svcnv_list = subprocess.check_output("tabix -f " + template_database +" "+ chr + ":" + str(start1) + "-" + str(end1) +"|grep "+svtype).split("\n")
@@ -75,7 +75,7 @@ with open(inFile,'r') as f:
             else:
                 sv_dict=[]
                 sv_dict_ori=[]    
-                #print(svcnv_list)
+#                print(svcnv_list)
                 for svcnvs in svcnv_list:
 #                    result = svcnvs.strip().split("\t") 
                     s = SVCNV_set.SVCNV(svcnvs)
@@ -87,32 +87,36 @@ with open(inFile,'r') as f:
 
 # simplify sv_dict from database
                 if svtype=="DEL" or svtype=="DUP": 
-                    sm1=SVCNV_set.simplify_by_overlap(sv_dict)
+                    sm1=SVCNV_set.merge_by_overlap(sv_dict,percent)
                 else:
-                    sm1=SVCNV_set.simplify_by_breakpoint(sv_dict)
+                    sm1=SVCNV_set.merge_by_breakpoint(sv_dict,distance)
 
 # calculate svcnv exclude ratio
                 sm2=[]
                 sv_dict_sim=[]
-                subtract_list_len=0
+                subtract_list_len_list=[]
                 svcnv_ratio=0                
-                
+                svcnv2=copy.copy(svcnv1)
+#                 for sv in sm1:
+#                     print("sim:"+sv.chr + "\t" + str(sv.start_pos) + "\t" + str(sv.end_pos))
 # check the difference of original sv and total databse svs by mapping out the gap sv          
-                if svtype=="DEL" or svtype=="DUP": # or svtype=="INV"
-                    sm2= SVCNV_set.subtract_by_overlap(sm1,svcnv1,percent)
+                if svtype=="DEL" or svtype=="DUP" or svtype=="INV":
+                    sm2= SVCNV_set.subtract_by_overlap(sm1,svcnv2,percent)
                     for sm in sm2:
-                        subtract_list_len+=sm.length 
+#                         print("sub:"+sm.chr + "\t" + str(sm.start_pos) + "\t" + str(sm.end_pos))
+                        subtract_list_len_list.append(sm.length) 
                 else:
-                    sm2 = SVCNV_set.subtract_by_breakpoint(sm1,svcnv1,distance)
-                    for sm in sm2:                      
-                        subtract_list_len+=svcnv1.start_pos-sm.start_pos
-
+                    sm2 = SVCNV_set.subtract_by_breakpoint(sm1,svcnv2,distance)
+                    for sm in sm2:  
+#                         print("sub:"+sm.chr + "\t" + str(sm.start_pos) + "\t" + str(sm.end_pos))
+                        subtract_list_len_list.append(sm.length)             
 # calculate the sv consensus by 1 - the difference between original sv and total databse svs by summing up the gap sv length 
             if len(sm2)==0 or svcnv1.length==0:
                 svcnv_ratio=1-float(len(filter(None,sm2)))
             else:                        
-                svcnv_ratio=float(1-float(subtract_list_len)/float(svcnv1.length)) 
-
+                svcnv_ratio=float(1-float(min(subtract_list_len_list))/float(svcnv1.length)) 
+#             print(subtract_list_len_list)
+#             print(svcnv_ratio)            
 #  determine whether the sv diference is passsing the cutoff and save the data file
             if svcnv_ratio<percent:
                 fp.write(svcnv1.chr + "\t" + str(svcnv1.start_pos) + "\t" + str(svcnv1.end_pos) + "\t" + svcnv1.chr + "\t"+ svcnv1.svcnv_type + "\t" + sv_id + "\tPASS\t" + svcnv1.info + "\t" + "{:.3f}".format(svcnv_ratio) + "\t" + "|".join(sv_dict_ori) + "\n" )
