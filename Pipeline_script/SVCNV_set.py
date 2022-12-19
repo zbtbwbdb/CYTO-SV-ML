@@ -67,32 +67,38 @@ class SVCNV_transform:
 
 def subtract_by_overlap(svcnv_list,svcnv,percent):
     if len(svcnv_list) == 0:
-        return []
+        return [svcnv]
     svcnv_list_sorted = sorted(svcnv_list)
     sub_list = [svcnv]
-    SVCNV_transform_current = None
     sim_len=len(svcnv_list)
     for idx,sim_current in enumerate(svcnv_list_sorted):
-        svcnv_tmp=copy.copy(svcnv)        
-        if sim_current.chr==svcnv.chr and (sim_current.start_pos>svcnv.end_pos or sim_current.end_pos<svcnv.start_pos):
+        svcnv_tmp=copy.copy(svcnv)    
+#         print("t"+svcnv_tmp.chr+ "\t" + str(svcnv_tmp.start_pos) + "\t" + str(svcnv_tmp.end_pos))            
+#         print("t"+sim_current.chr+ "\t" + str(sim_current.start_pos) + "\t" + str(sim_current.end_pos))        
+        if sim_current.chr==svcnv.chr and (sim_current.start_pos>svcnv_tmp.end_pos or sim_current.end_pos<svcnv_tmp.start_pos):
+#             print('no overlap--')
             continue
-        elif sim_current.chr==svcnv.chr and sim_current.start_pos<=svcnv.start_pos and sim_current.end_pos>svcnv.start_pos and sim_current.end_pos<svcnv.end_pos:
-            sim_current.start_pos=svcnv.end_pos
+        elif sim_current.chr==svcnv.chr and sim_current.start_pos<=svcnv_tmp.start_pos and sim_current.end_pos>svcnv_tmp.start_pos and sim_current.end_pos<svcnv_tmp.end_pos:
+#            print('partial overlap+-')
+            sim_current.start_pos=svcnv_tmp.end_pos
             sim_current.length=abs(sim_current.end_pos-sim_current.start_pos)
             sub_list.append(sim_current)
-        elif sim_current.chr==svcnv.chr and sim_current.start_pos<=svcnv.start_pos and sim_current.end_pos>=svcnv.end_pos:
-            sim_current.start_pos=svcnv.end_pos
-            sim_current.end_pos=svcnv.end_pos
+        elif sim_current.chr==svcnv.chr and sim_current.start_pos<=svcnv_tmp.start_pos and sim_current.end_pos>=svcnv_tmp.end_pos:
+#             print('full overlap++')           
+            sim_current.start_pos=svcnv_tmp.end_pos
+            sim_current.end_pos=svcnv_tmp.end_pos
             sim_current.length=abs(sim_current.end_pos-sim_current.start_pos)
             sub_list.append(sim_current)
             break         
-        elif sim_current.chr==svcnv.chr and sim_current.start_pos>svcnv.start_pos and sim_current.end_pos<=svcnv.end_pos:
+        elif sim_current.chr==svcnv.chr and sim_current.start_pos>svcnv_tmp.start_pos and sim_current.end_pos<=svcnv_tmp.end_pos:
+#             print('partial overlap--')                 
             SVCNV_transform_current=SVCNV_transform(svcnv_tmp)
-            SVCNV_transform_current.end_pos =sim_current.start_pos+(svcnv.end_pos-sim_current.end_pos)
+            SVCNV_transform_current.end_pos =sim_current.start_pos+(svcnv_tmp.end_pos-sim_current.end_pos)
             SVCNV_transform_current.length=abs(SVCNV_transform_current.end_pos-SVCNV_transform_current.start_pos)
             SVCNV_transform_current.info=sim_current.info
             sub_list.append(SVCNV_transform_current)                        
-        elif sim_current.chr==svcnv.chr and sim_current.start_pos>svcnv.start_pos and sim_current.start_pos<=svcnv.end_pos and sim_current.end_pos>=svcnv.end_pos:
+        elif sim_current.chr==svcnv.chr and sim_current.start_pos>svcnv_tmp.start_pos and sim_current.start_pos<=svcnv_tmp.end_pos and sim_current.end_pos>=svcnv_tmp.end_pos:
+#             print('partial overlap-+')               
             SVCNV_transform_current=SVCNV_transform(svcnv_tmp)
             SVCNV_transform_current.end_pos =sim_current.start_pos
             SVCNV_transform_current.length=abs(SVCNV_transform_current.end_pos-SVCNV_transform_current.start_pos)   
@@ -104,19 +110,20 @@ def subtract_by_overlap(svcnv_list,svcnv,percent):
 
 def subtract_by_breakpoint(svcnv_list,svcnv,distance):
     if len(svcnv_list) == 0:
-        return []
+        return [svcnv]
     svcnv_list_sorted = sorted(svcnv_list)
     sub_list = [svcnv]
-    SVCNV_transform_current = None
     for idx,sim_current in enumerate(svcnv_list_sorted):
-        svcnv_tmp=copy.copy(svcnv)         
+        svcnv_tmp=copy.copy(svcnv)   
+#         print("t"+sim_current.chr+ "\t" + str(sim_current.start_pos) + "\t" + str(sim_current.end_pos))    
         if  sim_current.chr==svcnv.chr and abs(sim_current.start_pos-svcnv_tmp.start_pos)<=distance and abs(sim_current.end_pos-svcnv_tmp.end_pos)<=distance:
-            sim_current.end_pos=sim_current.end_pos+abs(sim_current.start_pos-svcnv_tmp.start_pos)+abs(sim_current.end_pos-svcnv_tmp.end_pos)            
-            SVCNV_transform_current = SVCNV_transform(sim_current)
-            sub_list.append(SVCNV_transform_current)
-        if  sim_current.chr==svcnv.chr and abs(sim_current.start_pos-svcnv.start_pos)>distance and abs(sim_current.end_pos-svcnv.end_pos)>distance:
+#             print('partial overlap')            
+            sim_current.end_pos=sim_current.start_pos+min(0,sim_current.start_pos-svcnv_tmp.start_pos)+min(0,svcnv_tmp.end_pos-sim_current.end_pos)                
+            sim_current.length=abs(sim_current.end_pos-sim_current.start_pos)              
+            sub_list.append(sim_current)
+        if  sim_current.chr==svcnv.chr and abs(sim_current.start_pos-svcnv_tmp.start_pos)>distance and abs(sim_current.end_pos-svcnv_tmp.end_pos)>distance:
             continue
-        if svcnv.chr != sim_current.chr:
+        if svcnv_tmp.chr != sim_current.chr:
             continue
     return sub_list
 
@@ -158,7 +165,8 @@ def merge_by_breakpoint(svcnv_list,distance):
             SVCNV_transform_current = SVCNV_transform(svcnv_current)
             continue
         if SVCNV_transform_current.chr == svcnv_current.chr and (abs(svcnv_current.start_pos - SVCNV_transform_current.start_pos) <= distance or abs(svcnv_current.end_pos - SVCNV_transform_current.end_pos) <= distance):
-            SVCNV_transform_current.end_pos = max(svcnv_current.end_pos,SVCNV_transform_current.end_pos)
+            SVCNV_transform_current.start_pos = int((svcnv_current.start_pos+SVCNV_transform_current.start_pos)/2)
+            SVCNV_transform_current.end_pos = int((svcnv_current.end_pos+SVCNV_transform_current.end_pos)/2)
             SVCNV_transform_current.transform_list.append(svcnv_current)
         else:
             sm_list.append(SVCNV_transform_current)
@@ -196,7 +204,7 @@ def simplify_by_breakpoint(svcnv_list):
         if idx == 0:
             SVCNV_transform_current = SVCNV_transform(svcnv_current)
             continue
-        if abs(svcnv_current.start_pos-SVCNV_transform_current.start_pos)<100 and abs(svcnv_current.end_pos-SVCNV_transform_current.end_pos)<100 :
+        if abs(svcnv_current.start_pos-SVCNV_transform_current.start_pos)<1000 and abs(svcnv_current.end_pos-SVCNV_transform_current.end_pos)<1000 :
                 SVCNV_transform_current.start_pos = int((svcnv_current.start_pos+SVCNV_transform_current.start_pos)/2)
                 SVCNV_transform_current.end_pos = int((svcnv_current.end_pos+SVCNV_transform_current.end_pos)/2)
         else:
