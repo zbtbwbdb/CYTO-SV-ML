@@ -27,8 +27,8 @@ def vcf_bed_tf(line):
         if inf.startswith('SVTYPE='):
             sv_type=inf.split('=')[1] 
     if 'chr' not in item[2]:       
-        item[2]=str(item[0])+':'+str(item[1])+':'+str(sv_bp_end)+':'+str(item[0])+':'+str(sv_type)+':'+str(item[2])  
-    line=str(item[0])+'\t'+str(item[1])+'\t'+str(sv_bp_end)+'\t'+str(sv_chr2)+'\t'+sv_type+'\t'+ str(item[2])+'\n'
+        item[2]=str(item[0])+':'+str(item[1])+':'+str(sv_bp_end)+':'+str(sv_chr2)+':'+str(sv_type)+':'+str(item[2])  
+    line=str(item[0])+'\t'+str(item[1])+'\t'+str(sv_bp_end)+'\t'+str(sv_chr2)+'\t'+str(sv_type)+'\t'+ str(item[2])+'\n'
     return line  
   
 for line in in_vcf:
