@@ -11,6 +11,7 @@ except:
     
 def sv_info_tf(line):
     info_dict={}
+    info_key_list=[]
     item=line.strip().split('\t')
     sv_chr2=item[0]
     sv_end=item[1]
@@ -22,7 +23,8 @@ def sv_info_tf(line):
     for inf in info_list:
         if '=' in inf:
             info_dict[inf.split('=')[0]]=inf.split('=')[1]
-            
+            info_key_list.append(inf.split('=')[0])
+                
     # correct sv info        
     if 'SVTYPE' not in info_list:
         if 'DEL|DUP|INV|INS|TRA|BND' in item[2]:
@@ -31,7 +33,7 @@ def sv_info_tf(line):
             info_dict['SVTYPE']=re.findall('DEL|DUP|INV|INS|TRA|BND',item[4])[0]
             
     alt_info=re.sub('\[|\]',':',item[4])     
-    if 'CHR2' not in info_list:
+    if 'CHR2' not in info_key_list:
         if info_dict['SVTYPE']=='BND':
             for ai in alt_info.split(':'):
                 if re.findall('chr',ai):
@@ -39,7 +41,7 @@ def sv_info_tf(line):
         else:
             info_dict['CHR2']=item[0]   
             
-    if 'END' not in info_list:
+    if 'END' not in info_key_list:
         if info_dict['SVTYPE']=='BND':
             for ai in alt_info.split(':'):
                 if ai.isdigit():
