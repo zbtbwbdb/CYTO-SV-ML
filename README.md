@@ -36,6 +36,7 @@ cd CYTO-SV-ML
 mamba env create py27 -f py27.yaml
 mamba env create py39 -f py39.yaml
 mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
+pip install --upgrade snakemake
 pip install --upgrade snakemake # in case that snakemake version is old
 ```
 
