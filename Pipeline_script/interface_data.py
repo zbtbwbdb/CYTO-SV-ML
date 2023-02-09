@@ -25,10 +25,8 @@ model_trs=pickle.load(open(trs_dir+'trs.pickle', 'rb'))
 model_nontrs=pickle.load(open(nontrs_dir+'nontrs.pickle', 'rb'))	
 
 # read in all WGS SV data
-X_trs=
-X_nontrs=
-X_trs=
-X_nontrs=
+X_trs=pd.read_csv(inFile+'trs',sep='\t',header=0, index_col=None, keep_default_na=False)
+X_nontrs=pd.read_csv(inFile+'nontrs',sep='\t',header=0, index_col=None, keep_default_na=False)
 
 # transform all the original SV data
 s_trs=model_trs.transform(X_trs)
@@ -39,6 +37,8 @@ trs_label=automl_trs.predict_all(s_trs)
 nontrs_label=automl_nontrs.predict_all(s_nontrs)
 
 # attach the prediction label to all the original SV data
-
+X_trs['label']=trs_label['label']
+X_nontrs['label']=nontrs_label['label']
 # save all the SV data
-
+pd.to_csv(X_trs,inFile+'trs',sep='\t',index=False,header=True)
+pd.to_csv(X_nontrs,inFile+'nontrs',sep='\t',index=False,header=True)
