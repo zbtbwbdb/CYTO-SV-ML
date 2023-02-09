@@ -17,14 +17,26 @@ if inFile == "":
 	sys.exit()
       
 # load the optimal model
+automl_trs = AutoML(mode="Explain", n_jobs= 6, results_path=trs_dir)
+automl_nontrs = AutoML(mode="Explain", n_jobs= 6, results_path=nontrs_dir)
 
 # load the training data tranformer
+model_trs=pickle.load(open(trs_dir+'trs.pickle', 'rb'))
+model_nontrs=pickle.load(open(nontrs_dir+'nontrs.pickle', 'rb'))	
 
 # read in all WGS SV data
+X_trs=
+X_nontrs=
+X_trs=
+X_nontrs=
 
 # transform all the original SV data
+s_trs=model_trs.transform(X_trs)
+s_nontrs=model_nontrs.transform(X_nontrs)
 
 # predict all the transformed SV data
+trs_label=automl_trs.predict_all(s_trs)
+nontrs_label=automl_nontrs.predict_all(s_nontrs)
 
 # attach the prediction label to all the original SV data
 
