@@ -69,7 +69,7 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --config cohort_n
 ```
 ![CYTO-SV-ML snakemake report](cyto-sv-ml_snakemake_report.png)
 
-### Run Shiny Web-portal 
+### Run CYTO-SV-ML Snakemake interface pipeline for Web-portal application
 ```
 snakemake --core ${number_of_cores} -s cyto-sv-ml-interface.smk  --config cohort_name=${cohort_name}
 # to run the docker image in the local machine and open user interface with "http://localhost:8000/"
