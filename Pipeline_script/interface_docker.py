@@ -15,4 +15,17 @@ opt=parse_args(opt_parser)
 input<-as.character(opt$input_file)
 opc<-as.character(opt$output_file)
 
-# trnform data
+# load the optimal model
+
+# load the training data tranformer
+
+# read in all WGS SV data
+
+# transform all the original SV data
+
+# predict all the transformed SV data
+
+# attach the prediction label to all the original SV data
+
+# save all the SV data
+
