@@ -14,3 +14,5 @@ opt_parser<-OptionParser(option_list=option_list)
 opt=parse_args(opt_parser)
 input<-as.character(opt$input_file)
 opc<-as.character(opt$output_file)
+
+# trnform data
