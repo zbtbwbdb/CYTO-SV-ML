@@ -5,16 +5,12 @@ opts,args = getopt.getopt(sys.argv[1:],"i:d:p:t:o:")
 inFile = ""
 
 for op, value in opts:
-	if op == "-i":
-	    inFile = value
-	if op == "-d":
-	    distance = int(value)
-	if op == "-p":
-	    percent = float(value)
 	if op == "-t":
-	    template_database = value
-	if op == "-o":
-	    filter_pass = value
+	    trs_dir = str(value)
+	if op == "-n":
+	    nontrs_dir = str(value)
+	if op == "-i":
+	    inFile =  str(value)
 
 if inFile == "":
 	print("-i invalid")
