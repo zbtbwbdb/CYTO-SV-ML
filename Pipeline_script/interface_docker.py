@@ -1,20 +1,25 @@
-library(optparse)
-library(cluster)
-library(reghelper)
-library(bios2mds)
-library(Hmisc)
-library(stringr)
-library(GOSemSim)
-library(org.Hs.eg.db)
-library('biomaRt')
-################################################################################################################################################################################
+import sys,getopt,os,commands,copy,subprocess,SVCNV,SVCNV_sim,SVCNV_set
+#parameter setting
+wd = sys.path[0]
+opts,args = getopt.getopt(sys.argv[1:],"i:d:p:t:o:")
+inFile = ""
 
-option_list<-list(make_option(c("-i", "--input_file"),type="character",help="input file", default=NA,metavar="filename"), make_option(c("-o", "--output_file"),type="character",help="output file", default=NA,metavar="filename"))
-opt_parser<-OptionParser(option_list=option_list)
-opt=parse_args(opt_parser)
-input<-as.character(opt$input_file)
-opc<-as.character(opt$output_file)
+for op, value in opts:
+	if op == "-i":
+	    inFile = value
+	if op == "-d":
+	    distance = int(value)
+	if op == "-p":
+	    percent = float(value)
+	if op == "-t":
+	    template_database = value
+	if op == "-o":
+	    filter_pass = value
 
+if inFile == "":
+	print("-i invalid")
+	sys.exit()
+      
 # load the optimal model
 
 # load the training data tranformer
