@@ -9,5 +9,5 @@ python ${cyto_sv_ml_dir}/Pipeline_script/interface_data.py -t ${main_dir}'/out/c
 Rscript ${cyto_sv_ml_dir}/Pipeline_script/interface_data.R 
 cd ${cyto_sv_ml_dir}/cyto-sv-ml/
 sudo docker build -t cyto-sv-ml-app:${sample_all} .
-# to run the docker in the local machine and open user interface with "http://localhost:8000/"
+# to run the docker image in the local machine and open user interface with "http://localhost:8000/"
 # sudo docker run -d -p 8000:80 cyto-sv-ml-app:${sample_all}
