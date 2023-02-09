@@ -65,11 +65,16 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --c
 ### Run CYTO-SV-ML Snakemake modeling pipeline for whole cohort
 ```
 snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk  --config cohort_name=${cohort_name}
-snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --report ${your_work_dir}/out/${cohort_name}_report.html
+snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --config cohort_name=${cohort_name} --report ${your_work_dir}/out/${cohort_name}_report.html
 ```
 ![CYTO-SV-ML snakemake report](cyto-sv-ml_snakemake_report.png)
 
-# Run Shiny Web-portal 
+### Run Shiny Web-portal 
+```
+snakemake --core ${number_of_cores} -s cyto-sv-ml-interface.smk  --config cohort_name=${cohort_name}
+# to run the docker image in the local machine and open user interface with "http://localhost:8000/"
+sudo docker run -d -p 8000:80 cyto-sv-ml-app:${sample_all}
+```
 The analysis summary of 494 MDS cohort using CYTO-SV-ML pipeline 
 ### Online Web-portal
 ```
