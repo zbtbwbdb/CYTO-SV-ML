@@ -1,11 +1,12 @@
 #!/bin/bash
 main_dir=$1
-sample_all=$2
+cyto_sv_ml_dir=$2
+sample_all=$3
 
-echo ${sample_all}
+echo ${main_dir} ${cyto_sv_ml_dir} ${sample_all}
 echo "# build R-shiny based user interface in docker container " && date   
-python ${cyto_sv_ml_dir}/Pipeline_script/interface_docker.py -t OUTPUT_DIR+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_trs_EXP -n  OUTPUT_DIR+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_nontrs_EXP -i outdir+'/'+str(cohort_name)+'.sv.all.combine_all'
+python ${cyto_sv_ml_dir}/Pipeline_script/interface_docker.py -t ${main_dir}'/out/cyto_sv_ml/'${sample_all}'_trs_'${k}'_trs_EXP' -n ${main_dir}'/out/cyto_sv_ml/'${sample_all}'_nontrs_'${k}'_nontrs_EXP' -i ${main_dir}'/out/'${sample_all}'.sv.all.combine_all'
 cd ${cyto_sv_ml_dir}/cyto-sv-ml/
-sudo docker build -t cyto-sv-ml-app:${cohort_name} .
+sudo docker build -t cyto-sv-ml-app:${sample_all} .
 # to run the docker in the local machine and open user interface with "http://localhost:8000/"
-# sudo docker run -d -p 8000:80 cyto-sv-ml-app:${cohort_name}
+# sudo docker run -d -p 8000:80 cyto-sv-ml-app:${sample_all}
