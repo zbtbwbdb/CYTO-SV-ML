@@ -41,8 +41,10 @@ X_trs['predict_label','prediction_TA''prediction_TG''prediction_TS']=trs_label
 X_nontrs['predict_label','prediction_TA''prediction_TG''prediction_TS']=nontrs_label
 
 # re-organize the data
-X_trs=X_trs['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label', 'predict_max']
-X_nontrs=X_nontrs['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label', 'predict_max']
+col_drop=[str(w) for w in X_trs.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label', 'predict_max']]
+X_trs=X_trs.drop(col_drop,axis=1)
+col_drop=[str(w) for w in X_nontrs.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label', 'predict_max']]
+X_nontrs=X_nontrs.drop(col_drop,axis=1)
 
 # save all the SV data
 pd.to_csv(X_trs,inFile+'trs',sep='\t',index=False,header=True)
