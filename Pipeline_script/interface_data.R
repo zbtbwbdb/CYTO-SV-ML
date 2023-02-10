@@ -18,9 +18,9 @@ opc<-as.character(opt$output_file)
 # read in trs and nontrs data
 X_trs=read.table(paste(inFile,'trs',sep=''),sep='\t',index=False,header=True)
 X_nontrs=read.table(paste(inFile,'nontrs',sep=''),sep='\t',index=False,header=True)
-
+cyto_band_dict=read.table(cyto_dict_file,sep='\t',index=False,header=True)
 # combine trs and nontrs data
 X_all=rbind(X_trs,X_nontrs)
 
 # save the SV data
-save(X_all,file = paste(inFile+'_all',sep=''))
+save(X_all,cyto_band_dict, file = paste(inFile+'_all',sep=''))
