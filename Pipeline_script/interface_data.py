@@ -28,9 +28,6 @@ model_nontrs=pickle.load(open(nontrs_dir+'nontrs.pickle', 'rb'))
 X_trs=pd.read_csv(inFile+'trs',sep='\t',header=0, index_col=None, keep_default_na=False)
 X_nontrs=pd.read_csv(inFile+'nontrs',sep='\t',header=0, index_col=None, keep_default_na=False)
 
-# re-organize the data
-
-
 # transform all the original SV data
 s_trs=model_trs.transform(X_trs)
 s_nontrs=model_nontrs.transform(X_nontrs)
@@ -42,6 +39,10 @@ nontrs_label=automl_nontrs.predict_all(s_nontrs)
 # attach the prediction label to all the original SV data
 X_trs['predict_label','prediction_TA''prediction_TG''prediction_TS']=trs_label
 X_nontrs['predict_label','prediction_TA''prediction_TG''prediction_TS']=nontrs_label
+
+# re-organize the data
+X_trs=X_trs['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label', 'predict_max']
+X_nontrs=X_nontrs['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label', 'predict_max']
 
 # save all the SV data
 pd.to_csv(X_trs,inFile+'trs',sep='\t',index=False,header=True)
