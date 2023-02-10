@@ -40,8 +40,8 @@ trs_label=automl_trs.predict_all(s_trs)
 nontrs_label=automl_nontrs.predict_all(s_nontrs)
 
 # attach the prediction label to all the original SV data
-X_trs['label']=trs_label['label']
-X_nontrs['label']=nontrs_label['label']
+X_trs['predict_label','prediction_TA''prediction_TG''prediction_TS']=trs_label
+X_nontrs['predict_label','prediction_TA''prediction_TG''prediction_TS']=nontrs_label
 
 # save all the SV data
 pd.to_csv(X_trs,inFile+'trs',sep='\t',index=False,header=True)
