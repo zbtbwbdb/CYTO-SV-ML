@@ -28,6 +28,9 @@ model_nontrs=pickle.load(open(nontrs_dir+'nontrs.pickle', 'rb'))
 X_trs=pd.read_csv(inFile+'trs',sep='\t',header=0, index_col=None, keep_default_na=False)
 X_nontrs=pd.read_csv(inFile+'nontrs',sep='\t',header=0, index_col=None, keep_default_na=False)
 
+# re-organize the data
+
+
 # transform all the original SV data
 s_trs=model_trs.transform(X_trs)
 s_nontrs=model_nontrs.transform(X_nontrs)
