@@ -19,9 +19,6 @@ opc<-as.character(opt$output_file)
 X_trs=read.table(paste(inFile,'trs',sep=''),sep='\t',index=False,header=True)
 X_nontrs=read.table(paste(inFile,'nontrs',sep=''),sep='\t',index=False,header=True)
 
-# re-organize the data
-
-
 # combine trs and nontrs data
 X_all=rbind(X_trs,X_nontrs)
 
