@@ -1,4 +1,5 @@
-FROM dockerhub.nmdp.org:8443/nmdp-shiny-base:3.6.1
+#FROM dockerhub.nmdp.org:8443/nmdp-shiny-base:3.6.1
+FROM docker.io/rocker/shiny:3.6.1
 MAINTAINER "Tao Zhang tzhang@nmdp.org"
 
 RUN apt-get update && apt-get install -y libxtst6
