@@ -72,16 +72,33 @@ X_trs_all=pd.concat([X_trs_all,trs_label],axis=1)
 X_nontrs_all=pd.concat([X_nontrs_all,nontrs_label],axis=1)
 
 # re-organize in trs/nontrs data
-X_trs_all=X_trs_all.rename(columns={'SVTYPE':'svtype','prediction_-1':'prediction_TA','prediction_1':'prediction_TG','prediction_2':'prediction_TS','sv_chr': 'CHROM', 'sv_chr2':'CHR2', 'sv_bp_st':'POS', 'sv_bp_end':'END', 'sv_bp_st_ci_range':'cipos_range', 'sv_bp_end_ci_range':'ciend_range', 'sv_bp_st_ci0':'ci_pos0', 'sv_bp_st_ci1':'ci_pos1', 'sv_bp_end_ci0':'sv_bp_end_POS', 'sv_bp_end_ci1':'sv_bp_end_END', 'sv_read_ratio':'read_ratio'})
-X_nontrs_all=X_nontrs_all.rename(columns={'SVTYPE':'svtype','prediction_-1':'prediction_TA','prediction_1':'prediction_TG','prediction_2':'prediction_TS','sv_chr': 'CHROM', 'sv_chr2':'CHR2', 'sv_bp_st':'POS', 'sv_bp_end':'END', 'sv_bp_st_ci_range':'cipos_range', 'sv_bp_end_ci_range':'ciend_range', 'sv_bp_st_ci0':'ci_pos0', 'sv_bp_st_ci1':'ci_pos1', 'sv_bp_end_ci0':'sv_bp_end_POS', 'sv_bp_end_ci1':'sv_bp_end_END', 'sv_read_ratio':'read_ratio'})
-X_trs_all['sv_read_r']=0
-X_trs_all['sv_read_a']=0
-X_trs_all['sv_read_diff']=0
-X_trs_all['sv_database']=0
-X_trs_all.loc[:,'sv_read_r']=X_trs_all.loc[:,['PR_ref','SR_ref']].apply(lambda x: sum(x), axis=1) 
-X_trs_all.loc[:,'sv_read_a']=X_trs_all.loc[:,['PR_alt','SR_alt']].apply(lambda x: sum(x), axis=1) 
+col_rename={'SVTYPE':'svtype','prediction_-1':'prediction_TA','prediction_1':'prediction_TG','prediction_2':'prediction_TS','sv_chr': 'CHROM', 'sv_chr2':'CHR2', 'sv_bp_st':'POS', 'sv_bp_end':'END', 'sv_bp_st_ci_range':'cipos_range', 'sv_bp_end_ci_range':'ciend_range', 'sv_bp_st_ci0':'ci_pos0', 'sv_bp_st_ci1':'ci_pos1', 'sv_bp_end_ci0':'sv_bp_end_POS', 'sv_bp_end_ci1':'sv_bp_end_END', 'sv_read_ratio':'read_ratio', 'PR_ref':'sv_PR_ref', 'SR_ref':'sv_SR_ref','PR_alt':'sv_PR_alt', 'SR_alt':'sv_SR_alt', 'uwstl_s':'chromoseq_s', '1000_g':'1000G_g', '1000_gall':'1000G_all_g', 'cosmic_s':'COMSIC_s', 'cytoatlas_s':'CytoAtlas_s', 'gnomad_g2ab':'gnomAD_nonsingleton_g', 'gnomad_gall':'gnomAD_all_g', 'gnomad_g':'gnomAD_g', 'gnomad_qc':'gnomAD_qc', 'dgv_g':'DGV_g', 'control_g':'donor_g', 'control_gall':'donor_all_g'}
+X_trs_all=X_trs_all.rename(columns=col_rename)
+X_nontrs_all=X_nontrs_all.rename(columns=col_rename)
+X_trs_all=X_trs_all.assign(sv_read_r=0,sv_read_a=0,sv_read_diff=0,sv_database=0)
+X_trs_all.loc[:,'sv_read_r']=X_trs_all.loc[:,['sv_PR_ref','sv_SR_ref']].apply(lambda x: sum(x), axis=1) 
+X_trs_all.loc[:,'sv_read_a']=X_trs_all.loc[:,['sv_PR_alt','sv_SR_alt']].apply(lambda x: sum(x), axis=1) 
 X_trs_all.loc[:,'sv_read_diff']=X_trs_all.loc[:,['sv_read_r','sv_read_a']].apply(lambda x: x[1]-x[0], axis=1) 
-X_trs_all['sv_database']
+
+X_nontrs_all=X_nontrs_all.assign(sv_read_r=0,sv_read_a=0,sv_read_diff=0,sv_database=0)
+X_nontrs_all.loc[:,'sv_read_r']=X_nontrs_all.loc[:,['sv_PR_ref','sv_SR_ref']].apply(lambda x: sum(x), axis=1) 
+X_nontrs_all.loc[:,'sv_read_a']=X_nontrs_all.loc[:,['sv_PR_alt','sv_SR_alt']].apply(lambda x: sum(x), axis=1) 
+X_nontrs_all.loc[:,'sv_read_diff']=X_nontrs_all.loc[:,['sv_read_r','sv_read_a']].apply(lambda x: x[1]-x[0], axis=1) 
+
+# label the sv benchmark database
+def sv_db_an(sv_data,sv_type):
+    if sv_type=='trs':
+        sv_db_idx=np.where(sv_data=='YVID')
+    elif sv_type=='nontrs':
+        sv_data[sv_data=='Not_in_database']=0
+        sv_db_idx=np.where(sv_data.astype(float)>=0.9)
+    if sv_db_idx!=[]:
+        return '&'.join(str(w) for w in sv_data.index[sv_db_idx])
+    else:
+        return 'NA'
+col_database=['chromoseq_s', '1000G_g', '1000G_all_g', 'COMSIC_s', 'CytoAtlas_s', 'gnomAD_nonsingleton_g', 'gnomAD_all_g', 'gnomAD_g', 'gnomAD_qc', 'DGV_g', 'donor_g', 'donor_all_g']
+X_trs_all['sv_database']=X_trs_all.loc[:,col_database].apply(lambda x: sv_db_an(x,'trs'),axis=1) 
+X_nontrs_all['sv_database']=X_nontrs_all.loc[:,col_database].apply(lambda x: sv_db_an(x,'nontrs'),axis=1) 
 
 # mocked unqiue id
 tmp_id=['sv_id','sample_id']
@@ -95,17 +112,13 @@ X_trs_all.to_csv(inFile+'.trs_pred',sep='\t',index=False,header=True)
 X_nontrs_all.to_csv(inFile+'.nontrs_pred',sep='\t',index=False,header=True)
 
 # re-organize trs/nontrs data
-col_drop=[str(w) for w in X_trs_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label']]
+col_drop=[str(w) for w in X_trs_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a','sv_PR_ref','sv_SR_ref','sv_PR_alt','sv_SR_alt', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label']]
 X_trs_all=X_trs_all.drop(col_drop,axis=1)
-col_drop=[str(w) for w in X_nontrs_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label']]
+col_drop=[str(w) for w in X_nontrs_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a','sv_PR_ref','sv_SR_ref','sv_PR_alt','sv_SR_alt', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label']]
 X_nontrs_all=X_nontrs_all.drop(col_drop,axis=1)
-print(X_trs_all.shape)
-print(X_nontrs_all.shape)
 
 # combined trs/nontrs data
 X_all=pd.concat([X_trs_all,X_nontrs_all],axis=0)
-print(X_all.iloc[0:5,:])
-print(X_all.shape)
 
 # attach the prediction label to all the original SV data
 X_all['predict_max']=0
