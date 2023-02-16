@@ -27,8 +27,10 @@ rule interface_docker:
         OUTPUT_DIR+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_trs_EXP,
         OUTPUT_DIR+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_nontrs_EXP
     output:
-        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.Dockfile", cohort_name=cohort_name)        
+        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.Dockfile", cohort_name=cohort_name)   
+    params:
+        kfolds=config['kfolds']         
     shell:
         """  
-        cat {input} && bash {CYTO_SV_ML_DIR}/Pipeline_script/interface_docker.sh {MAIN_DIR} {cohort_name} {input} 
+        cat {input} && bash {CYTO_SV_ML_DIR}/Pipeline_script/interface_docker.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {cohort_name} {params.kfolds} 
         """      
