@@ -38,15 +38,22 @@ sv_type_vector=['trs','nontrs']
 
 ############################################################################################################################################################# 
 sv_data = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
+print(sv_data.columns)
 for sv_type in sv_type_vector:
     if sv_type=='trs':
-        sv_data_1=sv_data[~(sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS']))].copy()  
-        sv_data_1=sv_dataframe_transform.trs_sv_data_transform(sv_data_1)
+        sv_data_01=sv_data[~(sv_data['sv_type'].isin(['DEL','DUP','INV','INS']))].copy()  
+        sv_data_01.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs_o',sep='\t', header=True, index=None)        
+        sv_data_1=sv_dataframe_transform.trs_sv_data_transform(sv_data_01)[0]
         sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=True, index=None)
+        sv_data_10=sv_dataframe_transform.trs_sv_data_transform(sv_data_01)[1]
+        sv_data_10.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs_all',sep='\t', header=True, index=None)        
     else:
-        sv_data_1=sv_data[sv_data['sv_type'].isin(['sv_type','DEL','DUP','INV','INS'])].copy()     
-        sv_data_1=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_1)
+        sv_data_01=sv_data[sv_data['sv_type'].isin(['DEL','DUP','INV','INS'])].copy()     
+        sv_data_01.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs_o',sep='\t', header=True, index=None)       
+        sv_data_1=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_01)[0]
         sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs',sep='\t', header=True, index=None)        
+        sv_data_10=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_01)[1]
+        sv_data_10.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs_all',sep='\t', header=True, index=None)            
     sv_summary_plot=sv_dataframe_transform.sv_data_summary_plot(sv_data_1)    
     sv_summary_plot.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+'sv_summary_plot.pdf', transparent=True)  # open the plot file for save sv data summary   
 
@@ -104,7 +111,10 @@ for sv_type in sv_type_vector:
         s=model1.transform(X)
         s12_2=model1.transform(X12_2)
         #s12_0=model1.transform(X12_0)
-
+        # open a file, where you ant to store the data
+        tf_file = open(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_tf.pickle', 'wb')
+        pickle.dump(model1,tf_file)
+                    
         print(s.shape)
         print(s12.shape)
         print(s12_2.shape)
