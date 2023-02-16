@@ -52,7 +52,6 @@ X_trs=pd.read_csv(inFile+'.sv.all.combine_all_trs',sep='\t',header=0, index_col=
 X_nontrs=pd.read_csv(inFile+'.sv.all.combine_all_nontrs',sep='\t',header=0, index_col=None, keep_default_na=False)
 X_trs_all=pd.read_csv(inFile+'.sv.all.combine_all_trs_all',sep='\t',header=0, index_col=None, keep_default_na=False)
 X_nontrs_all=pd.read_csv(inFile+'.sv.all.combine_all_nontrs_all',sep='\t',header=0, index_col=None, keep_default_na=False)
-X_all=pd.read_csv(inFile+'.sv.all.combine_all',sep='\t',header=0, index_col=None, keep_default_na=False)
 
 # transform all the original SV data
 s_trs=model_trs.transform(X_trs)
@@ -61,30 +60,58 @@ s_nontrs=model_nontrs.transform(X_nontrs)
 # predict all the transformed SV data
 trs_label=automl_trs.predict_all(s_trs)
 nontrs_label=automl_nontrs.predict_all(s_nontrs)
+trs_label=trs_label.rename(columns={'label':'predict_label'})
+nontrs_label=nontrs_label.rename(columns={'label':'predict_label'})
+print(X_trs_all.shape)
+print(X_nontrs_all.shape)
+print(trs_label.shape)
+print(nontrs_label.shape)
 
-# attach the prediction label to all the original SV data
-X_trs_all.loc[:,['predict_label','prediction_TA','prediction_TG','prediction_TS']]=trs_label
-X_nontrs_all.loc[:,['predict_label','prediction_TA','prediction_TG','prediction_TS']]=nontrs_label
+# attach the prediction label to trs/nontrs the original SV data
+X_trs_all=pd.concat([X_trs_all,trs_label],axis=1)
+X_nontrs_all=pd.concat([X_nontrs_all,nontrs_label],axis=1)
+
+# re-organize in trs/nontrs data
+X_trs_all=X_trs_all.rename(columns={'SVTYPE':'svtype','prediction_-1':'prediction_TA','prediction_1':'prediction_TG','prediction_2':'prediction_TS','sv_chr': 'CHROM', 'sv_chr2':'CHR2', 'sv_bp_st':'POS', 'sv_bp_end':'END', 'sv_bp_st_ci_range':'cipos_range', 'sv_bp_end_ci_range':'ciend_range', 'sv_bp_st_ci0':'ci_pos0', 'sv_bp_st_ci1':'ci_pos1', 'sv_bp_end_ci0':'sv_bp_end_POS', 'sv_bp_end_ci1':'sv_bp_end_END', 'sv_read_ratio':'read_ratio'})
+X_nontrs_all=X_nontrs_all.rename(columns={'SVTYPE':'svtype','prediction_-1':'prediction_TA','prediction_1':'prediction_TG','prediction_2':'prediction_TS','sv_chr': 'CHROM', 'sv_chr2':'CHR2', 'sv_bp_st':'POS', 'sv_bp_end':'END', 'sv_bp_st_ci_range':'cipos_range', 'sv_bp_end_ci_range':'ciend_range', 'sv_bp_st_ci0':'ci_pos0', 'sv_bp_st_ci1':'ci_pos1', 'sv_bp_end_ci0':'sv_bp_end_POS', 'sv_bp_end_ci1':'sv_bp_end_END', 'sv_read_ratio':'read_ratio'})
+X_trs_all['sv_read_r']=0
+X_trs_all['sv_read_a']=0
+X_trs_all['sv_read_diff']=0
+X_trs_all['sv_database']=0
+X_trs_all.loc[:,'sv_read_r']=X_trs_all.loc[:,['PR_ref','SR_ref']].apply(lambda x: sum(x), axis=1) 
+X_trs_all.loc[:,'sv_read_a']=X_trs_all.loc[:,['PR_alt','SR_alt']].apply(lambda x: sum(x), axis=1) 
+X_trs_all.loc[:,'sv_read_diff']=X_trs_all.loc[:,['sv_read_r','sv_read_a']].apply(lambda x: x[1]-x[0], axis=1) 
+X_trs_all['sv_database']
+
+# mocked unqiue id
 tmp_id=['sv_id','sample_id']
 X_trs_all['tmp_id']=0
 X_nontrs_all['tmp_id']=0
 X_trs_all.loc[:,'tmp_id']=X_trs_all.loc[:,tmp_id].apply(lambda x: ':'.join(str(w) for w in x), axis=1)      
-X_nontrs_all.loc[:,'tmp_id']=X_nontrs_all.loc[:,tmp_id].apply(lambda x: ':'.join(str(w) for w in x), axis=1) 
-print(X_trs_all.iloc[0:5,:])
-print(X_nontrs_all.iloc[0:5,:])
-X_tmp=pd.concat([X_trs_all[['tmp_id','predict_label','prediction_TA','prediction_TG','prediction_TS']],X_nontrs_all[['tmp_id','predict_label','prediction_TA','prediction_TG','prediction_TS']]])
-print(X_tmp.iloc[0:5,:])
-X_all['tmp_id']=0
-X_all['tmp_id']=X_all.loc[:,tmp_id].apply(lambda x: ':'.join(str(w) for w in x), axis=1) 
-X_all.loc[:,['predict_label','prediction_TA','prediction_TG','prediction_TS']]='NA'
-X_all=pd.merge(X_all,X_tmp,how='left',on='tmp_id')
+X_nontrs_all.loc[:,'tmp_id']=X_nontrs_all.loc[:,tmp_id].apply(lambda x: ':'.join(str(w) for w in x), axis=1)
+
+# save the temp files
+X_trs_all.to_csv(inFile+'.trs_pred',sep='\t',index=False,header=True)
+X_nontrs_all.to_csv(inFile+'.nontrs_pred',sep='\t',index=False,header=True)
+
+# re-organize trs/nontrs data
+col_drop=[str(w) for w in X_trs_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label']]
+X_trs_all=X_trs_all.drop(col_drop,axis=1)
+col_drop=[str(w) for w in X_nontrs_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label']]
+X_nontrs_all=X_nontrs_all.drop(col_drop,axis=1)
+print(X_trs_all.shape)
+print(X_nontrs_all.shape)
+
+# combined trs/nontrs data
+X_all=pd.concat([X_trs_all,X_nontrs_all],axis=0)
+print(X_all.iloc[0:5,:])
+print(X_all.shape)
+
+# attach the prediction label to all the original SV data
+X_all['predict_max']=0
+X_all['predict_max']=X_all.loc[:,['prediction_TA', 'prediction_TG', 'prediction_TS']].apply(lambda x: max(x), axis=1) 
+print(X_all.iloc[0:5,:])
 print(X_all.columns)
-# re-organize the data
-#X_all=X_all.rename(columns={'old_col':'new_col','old_col':'new_col'})
-col_drop=[str(w) for w in X_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label', 'predict_max']]
-X_all=X_all.drop(col_drop,axis=1)
 
 # save all the SV data
-X_trs.to_csv(inFile+'trs',sep='\t',index=False,header=True)
-X_nontrs.to_csv(inFile+'nontrs',sep='\t',index=False,header=True)
-X_all.to_csv(inFile+'nontrs',sep='\t',index=False,header=True)
+X_all.to_csv(inFile+'.all_pred',sep='\t',index=False,header=True)
