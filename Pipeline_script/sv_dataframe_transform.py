@@ -28,18 +28,18 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs.loc[sv_data_trs['dgv_g']!='Not_in_database','dgv_g']="YVID"
     sv_data_trs.loc[sv_data_trs['centromere_qc']!='Not_in_database','centromere_qc']="YVID"
     sv_data_trs.loc[sv_data_trs['uwstl_s']!='Not_in_database','uwstl_s']="YVID"
-    print(sv_data_trs['1000_gall'].value_counts())
-    print(sv_data_trs['1000_g'].value_counts())
-    print(sv_data_trs['gnomad_gall'].value_counts())
-    print(sv_data_trs['gnomad_g'].value_counts())
-    print(sv_data_trs['control_gall'].value_counts())
-    print(sv_data_trs['control_g'].value_counts())
-    print(sv_data_trs['cytoatlas_s'].value_counts())
-    print(sv_data_trs['cosmic_s'].value_counts())
-    print(sv_data_trs['gnomad_qc'].value_counts())
-    print(sv_data_trs['centromere_qc'].value_counts())
-    print(sv_data_trs['dgv_g'].value_counts())
-    print(sv_data_trs['uwstl_s'].value_counts())
+#     print(sv_data_trs['1000_gall'].value_counts())
+#     print(sv_data_trs['1000_g'].value_counts())
+#     print(sv_data_trs['gnomad_gall'].value_counts())
+#     print(sv_data_trs['gnomad_g'].value_counts())
+#     print(sv_data_trs['control_gall'].value_counts())
+#     print(sv_data_trs['control_g'].value_counts())
+#     print(sv_data_trs['cytoatlas_s'].value_counts())
+#     print(sv_data_trs['cosmic_s'].value_counts())
+#     print(sv_data_trs['gnomad_qc'].value_counts())
+#     print(sv_data_trs['centromere_qc'].value_counts())
+#     print(sv_data_trs['dgv_g'].value_counts())
+#     print(sv_data_trs['uwstl_s'].value_counts())
     
     # transform sv_info variables
     sv_data_trs['ci_pos0']=0
@@ -85,7 +85,7 @@ def trs_sv_data_transform(sv_data_trs):
     
     # filter low quality sv
     sv_data_trs=sv_data_trs[(sv_data_trs['PR_alt']>=1) & (sv_data_trs['SR_alt']>=1) & ( sv_data_trs['BND_DEPTH'].astype(int) >=1) & ( sv_data_trs['MATE_BND_DEPTH'].astype(int) >=1) & (sv_data_trs['sv_bp_end_POS']!='NAN') & (sv_data_trs['sv_bp_end_POS']!='chrY')]
-    print(sv_data_trs.shape)   
+#     print(sv_data_trs.shape)   
     # generate sv_info variables (length=bp_st-bp_end; range=ci_st-ci_end; ratio=read_alt/read_ref; diff=read_alt-read_ref)
     sv_data_trs['cipos_range']=sv_data_trs['ci_pos0'].astype(int) -sv_data_trs['ci_pos1'].astype(int)
     sv_data_trs['ciend_range']=sv_data_trs['sv_bp_end_POS'].astype(int) -sv_data_trs['sv_bp_end_END'].astype(int)
@@ -115,7 +115,7 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs.loc[(sv_data_trs['1000_g']=="YVID") | (sv_data_trs['gnomad_g']=="YVID") | (sv_data_trs['dgv_g']=="YVID") | (sv_data_trs['1000_gall']=="YVID") | (sv_data_trs['gnomad_gall']=="YVID"),'label']=1   
     sv_data_trs.loc[((sv_data_trs['cytoatlas_s']=="YVID") | (sv_data_trs['cosmic_s']=="YVID")) ,'label']=2
     sv_data_trs.loc[(sv_data_trs['gnomad_qc']=="YVID") | (sv_data_trs['control_g']=="YVID") | (sv_data_trs['centromere_qc']=="YVID"),'label']=-1    
-    print(sv_data_trs['label'].value_counts())    
+#     print(sv_data_trs['label'].value_counts())    
     
     # make summary plot / table
     sv_data_trs['sv_start_bp0']=0
@@ -140,7 +140,7 @@ def trs_sv_data_transform(sv_data_trs):
                 except:
                     str_cell.append(str(i)+'&'+str(n))
     for m in str_cell:
-        print(m)
+#        print(m)
         sv_data_trs_2.loc[int(m.split('&')[1]), m.split('&')[0]]=0   
     
     # re-arrange the data
@@ -149,7 +149,7 @@ def trs_sv_data_transform(sv_data_trs):
     sv_data_trs_2=sv_data_trs_2.reset_index(drop=True)
     sv_data_trs_2=sv_data_trs_2.reindex(new_index)
     sv_data_trs_2=sv_data_trs_2.reset_index(drop=True)
-    return sv_data_trs_2
+    return sv_data_trs_2,sv_data_trs
 
 def nontrs_sv_data_transform(sv_data_nontrs):
     # re-arrange the data
@@ -172,18 +172,18 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs.loc[sv_data_nontrs['dgv_g']=='Not_in_database','dgv_g']=0
     sv_data_nontrs.loc[sv_data_nontrs['centromere_qc']=='Not_in_database','centromere_qc']=0
     sv_data_nontrs.loc[sv_data_nontrs['uwstl_s']=='Not_in_database','uwstl_s']=0
-    print(sv_data_nontrs['1000_gall'].value_counts())
-    print(sv_data_nontrs['1000_g'].value_counts())
-    print(sv_data_nontrs['gnomad_gall'].value_counts())
-    print(sv_data_nontrs['gnomad_g'].value_counts())
-    print(sv_data_nontrs['control_gall'].value_counts())
-    print(sv_data_nontrs['control_g'].value_counts())
-    print(sv_data_nontrs['cytoatlas_s'].value_counts())
-    print(sv_data_nontrs['cosmic_s'].value_counts())
-    print(sv_data_nontrs['gnomad_qc'].value_counts())
-    print(sv_data_nontrs['centromere_qc'].value_counts())
-    print(sv_data_nontrs['dgv_g'].value_counts())
-    print(sv_data_nontrs['uwstl_s'].value_counts())
+#     print(sv_data_nontrs['1000_gall'].value_counts())
+#     print(sv_data_nontrs['1000_g'].value_counts())
+#     print(sv_data_nontrs['gnomad_gall'].value_counts())
+#     print(sv_data_nontrs['gnomad_g'].value_counts())
+#     print(sv_data_nontrs['control_gall'].value_counts())
+#     print(sv_data_nontrs['control_g'].value_counts())
+#     print(sv_data_nontrs['cytoatlas_s'].value_counts())
+#     print(sv_data_nontrs['cosmic_s'].value_counts())
+#     print(sv_data_nontrs['gnomad_qc'].value_counts())
+#     print(sv_data_nontrs['centromere_qc'].value_counts())
+#     print(sv_data_nontrs['dgv_g'].value_counts())
+#     print(sv_data_nontrs['uwstl_s'].value_counts())
         
     # transform sv_info variables
     sv_data_nontrs['ci_pos0']=0
@@ -262,8 +262,8 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs.insert(sv_data_nontrs.shape[1], "label", list(repeat(0,sv_data_nontrs.shape[0])), True)
     sv_data_nontrs.loc[(sv_data_nontrs['gnomad_qc'].astype(float)>0.9) | (sv_data_nontrs['control_g'].astype(float)>0.9) | (sv_data_nontrs['centromere_qc'].astype(float)>0.9),'label']=-1
     sv_data_nontrs.loc[(sv_data_nontrs['1000_g'].astype(float)>0.7) | (sv_data_nontrs['gnomad_g'].astype(float)>0.7) | (sv_data_nontrs['dgv_g'].astype(float)>0.7) | (sv_data_nontrs['1000_gall'].astype(float)>0.7) | (sv_data_nontrs['gnomad_gall'].astype(float)>0.7),'label']=1
-    sv_data_nontrs.loc[( (sv_data_nontrs['cytoatlas_s'].astype(float)>0.9) | (sv_data_nontrs['cosmic_s'].astype(float)>0.9)) & (sv_data_nontrs['1000_gall'].astype(float)<0.9) & (sv_data_nontrs['gnomad_gall'].astype(float)<0.9) & (sv_data_nontrs['control_gall'].astype(float)<0.9) ,'label']=2
-    print(sv_data_nontrs['label'].value_counts())  
+    sv_data_nontrs.loc[( (sv_data_nontrs['cytoatlas_s'].astype(float)>0.9) | (sv_data_nontrs['cosmic_s'].astype(float)>0.9)  | (sv_data_nontrs['uwstl_s'].astype(float)>0.9)) & (sv_data_nontrs['1000_gall'].astype(float)<0.9) & (sv_data_nontrs['gnomad_gall'].astype(float)<0.9) & (sv_data_nontrs['control_g'].astype(float)<0.9) ,'label']=2
+#     print(sv_data_nontrs['label'].value_counts())  
     
     # drop columns wih rebundant variables
     sv_data_nontrs_2=sv_data_nontrs.copy()
@@ -282,7 +282,7 @@ def nontrs_sv_data_transform(sv_data_nontrs):
                 except:
                     str_cell.append(str(i)+'&'+str(n))
     for m in str_cell:
-        print(m)
+ #       print(m)
         sv_data_nontrs_2.loc[int(m.split('&')[1]), m.split('&')[0]]=0     
     
     # re-arrange the data 
@@ -293,7 +293,7 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs_2=sv_data_nontrs_2.reset_index(drop=True)    
     sv_data_nontrs_2=sv_data_nontrs_2[sv_data_nontrs_2['sv_type']!='INV']
     sv_data_nontrs_2.loc[sv_data_nontrs_2['svtyper_score']=='.','svtyper_score']=0
-    return sv_data_nontrs_2
+    return sv_data_nontrs_2,sv_data_nontrs
 
 def sv_data_summary_plot(sv_data):
     # count labels by  sv type
