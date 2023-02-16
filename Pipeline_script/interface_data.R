@@ -10,8 +10,8 @@ output<-as.character(opt$output_file)
 cyto_band_file<-as.character(opt$cyto_band_file)
 
 # read in trs and nontrs data
-X_all=read.table(paste(input,'.all_pred',sep=''),sep='\t',header=T)
-cyto_band_dict=read.table(cyto_band_file,sep='\t',header=T)
+all_sv=read.table(paste(input,'.all_pred',sep=''),sep='\t',header=T)
+genome_coor=read.table(cyto_band_file,sep='\t',header=T)
 
 # save the SV data
-save(X_all,cyto_band_dict, file = output)
+save(all_sv,genome_coor, file = output)
