@@ -291,7 +291,7 @@ def nontrs_sv_data_transform(sv_data_nontrs):
     sv_data_nontrs_2=sv_data_nontrs_2.reset_index(drop=True)
     sv_data_nontrs_2=sv_data_nontrs_2.reindex(new_index)
     sv_data_nontrs_2=sv_data_nontrs_2.reset_index(drop=True)    
-    sv_data_nontrs_2=sv_data_nontrs_2[sv_data_nontrs_2['sv_type']!='INV']
+    #sv_data_nontrs_2=sv_data_nontrs_2[sv_data_nontrs_2['sv_type']!='INV']
     sv_data_nontrs_2.loc[sv_data_nontrs_2['svtyper_score']=='.','svtyper_score']=0
     return sv_data_nontrs_2,sv_data_nontrs
 
