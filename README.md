@@ -71,7 +71,7 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --config cohort_n
 
 ### Run CYTO-SV-ML Snakemake interface pipeline for Web-portal application
 ```
-snakemake --core ${number_of_cores} -s cyto-sv-ml-interface.smk  --config cohort_name=${cohort_name}
+snakemake --core ${number_of_cores} -s cyto-sv-ml-interface.smk  --config cohort_name=${cohort_name} k=${kfolds}
 # to run the docker image in the local machine and open user interface with "http://localhost:8000/"
 sudo docker run -d -p 8000:80 cyto-sv-ml-app:${sample_all}
 ```
