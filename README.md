@@ -52,7 +52,7 @@ tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
 cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
 ```
 
-### Run CYTO-SV-ML Snakemake preprocess pipeline for each sample
+### 1. Run CYTO-SV-ML Snakemake preprocess pipeline for each sample
 Please change the config.yaml according to your own environment settings:                                                    
 {your_work_dir} for input/output dir   
 {your_work_dir}/in/${sample}.cram # input for chromseq pipeline <br/>
@@ -62,14 +62,14 @@ Please change the config.yaml according to your own environment settings:
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender}
 ```
-### Run CYTO-SV-ML Snakemake modeling pipeline for whole cohort
+### 2. Run CYTO-SV-ML Snakemake modeling pipeline for whole cohort
 ```
 snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk  --config cohort_name=${cohort_name}
 snakemake --core ${number_of_cores} -s cyto-sv-ml-modeling.smk --config cohort_name=${cohort_name} --report ${your_work_dir}/out/${cohort_name}_report.html
 ```
 ![CYTO-SV-ML snakemake report](cyto-sv-ml_snakemake_report.png)
 
-### Run CYTO-SV-ML Snakemake interface pipeline for Web-portal application
+### 3. Run CYTO-SV-ML Snakemake interface pipeline for Web-portal application
 ```
 snakemake --core ${number_of_cores} -s cyto-sv-ml-interface.smk  --config cohort_name=${cohort_name} k=${kfolds}
 # to run the docker image in the local machine and open user interface with "http://localhost:8000/"
