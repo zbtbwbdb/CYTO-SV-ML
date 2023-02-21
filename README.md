@@ -7,8 +7,8 @@
 
 <!--ts-->
    * [Installation](#Installation)
-   * [Pipeline Usage](#usage)
-   * [Download SV-related Resource](#Download SV-related Resource)
+   * [Pipeline Usage](#Pipeline-usage)
+   * [Download SV related Resource](#Download-SV-related-Resource)
 
 
 Installation
@@ -94,7 +94,7 @@ http://cyto-sv-ml.b12x.org/
 ![CYTO-SV-ML Rshiny web-portal](cyto-sv-ml_web-portal.png)
 
 
-Download SV-related Resource
+Download SV related Resource
 =============================
 
 ## SV database Download (The official websites contain detailed information)
