@@ -10,7 +10,7 @@
    * [Pipeline Usage](#Pipeline-usage)
    * [Download SV related Resource](#Download-SV-related-Resource)
 
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Installation
 ============
 ### Install conda environment
@@ -60,7 +60,7 @@ tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
 cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
 ```
 
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Pipeline Usage
 ============
 ### 1. Run CYTO-SV-ML Snakemake preprocess pipeline for each sample
@@ -93,7 +93,7 @@ http://cyto-sv-ml.b12x.org/
 ```
 ![CYTO-SV-ML Rshiny web-portal](cyto-sv-ml_web-portal.png)
 
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Download SV related Resource
 =============================
 
