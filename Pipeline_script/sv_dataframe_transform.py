@@ -272,7 +272,7 @@ def sv_data_summary_plot(sv_data):
     d0=0
     for i in range(df1.shape[1]):
         data=df1.iloc[0,i]
-        ax.text(x=-0.05, y = d0+data/2 , s=f"{data}" , fontdict=dict(fontsize=10))
+        ax.text(x=i-0.15, y = d0+data/2 , s=f"{data}" , fontdict=dict(fontsize=10))
         d0=d0+data
     ax.set_yscale('linear')
     ax.ticklabel_format(style='plain', axis='y')
