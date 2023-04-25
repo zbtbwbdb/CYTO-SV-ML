@@ -6,14 +6,14 @@ size_k=$4
 
 echo "# starting SV info extraction" && date   
 cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0
-echo ${sv_caller_vector} | sed "s%@%\n%g" > ${main_dir}/out/sv_caller_vector.tmp
-sc_ln=$(wc -l ${main_dir}/out/sv_caller_vector.tmp | awk '{print $1}')
+echo ${sv_caller_vector} | sed "s%@%\n%g" > ${main_dir}/out/${sample}/sv_caller_vector.tmp2
+sc_ln=$(wc -l ${main_dir}/out/${sample}/sv_caller_vector.tmp2 | awk '{print $1}')
 
 # combine the sv_caller annotation vcf 
 n=0
 for i in $(seq 1 $sc_ln)
    do
-       sv_caller=$(awk -v a="$i" '(FNR==a){print $1}' ${main_dir}/out/sv_caller_vector.tmp)  
+       sv_caller=$(awk -v a="$i" '(FNR==a){print $1}' ${main_dir}/out/${sample}/sv_caller_vector.tmp2)  
           echo $ sv_caller "ok"      
       if [ "${n}" == 0 ]; then
           awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ($2 in a) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.10k.sv_info.sim ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 > ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp1
@@ -31,7 +31,7 @@ cp ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0  ${main_dir
 n=0
 for i in $(seq 1 $sc_ln)
    do
-       sv_caller=$(awk -v a="$i" '(FNR==a){print $1}' sv_caller_vector.tmp)  
+       sv_caller=$(awk -v a="$i" '(FNR==a){print $1}'  ${main_dir}/out/${sample}/sv_caller_vector.tmp2)  
       if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf.sv_info.sim ]; then             
           echo ${sv_caller} "svtype ok" && date   
           if [ "${n}" == 0 ]; then                
@@ -73,3 +73,4 @@ else
     cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info            
 fi
 rm ${main_dir}/out/${sample}/${sample}.*tmp*     
+rm ${main_dir}/out/${sample}/sv_caller_vector.tmp2
