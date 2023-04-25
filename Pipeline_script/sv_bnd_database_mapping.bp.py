@@ -15,6 +15,8 @@
 
 import sys,os,re
 import pandas as pd
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 ref_data=pd.read_csv(sys.argv[1],sep='\t',header=None)#,skiprows=1)
 in_vcf=pd.read_csv(sys.argv[2],sep='\t',header=0,keep_default_na=False)
