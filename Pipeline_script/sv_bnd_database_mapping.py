@@ -16,7 +16,7 @@
 import sys,os,re
 import pandas as pd
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.filterwarnings("ignore")
 
 # read the sv input data and database
 ref_data=pd.read_csv(sys.argv[1],sep='\t',header=None)
