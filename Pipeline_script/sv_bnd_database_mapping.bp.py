@@ -34,7 +34,8 @@ for i in range(in_vcf.shape[0]):
         continue
     else:
         bnd_dict=bnd_dict.astype(str)
-        bnd_dict['info']=bnd_dict.apply(lambda x: '|'.join(x.tolist()), axis=1)
+        bnd_dict['info']==max(0, int(sv_data[1])-bp1, bp1-int(sv_data[2]), int(sv_data[4])-bp2, bp2-int(sv_data[5]))
+        #bnd_dict['info']=bnd_dict.apply(lambda x: '|'.join(x.tolist()), axis=1)
         #print(bnd_dict['info'].str.cat(sep='&'))       
         in_vcf.iloc[i,in_vcf.shape[1]-1]=bnd_dict['info'].str.cat(sep='&')#re.sub('\t| ',',',str(list(bnd_dict)))
 in_vcf.to_csv(out_vcf,sep='\t',index=False,header=False)
