@@ -14,7 +14,7 @@ import sv_dataframe_transform
 from sklearn import svm, metrics, datasets, preprocessing
 from sklearn.preprocessing import LabelEncoder, label_binarize, StandardScaler, OrdinalEncoder, OneHotEncoder 
 from sklearn.ensemble import GradientBoostingRegressor,GradientBoostingClassifier, AdaBoostClassifier
-from sklearn.metrics import mean_squared_error, median_absolute_error, roc_curve, auc, accuracy_score, precision_score, recall_score, precision_recall_curve, confusion_matrix
+from sklearn.metrics import mean_squared_error, median_absolute_error, roc_curve, auc, accuracy_score, precision_score, recall_score, precision_recall_curve, f1_score, roc_auc_score, brier_score_loss, accuracy_score, confusion_matrix
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.compose import make_column_transformer, TransformedTargetRegressor
@@ -34,15 +34,27 @@ for op, value in opts:
 	if op == "-k":
 	    kfolds = int(value)
 sv_type_vector=['trs','nontrs']
+# add cyto-idx into sv_data (outside of modelling)
+# drop cyto-idx for modelling (before modelling)
+# calculate label-2 cyto-idx count (after modelling)
 
 ############################################################################################################################################################# 
 for sv_type in sv_type_vector:
     if sv_type=='trs':
-        sv_data_1 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=0, index_col=None, keep_default_na=False)     
+        sv_data_1 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=0, index_col=None, keep_default_na=False)    
+        sv_data_10 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs_all',sep='\t', header=0, index_col=None, keep_default_na=False)  
+        X10 = sv_data_10.loc[:,['sv_type','sv_bp_end_cc1', 'sv_bp_end_cc_v1', 'sv_bp_end_cc_v2',  'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4', 'sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11',  'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14',   'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16', 'sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2',  'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6',  'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24', 'cipos_range', 'ciend_range',  'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'bnd_depth_ratio',  'PR_read_ratio_diff', 'SR_read_ratio_diff', 'read_ratio_diff', 'bnd_depth_ratio_diff']]
+        print(X10.shape)        
     else:  
         sv_data_1 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs',sep='\t', header=0, index_col=None, keep_default_na=False)      
+        sv_data_10 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs_all',sep='\t', header=0, index_col=None, keep_default_na=False)  
+        sv_data_10=sv_data_10.rename(columns={'QUAL':'svtyper_score','SUPP':'sv_caller_supp'})  
+        X10 = sv_data_10.loc[:,['sv_type', 'svtyper_score', 'sv_bp_end_cc1', 'sv_bp_end_cc_v1','sv_bp_end_cc_v2', 'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4','sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11', 'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14', 'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16','sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2', 'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6', 'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24', 'sv_caller_supp', 'cipos_range', 'ciend_range', 'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'PR_read_ratio_diff',  'SR_read_ratio_diff', 'read_ratio_diff']]    
+        print(X10.shape)
+        
     print(sv_data_1.columns)
     print("# load sv data matrix with label")
+    print(sv_data_1['label'].value_counts())    
     sv_data_1['label']=sv_data_1['label'].astype(float).astype(np.int64)
     print(sv_data_1['label'].value_counts())
     sv_data12_2=sv_data_1[sv_data_1['label']!=0].copy()
@@ -74,8 +86,9 @@ for sv_type in sv_type_vector:
     print("# tune sub-oversampling and split training/testing/validation") 
     y = sv_data12_2.label.values
     X = sv_data12_2.drop(["label"], axis=1)
+  
     sv_ml_metrics_ts_file=open(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+'sv_ml_metrics_sub.csv','w')  # open the text file for save model performance metrics 
-    sv_ml_metrics_ts={'mic_pre':[],'mac_pre':[],'mic_rec':[],'mac_rec':[]}  
+    sv_ml_metrics_ts={'mic_pre':[],'mac_pre':[],'mic_rec':[],'mac_rec':[],'mic_f1':[],'mac_f1':[],'accuracy_sc':[]}  
     label_avg=median([round(len(y_somatic_sv)*0.9),round(len(y_germline_sv)*0.9),round(len(y_false_sv)*0.9)])
     for k in range(kfolds):
         np.random.seed(k*2)
@@ -103,7 +116,8 @@ for sv_type in sv_type_vector:
         s12=model1.fit_transform(X12)
         s=model1.transform(X)
         s12_2=model1.transform(X12_2)
-        #s12_0=model1.transform(X12_0)
+        s10=model1.transform(X10)
+        print(s10.shape)
         # open a file, where you ant to store the data
         tf_file = open(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_tf.pickle', 'wb')
         pickle.dump(model1,tf_file)
@@ -134,20 +148,29 @@ for sv_type in sv_type_vector:
         print("Test macro precision_score:", precision_score(y, predictions["label"].astype(int),average='macro'))
         print("Test micro recall_score:", recall_score(y, predictions["label"].astype(int),average='micro'))
         print("Test macro recall_score:", recall_score(y, predictions["label"].astype(int),average='macro'))
-
+        print("Test micro f1_score:", f1_score(y, predictions["label"].astype(int),average='micro'))
+        print("Test macro f1_score:", f1_score(y, predictions["label"].astype(int),average='macro'))
+        print("Test accuracy_score:", accuracy_score(y, predictions["label"].astype(int)))
+        
         predictions12_2 = automl.predict_all(s12_2)
         predictions12_2['label'].value_counts()
-        print("Test accuracy:", accuracy_score(y12_2, predictions12_2["label"].astype(int)))
+        print("Validation accuracy:", accuracy_score(y12_2, predictions12_2["label"].astype(int)))
         print(predictions12_2['label'].value_counts())
-        print("Test micro precision_score:", precision_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
-        print("Test macro precision_score:", precision_score(y12_2, predictions12_2["label"].astype(int),average='macro'))
-        print("Test micro recall_score:", recall_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
-        print("Test macro recall_score:", recall_score(y12_2, predictions12_2["label"].astype(int),average='macro'))
+        print("Validation micro precision_score:", precision_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
+        print("Validation macro precision_score:", precision_score(y12_2, predictions12_2["label"].astype(int),average='macro'))
+        print("Validation micro recall_score:", recall_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
+        print("Validation macro recall_score:", recall_score(y12_2, predictions12_2["label"].astype(int),average='macro'))
+        print("Validation micro f1_score:", f1_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
+        print("Validation macro f1_score:", f1_score(y12_2, predictions12_2["label"].astype(int),average='macro'))
+        print("Validation accuracy_score:", accuracy_score(y12_2, predictions12_2["label"].astype(int)))        
+        
         sv_ml_metrics_ts['mic_pre'].append(precision_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
         sv_ml_metrics_ts['mac_pre'].append(precision_score(y12_2, predictions12_2["label"].astype(int),average='macro'))
         sv_ml_metrics_ts['mic_rec'].append(recall_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
         sv_ml_metrics_ts['mac_rec'].append(recall_score(y12_2, predictions12_2["label"].astype(int),average='macro'))
-
+        sv_ml_metrics_ts['mic_f1'].append(f1_score(y12_2, predictions12_2["label"].astype(int),average='micro'))
+        sv_ml_metrics_ts['mac_f1'].append(f1_score(y12_2, predictions12_2["label"].astype(int),average='macro'))           
+        sv_ml_metrics_ts['accuracy_sc'].append(accuracy_score(y12_2, predictions12_2["label"].astype(int)))        
         print("## Display the visualization of the Confusion Matrix.")
         cf_matrix = confusion_matrix(y12_2, predictions12_2['label'])
         tf=np.vectorize(lambda x: round(x,2))
@@ -165,7 +188,8 @@ for sv_type in sv_type_vector:
         sns.set(rc={'figure.figsize':(10,10)})
         plt.show()
         plt.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_model_confusion_matrix.pdf')
-
+        plt.close()
+        
         print("# compute AUC  for model performance evaluation of multiclass")
         y1 = label_binarize(y12_2, classes=[-1, 1, 2])
         y1
@@ -237,5 +261,10 @@ for sv_type in sv_type_vector:
         plt.legend(loc="lower right")
         plt.show()
         plt.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'_ts_model_aucroc_curve.pdf')
+        plt.close()
+        predictions_all = automl.predict_all(s10)
+        print(predictions_all.shape)        
+#         sv_data12_pred_all=pd.concat([sv_data_10,predictions_all],axis=1)
+        predictions_all.to_csv(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+str(k)+'pred_all.csv',sep='\t', header=True, index=None)
     for key,value in sv_ml_metrics_ts.items():
         sv_ml_metrics_ts_file.write(str(key)+','+','.join(str(w) for w in value)+'\n')
