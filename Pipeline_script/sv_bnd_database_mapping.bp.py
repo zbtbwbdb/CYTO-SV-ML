@@ -35,8 +35,9 @@ for i in range(in_vcf.shape[0]):
     else:
         bnd_dict.iloc[:,1]=bnd_dict.iloc[:,1].astype(int)-bp1
         bnd_dict.iloc[:,2]=bp1-bnd_dict.iloc[:,2].astype(int) 
+        bnd_dict.iloc[:,3]=0    
         bnd_dict.iloc[:,4]=bnd_dict.iloc[:,4].astype(int)-bp1
         bnd_dict.iloc[:,5]=bp1-bnd_dict.iloc[:,5].astype(int) 
-        bnd_dict['info']==max(0, bnd_dict.iloc[:,1], bnd_dict.iloc[:,2], bnd_dict.iloc[:,4], bnd_dict.iloc[:,5])    
+        bnd_dict['info']=bnd_dict.apply(lambda x: max(x[1:6]),axis=1)  
         in_vcf.iloc[i,in_vcf.shape[1]-1]=min(bnd_dict['info']) 
 in_vcf.to_csv(out_vcf,sep='\t',index=False,header=False)
