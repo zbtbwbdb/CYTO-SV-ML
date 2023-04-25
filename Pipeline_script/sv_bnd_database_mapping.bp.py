@@ -29,13 +29,14 @@ for i in range(in_vcf.shape[0]):
     bp2=int(in_vcf.iloc[i,2])  
 #     if i%1000==0:
 #         print(str(i)+":\t"+chr1+"\t"+str(bp1)+"\t"+chr2+"\t"+str(bp2))
-    bnd_dict=ref_data[(ref_data.iloc[:,0]==chr1) & (ref_data.iloc[:,3]==chr2) & ((ref_data.iloc[:,1].astype(int)-bp1)<=bp_dis)  & ((bp1-ref_data.iloc[:,2].astype(int))<=bp_dis) & ((ref_data.iloc[:,4].astype(int)-bp2)<=bp_dis) & ((bp2-ref_data.iloc[:,5].astype(int))<=bp_dis)] 
+    bnd_dict=ref_data[(ref_data.iloc[:,0]==chr1) & (ref_data.iloc[:,3]==chr2) & (ref_data.iloc[:,1].astype(int)<=bp1+bp_dis)  & (ref_data.iloc[:,2].astype(int)>=(bp1-bp_dis)) & (ref_data.iloc[:,4].astype(int)<=bp2+bp_dis) & (ref_data.iloc[:,5].astype(int)>=(bp2-bp_dis))] 
     if bnd_dict.empty or bnd_dict.shape[0]==0:
         continue
     else:
-        bnd_dict=bnd_dict.astype(str)
-        bnd_dict['info']==max(0, int(sv_data[1])-bp1, bp1-int(sv_data[2]), int(sv_data[4])-bp2, bp2-int(sv_data[5]))
-        #bnd_dict['info']=bnd_dict.apply(lambda x: '|'.join(x.tolist()), axis=1)
-        #print(bnd_dict['info'].str.cat(sep='&'))       
-        in_vcf.iloc[i,in_vcf.shape[1]-1]=bnd_dict['info'].str.cat(sep='&')#re.sub('\t| ',',',str(list(bnd_dict)))
+        bnd_dict.iloc[:,1]=bnd_dict.iloc[:,1].astype(int)-bp1
+        bnd_dict.iloc[:,2]=bp1-bnd_dict.iloc[:,2].astype(int) 
+        bnd_dict.iloc[:,4]=bnd_dict.iloc[:,4].astype(int)-bp1
+        bnd_dict.iloc[:,5]=bp1-bnd_dict.iloc[:,5].astype(int) 
+        bnd_dict['info']==max(0, bnd_dict.iloc[:,1], bnd_dict.iloc[:,2], bnd_dict.iloc[:,4], bnd_dict.iloc[:,5])    
+        in_vcf.iloc[i,in_vcf.shape[1]-1]=min(bnd_dict['info']) 
 in_vcf.to_csv(out_vcf,sep='\t',index=False,header=False)
