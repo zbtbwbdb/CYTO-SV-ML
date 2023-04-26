@@ -284,19 +284,21 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     sv_data_nontrs=sv_data_nontrs.fillna(0)
     # replace infinite value
     sv_data_nontrs.replace([np.inf, -np.inf], 0, inplace=True)
-    sv_data_nontrs.to_csv("/home/tzhang/test2",sep="\t",header=True,index=False)   
+    sv_data_nontrs.to_csv("/home/tzhang/test2"+str(nontrs_sv_cutoff)+"bf",sep="\t",header=True,index=False)   
     print(sv_data_nontrs.shape)  
         
     # label benchmark sv 
-    print(sv_data_nontrs.shape)  
-    #sv_data_nontrs=sv_data_nontrs[abs(sv_data_nontrs['sv_length'])>=10000]    
-    sv_data_nontrs=sv_data_nontrs[(sv_data_nontrs['GT']=='0/1')]
     print(sv_data_nontrs.shape)      
+    sv_data_nontrs=sv_data_nontrs[abs(sv_data_nontrs['sv_length'])>=100000]    
+    print(sv_data_nontrs.shape)      
+    sv_data_nontrs=sv_data_nontrs[(sv_data_nontrs['GT']=='0/1')]
+    print(sv_data_nontrs.shape)     
     sv_data_nontrs.insert(sv_data_nontrs.shape[1], "label", list(repeat(0,sv_data_nontrs.shape[0])), True)
     sv_data_nontrs.loc[(sv_data_nontrs['1000_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['gnomad_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['dgv_g'].astype(float)>nontrs_sv_cutoff),'label']=1
     sv_data_nontrs.loc[( (sv_data_nontrs['cosmic_s'].astype(float)>nontrs_sv_cutoff))  & (sv_data_nontrs['dgv_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['1000_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['gnomad_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['control_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['1000_gall'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['gnomad_gall'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['control_gall'].astype(float)<nontrs_sv_cutoff) ,'label']=2    
     sv_data_nontrs.loc[(sv_data_nontrs['gnomad_qc'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['control_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['centromere_qc'].astype(float)>nontrs_sv_cutoff),'label']=-1
-
+    sv_data_nontrs.to_csv("/home/tzhang/test2"+str(nontrs_sv_cutoff)+"af",sep="\t",header=True,index=False)
+    
     print(sv_data_nontrs['label'].value_counts())      
     sv_data_nontrs=sv_data_nontrs.rename(columns={'QUAL':'svtyper_score','SUPP':'sv_caller_supp'})  
     sv_data_nontrs.replace('NAN', 0, inplace=True) 
