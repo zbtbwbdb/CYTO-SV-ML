@@ -41,7 +41,7 @@ for i in range(in_vcf.shape[0]):
         bnd_dict.iloc[:,2]=bp1-bnd_dict.iloc[:,2].astype(int) 
         bnd_dict.iloc[:,4]=bnd_dict.iloc[:,4].astype(int)-bp2
         bnd_dict.iloc[:,5]=bp2-bnd_dict.iloc[:,5].astype(int) 
-        bnd_dict['info']=bnd_dict.apply(lambda x: max(0,min(x[1],x[2]),min(x[4],x[5])),axis=1)  
+        bnd_dict['info']=bnd_dict.apply(lambda x: max(0,x[1],x[2], x[4], x[5]),axis=1)  
         print(bnd_dict)        
         in_vcf.iloc[i,in_vcf.shape[1]-1]=min(bnd_dict['info']) 
 in_vcf.to_csv(out_vcf,sep='\t',index=False,header=False)
