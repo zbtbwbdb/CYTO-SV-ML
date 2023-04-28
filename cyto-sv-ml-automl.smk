@@ -35,7 +35,7 @@ SIZE_K=round(size/1000)
 
 rule all:
     input:
-        expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_{sv_type}_sv_ml_metrics_sub.csv", cohort_name=cohort_name, sv_type=['trs','nontrs'])
+        protected(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_{sv_type}_sv_ml_metrics_sub.csv", cohort_name=cohort_name, sv_type=['trs','nontrs']))
         
 #  checkpoint for all sample sv data   
 checkpoint all_sample_sv_ready:
@@ -54,7 +54,7 @@ rule all_sample_sv_combine:
     input:
         check_sample_file
     output:
-        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name)        
+        protected(expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.sv.all.combine_all", cohort_name=cohort_name))        
     shell:
         """  
         cat {input} && bash {CYTO_SV_ML_DIR}/Pipeline_script/all_sample_sv_combine.sh {MAIN_DIR} {cohort_name} {input} 
@@ -83,5 +83,6 @@ rule cyto_sv_ml:
     shell:
         """
         sudo mkdir -p {OUTPUT_DIR}/{cohort_name}/cyto_sv_ml &&
-        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs} 
+        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_transformation.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs}  &&
+        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_modelling.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs}    
         """             
