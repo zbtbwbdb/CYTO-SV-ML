@@ -31,7 +31,7 @@ SIZE_K=round(size/1000)
     
 rule all:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=SIZE_K)  
+        protected(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.all_anno.all_info.all_complex.supp", sample=SAMPLES, size_k=SIZE_K))  
         
 # Run chromoseq_sv
 rule chromoseq_sv:
@@ -40,7 +40,7 @@ rule chromoseq_sv:
     input:
         sample_cram=expand(INPUT_DIR+"/{sample}.cram",sample=SAMPLES) 
     output:
-        sample_vcf = expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller=chromoseq_sv_callers)
+        sample_vcf = protected(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller=chromoseq_sv_callers))
     threads: 8        
     params:
         chromoseq_docker = chromoseq_docker,        
@@ -58,7 +58,7 @@ rule parliment2_sv:
     input:         
         sample_bam=expand(INPUT_DIR+"/{sample}.bam",sample=SAMPLES)  
     output:  
-        sample_vcf = expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller= parliment2_sv_callers)  
+        sample_vcf = protected(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller= parliment2_sv_callers))  
     threads: 8
     params:
         parliment_docker = parliment_docker,
@@ -73,8 +73,8 @@ rule sv_vcf_tf:
     input:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller=all_callers)
     output:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs']),        
-#        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers)
+        temp(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])),        
+        temp(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers))
     params:
         sm = SAMPLES,   
     shell:
@@ -87,9 +87,9 @@ rule svmerge_qc:
     input:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),           
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),    
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", size_k=SIZE_K, sample=SAMPLES)        
+        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])),           
+        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])),    
+        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", size_k=SIZE_K, sample=SAMPLES))        
     params:
         sm = SAMPLES         
     shell:
@@ -103,8 +103,10 @@ rule svtyper_qc:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs']),
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])
     output:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K),  
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, size_k=SIZE_K)     
+        protected(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.{size_k}k.all.svtyped.vcf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K)),    
+        temp(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K)),  
+        protected(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.all.svtyped.vcf", sample=SAMPLES, size_k=SIZE_K)),
+        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, size_k=SIZE_K))     
     params:
         sm = SAMPLES,  
         sv_caller='@'.join(str(sc) for sc in all_callers)
@@ -120,7 +122,7 @@ rule sv_seq_complex:
     input:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", sample=SAMPLES, size_k=SIZE_K)
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES, size_k=SIZE_K)
+        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.bed.bpst_bpend.kz.index_complex", sample=SAMPLES, size_k=SIZE_K))
     params:
         sm = SAMPLES,
         py27_dir=config['py27_dir']      
@@ -134,7 +136,7 @@ rule sv_database_ann:
     input:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])   
     output:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=SIZE_K)
+        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=SIZE_K))
     params:
         sm = SAMPLES, 
         sv_db='@'.join(str(sd) for sd in SV_DB),
@@ -147,8 +149,8 @@ rule sv_database_ann:
 # run sv vcf info extraction          
 rule sv_info_extract:
     input:
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K) ,
-#        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers)        
+        temp(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K)),
+        temp(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers))        
     output:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_info", sample=SAMPLES, size_k=SIZE_K)
     params:
