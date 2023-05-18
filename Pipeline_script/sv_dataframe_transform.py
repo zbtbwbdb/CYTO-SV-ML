@@ -121,9 +121,22 @@ def trs_sv_data_transform(sv_data_trs,trs_sv_cutoff):
     
     # label benchmark sv 
     sv_data_trs.insert(sv_data_trs.shape[1], "label", list(repeat(0,sv_data_trs.shape[0])), True)
-    sv_data_trs.loc[(sv_data_trs['1000_g']=="YVID") | (sv_data_trs['gnomad_g']=="YVID") | (sv_data_trs['dgv_g']=="YVID"),'label']=1   
-    sv_data_trs.loc[(sv_data_trs['gnomad_qc']=="YVID") | (sv_data_trs['control_g']=="YVID") | (sv_data_trs['centromere_qc']=="YVID"),'label']=-1  
-    sv_data_trs.loc[((sv_data_trs['cytoatlas_s']=="YVID") | (sv_data_trs['cosmic_s']=="YVID")) & (sv_data_trs['control_gall']!="YVID"),'label']=2    
+    sv_data_trs.to_csv("/home/tzhang/trs_test",sep="\t",header=True,index=False)       
+    tg_idx0=np.where(((sv_data_trs['1000_g']=="YVID") | (sv_data_trs['gnomad_g']=="YVID") | (sv_data_trs['dgv_g']=="YVID")))
+    ta_idx0=np.where(((sv_data_trs['gnomad_qc']=="YVID") | (sv_data_trs['control_g']=="YVID") | (sv_data_trs['centromere_qc']=="YVID")))    
+    ts_idx0=np.where((((sv_data_trs['cytoatlas_s']=="YVID") | (sv_data_trs['cosmic_s']=="YVID") | (sv_data_trs['uwstl_s']=="YVID")) & (sv_data_trs['control_gall']!="YVID"))) 
+    print(tg_idx0[0].shape)
+    print(ta_idx0[0].shape)    
+    print(ts_idx0[0].shape)       
+    tg_idx=[i for i in tg_idx0[0]  if i not in ta_idx0[0] and i not in ts_idx0[0] ]
+    ta_idx=[i for i in ta_idx0[0]  if i not in tg_idx0[0] and i not in ts_idx0[0] ] 
+    ts_idx=[i for i in ts_idx0[0]  if i not in tg_idx0[0] and i not in ta_idx0[0] ]      
+    print(len(tg_idx))
+    print(len(ta_idx))
+    print(len(ts_idx))    
+    sv_data_trs.loc[np.r_[tg_idx],'label']=1   
+    sv_data_trs.loc[np.r_[ta_idx],'label']=-1  
+    sv_data_trs.loc[np.r_[ts_idx],'label']=2    
     print(sv_data_trs['label'].value_counts())    
     
     # make summary plot / table
@@ -284,21 +297,38 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     sv_data_nontrs=sv_data_nontrs.fillna(0)
     # replace infinite value
     sv_data_nontrs.replace([np.inf, -np.inf], 0, inplace=True)
-    sv_data_nontrs.to_csv("/home/tzhang/test2"+str(nontrs_sv_cutoff)+"bf",sep="\t",header=True,index=False)   
+    sv_data_nontrs.to_csv("/home/tzhang/test2",sep="\t",header=True,index=False)   
     print(sv_data_nontrs.shape)  
         
     # label benchmark sv 
-    print(sv_data_nontrs.shape)      
-    sv_data_nontrs=sv_data_nontrs[abs(sv_data_nontrs['sv_length'])>=100000]    
-    print(sv_data_nontrs.shape)      
-    sv_data_nontrs=sv_data_nontrs[(sv_data_nontrs['GT']=='0/1')]
+    sv_data_nontrs=sv_data_nontrs[abs(sv_data_nontrs['sv_length'])>=1000000]   
     print(sv_data_nontrs.shape)     
-    sv_data_nontrs.insert(sv_data_nontrs.shape[1], "label", list(repeat(0,sv_data_nontrs.shape[0])), True)
-    sv_data_nontrs.loc[(sv_data_nontrs['1000_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['gnomad_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['dgv_g'].astype(float)>nontrs_sv_cutoff),'label']=1
-    sv_data_nontrs.loc[( (sv_data_nontrs['cosmic_s'].astype(float)>nontrs_sv_cutoff))  & (sv_data_nontrs['dgv_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['1000_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['gnomad_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['control_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['1000_gall'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['gnomad_gall'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['control_gall'].astype(float)<nontrs_sv_cutoff) ,'label']=2    
-    sv_data_nontrs.loc[(sv_data_nontrs['gnomad_qc'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['control_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['centromere_qc'].astype(float)>nontrs_sv_cutoff),'label']=-1
-    sv_data_nontrs.to_csv("/home/tzhang/test2"+str(nontrs_sv_cutoff)+"af",sep="\t",header=True,index=False)
-    
+    sv_data_nontrs=sv_data_nontrs[(sv_data_nontrs['GT']=='0/1')]
+    print(sv_data_nontrs.shape)  
+ 
+    random.seed(0)
+    new_index=random.sample(list(range(sv_data_nontrs.shape[0])), k=sv_data_nontrs.shape[0]) 
+    sv_data_nontrs=sv_data_nontrs.reset_index(drop=True)
+    sv_data_nontrs=sv_data_nontrs.reindex(new_index)
+    sv_data_nontrs=sv_data_nontrs.reset_index(drop=True)     
+    sv_data_nontrs.insert(sv_data_nontrs.shape[1], "label", list(repeat(0,sv_data_nontrs.shape[0])), True)    
+    tg_idx0=np.where(((sv_data_nontrs['1000_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['gnomad_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['dgv_g'].astype(float)>nontrs_sv_cutoff)))
+    ta_idx0=np.where(((sv_data_nontrs['gnomad_qc'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['control_g'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['centromere_qc'].astype(float)>nontrs_sv_cutoff)))    
+    ts_idx0=np.where((((sv_data_nontrs['cosmic_s'].astype(float)>nontrs_sv_cutoff) | (sv_data_nontrs['uwstl_s'].astype(float)>nontrs_sv_cutoff))  & (sv_data_nontrs['dgv_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['1000_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['gnomad_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['control_g'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['1000_gall'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['gnomad_gall'].astype(float)<nontrs_sv_cutoff) & (sv_data_nontrs['control_gall'].astype(float)<nontrs_sv_cutoff))) 
+    print(tg_idx0[0].shape)
+    print(ta_idx0[0].shape)    
+    print(ts_idx0[0].shape)       
+    tg_idx=[i for i in tg_idx0[0]  if i not in ta_idx0[0] and i not in ts_idx0[0] ]
+    ta_idx=[i for i in ta_idx0[0]  if i not in tg_idx0[0] and i not in ts_idx0[0] ] 
+    ts_idx=[i for i in ts_idx0[0]  if i not in tg_idx0[0] and i not in ta_idx0[0] ]     
+    print(len(tg_idx))
+    print(len(ta_idx))  
+    print(len(ts_idx))      
+    sv_data_nontrs.loc[np.r_[tg_idx],'label']=1    
+    sv_data_nontrs.loc[np.r_[ta_idx],'label']=-1    
+    sv_data_nontrs.loc[np.r_[ts_idx],'label']=2    
+
+
     print(sv_data_nontrs['label'].value_counts())      
     sv_data_nontrs=sv_data_nontrs.rename(columns={'QUAL':'svtyper_score','SUPP':'sv_caller_supp'})  
     sv_data_nontrs.replace('NAN', 0, inplace=True) 
