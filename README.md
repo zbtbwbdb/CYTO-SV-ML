@@ -46,6 +46,7 @@ mamba env create py39 -f py39.yaml
 mamba env create cyto-sv-ml -f cyto-sv-ml.yaml
 conda activate cyto-sv-ml
 pip install --upgrade snakemake # in case that snakemake version is old
+# note: python-graphviz might be conflicted with the pre-existing packages in your environment. If it happened, please remove it from requirement file and install it separately.
 ```
 
 ### Download hg38 reference genome 
