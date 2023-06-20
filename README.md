@@ -56,7 +56,7 @@ cd CYTO-SV-ML/reference
 CYTO-SV-ML/reference/hg38/hs38.fasta
 CYTO-SV-ML/reference/hg38/hs38.fasta.fai
 # VEP GRCh38 from ensembl
-curl -O https://ftp.ensembl.org/pub/release-108/variation/vep/homo_sapiens_vep_104_GRCh38.tar.gz
+curl -O https://ftp.ensembl.org/pub/release-104/variation/vep/homo_sapiens_vep_104_GRCh38.tar.gz
 tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
 cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
 ```
