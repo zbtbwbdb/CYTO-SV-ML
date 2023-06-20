@@ -73,7 +73,7 @@ rule sv_vcf_tf:
     input:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller=all_callers)
     output:
-        temp(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs'])),        
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.{sv_type}_tf", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K, sv_type=['trs','nontrs']),        
         temp(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers))
     params:
         sm = SAMPLES,   
