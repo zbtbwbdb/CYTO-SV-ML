@@ -51,12 +51,11 @@ pip install --upgrade snakemake # in case that snakemake version is old
 
 ### Download hg38 reference genome 
 ```
-mkdir CYTO-SV-ML/reference
+cd CYTO-SV-ML/reference
 # hg38 from Broad Institute Google Cloud (https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/)
 CYTO-SV-ML/reference/hg38/hs38.fasta
 CYTO-SV-ML/reference/hg38/hs38.fasta.fai
 # VEP GRCh38 from ensembl
-cd CYTO-SV-ML/reference
 curl -O https://ftp.ensembl.org/pub/release-108/variation/vep/homo_sapiens_vep_104_GRCh38.tar.gz
 tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
 cd CYTO-SV-ML/reference/homo_sapiens/104_GRCh38
