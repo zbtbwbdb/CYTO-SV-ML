@@ -35,13 +35,13 @@ for i in range(in_vcf.shape[0]):
     if bnd_dict.empty or bnd_dict.shape[0]==0:
         continue
     else:
-        print(in_vcf.iloc[i,:])
-        print(bnd_dict)          
+        #print(in_vcf.iloc[i,:])
+        #print(bnd_dict)          
         bnd_dict.iloc[:,1]=bnd_dict.iloc[:,1].astype(int)-bp1
         bnd_dict.iloc[:,2]=bp1-bnd_dict.iloc[:,2].astype(int) 
         bnd_dict.iloc[:,4]=bnd_dict.iloc[:,4].astype(int)-bp2
         bnd_dict.iloc[:,5]=bp2-bnd_dict.iloc[:,5].astype(int) 
         bnd_dict['info']=bnd_dict.apply(lambda x: max(0,x[1],x[2], x[4], x[5]),axis=1)  
-        print(bnd_dict)        
+        #print(bnd_dict)        
         in_vcf.iloc[i,in_vcf.shape[1]-1]=min(bnd_dict['info']) 
 in_vcf.to_csv(out_vcf,sep='\t',index=False,header=False)
