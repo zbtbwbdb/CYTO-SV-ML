@@ -51,6 +51,7 @@ pip install --upgrade snakemake # in case that snakemake version is old
 
 ### Download hg38 reference genome 
 ```
+mkdir CYTO-SV-ML/reference
 # hg38 from Broad Institute Google Cloud (https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/)
 CYTO-SV-ML/reference/hg38/hs38.fasta
 CYTO-SV-ML/reference/hg38/hs38.fasta.fai
