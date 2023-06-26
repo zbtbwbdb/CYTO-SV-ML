@@ -136,7 +136,7 @@ rule sv_database_ann:
     input:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])   
     output:
-        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=SIZE_K))
+       expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=SIZE_K)
     params:
         sm = SAMPLES, 
         sv_db='@'.join(str(sd) for sd in SV_DB),
