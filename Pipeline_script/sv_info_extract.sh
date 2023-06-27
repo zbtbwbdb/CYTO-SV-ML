@@ -66,7 +66,7 @@ if (( $info_check>1 )); then
     info_check2=$(awk '{print NF}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info | awk '!a[$1]++' | wc -l )
     if (( $info_check2>1 )); then   
         awk '{print NF}'  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.all_info  | awk '!a[$1]++'       
-        echo "sv_info2 missing !!!"    
+        echo "sv_info2 missing error !!!"    
         exit
     fi
 else
