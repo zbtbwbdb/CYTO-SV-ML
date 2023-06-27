@@ -18,13 +18,13 @@ echo "# SV database annotation label" && date
 for SV_database_name in uwstl_s 
     do
         echo ${SV_database_name} "ok" && date            
-        if [ -s ${main_dir}/out/${sample}/${sample}.${SV_database_name}.nontrs.gz ]; then                  
-            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_database_mapping.py -i ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs -t ${main_dir}/out/${sample}/${sample}.${SV_database_name}.nontrs.gz -d 1000 -p 0.7 -o ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs.${SV_database_name}  
+        if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${SV_database_name}.nontrs.gz ]; then                  
+            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_database_mapping.py -i ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs -t ${main_dir}/out/${sample}/sv_caller_results/${sample}.${SV_database_name}.nontrs.gz -d 1000 -p 0.7 -o ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs.${SV_database_name}  
         else
             awk 'FNR!=1{$4=$1"\t"$4; print $0"\tNAN"}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs.${SV_database_name}
         fi
-        if [ -s ${main_dir}/out/${sample}/${sample}/${sample}.${SV_database_name}.trs ]; then
-            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_bnd_database_mapping.py ${main_dir}/out/${sample}/${sample}.${SV_database_name}.trs ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs ${SV_database_name}_1000 
+        if [ -s ${main_dir}/out/${sample}/${sample}/sv_caller_results/${sample}.${SV_database_name}.trs ]; then
+            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_bnd_database_mapping.py ${main_dir}/out/${sample}/${sample}.${SV_database_name}.trs ${main_dir}/out/${sample}/sv_caller_results/${sample}.${size_k}k.sv.all.trs ${SV_database_name}_1000 
         else
             awk 'FNR!=1{print $0"\tNAN"}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs | sed 's% %\t%g' >  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs.${SV_database_name}_1000 
         fi
