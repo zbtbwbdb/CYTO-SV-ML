@@ -89,7 +89,7 @@ rule svmerge_qc:
     output:
         temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])),           
         temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])),    
-        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", size_k=SIZE_K, sample=SAMPLES))
+        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", size_k=SIZE_K, sample=SAMPLES)),
         protected(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping", size_k=SIZE_K, sample=SAMPLES))
     params:
         sm = SAMPLES         
