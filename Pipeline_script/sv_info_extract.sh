@@ -29,7 +29,7 @@ sc_ln=$(wc -l ${main_dir}/out/${sample}/sv_caller_vector.tmp2 | awk '{print $1}'
 n=0
 for i in $(seq 1 $sc_ln)
    do
-       sv_caller=$(awk -v a="$i" '(FNR==a){print $1}' sv_caller_vector.tmp2)  
+       sv_caller=$(awk -v a="$i" '(FNR==a){print $1}' ${main_dir}/out/${sample}/sv_caller_vector.tmp2)  
       if [ -s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.${size_k}k.all.svtyped.vcf.sv_info.sim ]; then             
           echo ${sv_caller} "svtype ok" && date   
           if [ "${n}" == 0 ]; then                
