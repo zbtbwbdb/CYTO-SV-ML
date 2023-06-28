@@ -5,7 +5,7 @@ sv_caller_vector=$3
 size_k=$4
 
 echo "# starting SV info extraction" && date   
-cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0
+cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping.tmp0t
 echo ${sv_caller_vector} | sed "s%@%\n%g" > ${main_dir}/out/${sample}/sv_caller_vector.tmp2
 sc_ln=$(wc -l ${main_dir}/out/${sample}/sv_caller_vector.tmp2 | awk '{print $1}')
 
