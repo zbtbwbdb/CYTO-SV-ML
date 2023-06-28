@@ -89,7 +89,8 @@ rule svmerge_qc:
     output:
         temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.{sv_type}_tf.all", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])),           
         temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])),    
-        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", size_k=SIZE_K, sample=SAMPLES))        
+        temp(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all", size_k=SIZE_K, sample=SAMPLES))
+        protected(expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping", size_k=SIZE_K, sample=SAMPLES))
     params:
         sm = SAMPLES         
     shell:
@@ -134,7 +135,8 @@ rule sv_seq_complex:
 # run sv database annotation      
 rule sv_database_ann:
     input:
-        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs'])   
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.{sv_type}", sample=SAMPLES, size_k=SIZE_K, sv_type=['trs','nontrs']),
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping", size_k=SIZE_K, sample=SAMPLES)
     output:
        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_anno", sample=SAMPLES, size_k=SIZE_K)
     params:
@@ -150,7 +152,8 @@ rule sv_database_ann:
 rule sv_info_extract:
     input:
         expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.{size_k}k.all.svtyped.vcf.sv_info.sim", sample=SAMPLES, sv_caller=all_callers, size_k=SIZE_K),
-        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers)        
+        expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf.{size_k}k.sv_info.sim", sample=SAMPLES, size_k=SIZE_K, sv_caller=all_callers), 
+        expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping", size_k=SIZE_K, sample=SAMPLES)
     output:
         expand(OUTPUT_DIR+"/{sample}/{sample}.{size_k}k.sv.all.sv_id_mapping.all_info", sample=SAMPLES, size_k=SIZE_K)
     params:
