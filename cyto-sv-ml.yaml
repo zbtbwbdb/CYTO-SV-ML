@@ -162,7 +162,7 @@ dependencies:
   - snakemake-minimal
   - sqlite=3.40.0=h5082296_0
   - stopit=1.1.2=py_0
-  - survivor=1.0.7=hd03093a_2
+  - survivor=1.0.6=hd03093a_2
   - tabix=1.11=hdfd78af_0
   - tabulate=0.8.10=py38h06a4308_0
   - tk=8.6.12=h27826a3_0
