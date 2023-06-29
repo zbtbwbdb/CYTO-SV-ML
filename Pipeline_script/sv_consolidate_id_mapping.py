@@ -39,19 +39,22 @@ def sv_id_tf(line):
  
     # inv sv_id column extraction
     sv_id_list=[]    
-    id_index_list=item[8].split(':')    
-    id_index=id_index_list.index('ID') 
-    id_len=len(id_index_list)-id_index-1
+    id_index_list=item[8].split(':')  # "format list"  
+    id_index=id_index_list.index('ID') # id forward index in "format list"
+    id_len=len(id_index_list)-id_index-1 # id backward index in "format list"
     for i in range(9,len(item)):
         geno_list=item[i].split(':')           
-        inv_sv_id=':'.join(str(w) for w in geno_list[id_index:(len(geno_list)-id_len)])   
+        inv_sv_id=':'.join(str(w) for w in geno_list[id_index:(len(geno_list)-id_len)])  # id = forward - backward in "format list"  
+        if "CNVnator" not in inv_sv_id and "_" in inv_sv_id:
+            inv_sv_id=re.sub('_',':',inv_sv_id)  # correct id (like Manta id)
         if (inv_sv_id=='NaN' or inv_sv_id=='.') and geno_list[-1]!='NAN':
             inv_sv_co=re.sub('_|-',':',geno_list[-1].split(',')[0]).split(':')
             inv_sv_id=':'.join(str(w) for w in [inv_sv_co[i] for i in [0,1,3,2]])+':'+sv_type
         if inv_sv_id!='NaN' and inv_sv_id!='.' and 'chr' not in inv_sv_id:                   
             inv_sv_co=re.sub('_|-',':',geno_list[-1].split(',')[0]).split(':')
             inv_sv_id=':'.join(str(w) for w in [inv_sv_co[i] for i in [0,1,3,2]])+':'+sv_type+':'+inv_sv_id
-        print(inv_sv_id)
+        if inv_sv_id!='NaN':         
+            print(inv_sv_id)
         if inv_sv_id!='NaN' and inv_sv_id!='.' and 'chr' in inv_sv_id:                   
             sv_id_list.append(consolidate_sv_id+'\t'+inv_sv_id)
     # print out mapping consolidate sv_id and inv sv_id
