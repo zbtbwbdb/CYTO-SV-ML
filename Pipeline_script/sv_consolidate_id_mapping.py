@@ -53,8 +53,8 @@ def sv_id_tf(line):
         if inv_sv_id!='NaN' and inv_sv_id!='.' and 'chr' not in inv_sv_id:                   
             inv_sv_co=re.sub('_|-',':',geno_list[-1].split(',')[0]).split(':')
             inv_sv_id=':'.join(str(w) for w in [inv_sv_co[i] for i in [0,1,3,2]])+':'+sv_type+':'+inv_sv_id
-        if inv_sv_id!='NaN':         
-            print(inv_sv_id)
+        # if inv_sv_id!='NaN':         
+        #     print(inv_sv_id)
         if inv_sv_id!='NaN' and inv_sv_id!='.' and 'chr' in inv_sv_id:                   
             sv_id_list.append(consolidate_sv_id+'\t'+inv_sv_id)
     # print out mapping consolidate sv_id and inv sv_id
