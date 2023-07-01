@@ -11,7 +11,7 @@ echo "# prepare the SV vcf files with size restriction and extract sv_vcf_info" 
 for sv_caller in  breakdancer cnvnator delly.deletion delly.duplication delly.inversion ichnorcnv manta       
     do
         echo ${sv_caller}
-        cat ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.list
+        ls ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.list
         SURVIVOR merge ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.list 1000 0 1 0 0 10  ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s
         python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s sc
         mv ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s.re_id ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf    
