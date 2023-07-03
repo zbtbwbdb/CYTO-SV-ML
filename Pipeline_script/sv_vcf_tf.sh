@@ -14,9 +14,11 @@ for sv_caller in  breakdancer cnvnator delly.deletion delly.duplication delly.in
         python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf sf        
         ls ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.list        
         SURVIVOR merge ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.list 1000 0 1 0 0 10  ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s
-        awk 'FNR==NR{split($3,b,":");a[b[1]":"b[2]":"b[3]":"b[4]":"b[5]];c[b[1]":"b[2]":"b[3]":"b[4]":"b[5]]=$3;next}{split($3,d,":"); e=b[1]":"b[2]":"b[3]":"b[4]":"b[5]; if ($1~"#") {print $0} else if (e in a) {$3=c[e]; print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id >   ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id.s
-        echo ${sv_caller} "SV size tf" && date     
-        python ${cyto_sv_ml_dir}/Pipeline_script/sv_size.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id.s $size down > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.${size_k}k
+        awk 'FNR==NR{split($3,b,":");a[b[1]":"b[2]":"b[3]":"b[4]":"b[5]];c[b[1]":"b[2]":"b[3]":"b[4]":"b[5]]=$3;next}{split($3,d,":"); e=b[1]":"b[2]":"b[3]":"b[4]":"b[5]; if (e in a) {$3=c[e]; print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id | sed 's% %\t%g' >   ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id.s
+        awk '($1~"#"){print $0}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id  > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id.hd
+        cat ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id.hd ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id.s > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id
+        echo ${sv_caller} "SV size tf" && date
+        python ${cyto_sv_ml_dir}/Pipeline_script/sv_size.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id $size down > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.${size_k}k
         echo ${sv_caller} "SV type tf" && date                
         python ${cyto_sv_ml_dir}/Pipeline_script/sv_vcf_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.${size_k}k
         echo ${sv_caller} "SV info tf" && date                 
