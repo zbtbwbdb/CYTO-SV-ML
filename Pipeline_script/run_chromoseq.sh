@@ -21,5 +21,5 @@ awk '($1=="BND"){print $2"\t"$3"\t"$5"\t"$4"\t"$2":"$3":"$5":"$1}' ${main_dir}/o
          
 echo "# prepare the SV vcf files (manta + ichnorcnv)" && date 
 gunzip -f ${main_dir}/out/${sample}/sv_caller_results/${sample}.svs_annotated.vcf.gz 
-cp ${main_dir}/out/${sample}/sv_caller_results/${sample}.svs_annotated.vcf ${main_dir}/out/${sample}/sv_caller_results/${sample}.manta.vcf         
+grep -v ICHOR ${main_dir}/out/${sample}/sv_caller_results/${sample}.svs_annotated.vcf > ${main_dir}/out/${sample}/sv_caller_results/${sample}.manta.vcf         
 python ${cyto_sv_ml_dir}/Pipeline_script/ichnorcnv_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.segs.txt ${main_dir}/out/${sample}/sv_caller_results/${sample}.ichnorcnv.vcf
