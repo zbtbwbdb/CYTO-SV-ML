@@ -47,6 +47,10 @@ def sv_id_tf(line):
         inv_sv_id=':'.join(str(w) for w in geno_list[id_index:(len(geno_list)-id_len)])  # id = forward - backward in "format list"  
         if "CNVnator" not in inv_sv_id and "_" in inv_sv_id:
             inv_sv_id=re.sub('_',':',inv_sv_id)  # correct id (like Manta id)
+        if "CNVnator" in inv_sv_id and ":" not in inv_sv_id:
+            inv_sv_id=re.sub('_',':',inv_sv_id)  # correct id (like CNVnator id)    
+            inv_sv_id_list=inv_sv_id.split(':')
+            inv_sv_id=':'.join(str(w) for w in inv_sv_id_list[:-2])+':'+inv_sv_id_list[-3]+':'+inv_sv_id_list[-2]+':'+inv_sv_id_list[-1]
         if (inv_sv_id=='NaN' or inv_sv_id=='.') and geno_list[-1]!='NAN':
             inv_sv_co=re.sub('_|-',':',geno_list[-1].split(',')[0]).split(':')
             inv_sv_id=':'.join(str(w) for w in [inv_sv_co[i] for i in [0,1,3,2]])+':'+sv_type
