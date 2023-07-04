@@ -13,7 +13,7 @@ for sv_caller in  breakdancer cnvnator delly.deletion delly.duplication delly.in
         echo ${sv_caller}
         python ${cyto_sv_ml_dir}/Pipeline_script/sv_id_tf.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf c        
         ls ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.list        
-        SURVIVOR merge ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.list 1000 0 1 0 0 10  ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s
+        SURVIVOR merge ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.list 1000 1 1 0 0 10  ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s
         awk '($1!~"#"){split($3,b,":");print b[1]":"b[2]":"b[3]":"b[4]":"b[5]"\t"$3}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s.id
         awk 'FNR==NR{a[$1];c[$1]=$2;next}{split($3,b,":"); e=b[1]":"b[2]":"b[3]":"b[4]":"b[5]; if (($1!~"#")&&(e in a)) {$3=c[e]; print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.s.id ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id | sed 's% %\t%g' >   ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id.s
         awk '($1~"#"){print $0}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id  > ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.re_id.hd
