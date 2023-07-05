@@ -25,6 +25,8 @@ warnings.filterwarnings("ignore")
 
 ############################################################################################################################################################# 
 wd = sys.path[0]
+trs_sv_cutoff=1000 # trs_sv breakpoint distance based cutoff
+nontrs_sv_cutoff=0.9 # nontrs_sv sequence overlapping based cutoff
 opts,args = getopt.getopt(sys.argv[1:],"s:o:k:t:c:")
 for op, value in opts:
 	if op == "-s":
@@ -38,8 +40,7 @@ for op, value in opts:
 	if op == "-c":
 	    nontrs_sv_cutoff = float(value)  
 sv_type_vector=['trs','nontrs']
-# trs_sv_cutoff=1000 # trs_sv breakpoint distance based cutoff
-# nontrs_sv_cutoff=0.9 # nontrs_sv sequence overlapping based cutoff
+
 ############################################################################################################################################################# 
 sv_data = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
 print(sv_data.columns)
