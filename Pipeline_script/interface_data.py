@@ -21,6 +21,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.compose import make_column_transformer, TransformedTargetRegressor
 from sklearn.pipeline import make_pipeline
 from supervised.automl import AutoML 
+warnings.filterwarnings("ignore")
+
+############################################################################################################################################################# 
 
 #parameter setting
 wd = sys.path[0]
@@ -38,6 +41,7 @@ for op, value in opts:
 if inFile == "":
 	print("-i invalid")
 	sys.exit()
+############################################################################################################################################################# 
       
 # load the optimal model
 automl_trs = AutoML(mode="Explain", n_jobs= 6, results_path=trs_dir+'_ts_EXP')
