@@ -1,4 +1,10 @@
-install.packages("optparse")
+requiredPackages = c('optparse')
+for(p in requiredPackages){
+  if(!require(p,character.only = TRUE)) 
+    {
+    install.packages(p)
+    }
+}
 library(optparse)
 
 ################################################################################################################################################################################
