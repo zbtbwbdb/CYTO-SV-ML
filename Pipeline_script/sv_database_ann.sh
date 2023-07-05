@@ -24,7 +24,7 @@ for SV_database_name in uwstl_s
             awk 'FNR!=1{$4=$1"\t"$4; print $0"\tNAN"}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs | sed 's% %\t%g' > ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.nontrs.${SV_database_name}
         fi
         if [ -s ${main_dir}/out/${sample}/${sample}/sv_caller_results/${sample}.${SV_database_name}.trs ]; then
-            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_bnd_database_mapping.py ${main_dir}/out/${sample}/sv_caller_results/${sample}.${SV_database_name}.trs ${main_dir}/out/${sample}/sv_caller_results/${sample}.${size_k}k.sv.all.trs ${SV_database_name}_1000 
+            ${py27_dir}/python ${cyto_sv_ml_dir}/Pipeline_script/sv_bnd_database_mapping.py ${main_dir}/out/${sample}/${sample}.${SV_database_name}.trs ${main_dir}/out/${sample}/sv_caller_results/${sample}.${size_k}k.sv.all.trs ${SV_database_name}_1000 
         else
             awk 'FNR!=1{print $0"\tNAN"}' ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs | sed 's% %\t%g' >  ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.trs.${SV_database_name}_1000 
         fi
