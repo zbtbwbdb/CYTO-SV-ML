@@ -27,14 +27,12 @@ warnings.filterwarnings("ignore")
 wd = sys.path[0]
 trs_sv_cutoff=1000 # trs_sv breakpoint distance based cutoff
 nontrs_sv_cutoff=0.9 # nontrs_sv sequence overlapping based cutoff
-opts,args = getopt.getopt(sys.argv[1:],"s:o:k:t:c:")
+opts,args = getopt.getopt(sys.argv[1:],"s:o:t:c:")
 for op, value in opts:
 	if op == "-s":
 	    cohort_name = str(value)
 	if op == "-o":
 	    outdir = str(value)
-	if op == "-k":
-	    kfolds = int(value)
 	if op == "-t":
 	    trs_sv_cutoff = int(value)
 	if op == "-c":
