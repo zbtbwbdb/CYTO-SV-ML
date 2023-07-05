@@ -71,7 +71,7 @@ def trs_sv_data_transform(sv_data_trs,trs_sv_cutoff):
     sv_data_trs.loc[(sv_data_trs['DV'].isnull()) | (sv_data_trs['DV']=='NA') | (sv_data_trs['DV']=='.'),'DV']=0  
     sv_data_trs.loc[(sv_data_trs['RR'].isnull()) | (sv_data_trs['RR']=='NA') | (sv_data_trs['RR']=='.'),'RR']=0          
     sv_data_trs.loc[(sv_data_trs['RV'].isnull()) | (sv_data_trs['RV']=='NA') | (sv_data_trs['RV']=='.'),'RV']=0  
-    sv_data_trs.to_csv("/home/tzhang/test0",sep="\t",header=True,index=False)     
+  
 #     print(sv_data_trs.loc[((~sv_data_trs['PR'].str.contains(',')) | (sv_data_trs['PR']=='0,0')) & (sv_data_trs['AP']!=0),['RP','AP']].shape)
     sv_data_trs.loc[((~sv_data_trs['PR'].str.contains(',')) | (sv_data_trs['PR']=='0,0')) & (sv_data_trs['AP']!=0),'PR']=sv_data_trs.loc[((~sv_data_trs['PR'].str.contains(',')) | (sv_data_trs['PR']=='0,0')) & (sv_data_trs['AP']!=0),['RP','AP']].apply(lambda x: str(x['RP'])+','+str(x['AP']), axis=1)
     sv_data_trs.loc[((~sv_data_trs['SR'].str.contains(',')) | (sv_data_trs['SR']=='0,0')) & (sv_data_trs['AS']!=0),'SR']=sv_data_trs.loc[((~sv_data_trs['SR'].str.contains(',')) | (sv_data_trs['SR']=='0,0')) & (sv_data_trs['AS']!=0),['RS','AS']].apply(lambda x: str(x['RS'])+','+str(x['AS']), axis=1)             
@@ -89,7 +89,6 @@ def trs_sv_data_transform(sv_data_trs,trs_sv_cutoff):
     sv_data_trs=sv_data_trs.fillna(0)
     sv_data_trs.replace('', 0, inplace=True)    
     sv_data_trs.replace('.', 0, inplace=True) 
-    sv_data_trs.to_csv("/home/tzhang/trs_test",sep="\t",header=True,index=False)    
     
     # filter low quality sv
     sv_data_trs=sv_data_trs[(sv_data_trs['PR_alt']>=1) & (sv_data_trs['SR_alt']>=1) & ( sv_data_trs['BND_DEPTH'].astype(int) >=1) & ( sv_data_trs['MATE_BND_DEPTH'].astype(int) >=1) & (sv_data_trs['sv_bp_end_POS']!='NAN') & (sv_data_trs['sv_bp_end_POS']!='chrY')]
@@ -120,8 +119,7 @@ def trs_sv_data_transform(sv_data_trs,trs_sv_cutoff):
     sv_data_trs.replace([np.inf, -np.inf], 0, inplace=True) 
     
     # label benchmark sv 
-    sv_data_trs.insert(sv_data_trs.shape[1], "label", list(repeat(0,sv_data_trs.shape[0])), True)
-    sv_data_trs.to_csv("/home/tzhang/trs_test",sep="\t",header=True,index=False)       
+    sv_data_trs.insert(sv_data_trs.shape[1], "label", list(repeat(0,sv_data_trs.shape[0])), True)  
     tg_idx0=np.where(((sv_data_trs['1000_g']=="YVID") | (sv_data_trs['gnomad_g']=="YVID") | (sv_data_trs['dgv_g']=="YVID")))
     ta_idx0=np.where(((sv_data_trs['gnomad_qc']=="YVID") | (sv_data_trs['control_g']=="YVID") | (sv_data_trs['centromere_qc']=="YVID")))    
     ts_idx0=np.where((((sv_data_trs['cytoatlas_s']=="YVID") | (sv_data_trs['cosmic_s']=="YVID") | (sv_data_trs['uwstl_s']=="YVID")) & (sv_data_trs['control_gall']!="YVID"))) 
@@ -236,7 +234,7 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     sv_data_nontrs.loc[(sv_data_nontrs['DV'].isnull()) | (sv_data_nontrs['DV']=='NA') | (sv_data_nontrs['DV']=='.'),'DV']=0  
     sv_data_nontrs.loc[(sv_data_nontrs['RR'].isnull()) | (sv_data_nontrs['RR']=='NA') | (sv_data_nontrs['RR']=='.'),'RR']=0          
     sv_data_nontrs.loc[(sv_data_nontrs['RV'].isnull()) | (sv_data_nontrs['RV']=='NA') | (sv_data_nontrs['RV']=='.'),'RV']=0  
-    sv_data_nontrs.to_csv("/home/tzhang/test0",sep="\t",header=True,index=False)     
+ 
 #     print(sv_data_nontrs.loc[((~sv_data_nontrs['PR'].str.contains(',')) | (sv_data_nontrs['PR']=='0,0')) & (sv_data_nontrs['AP']!=0),['RP','AP']].shape)
     sv_data_nontrs.loc[((~sv_data_nontrs['PR'].str.contains(',')) | (sv_data_nontrs['PR']=='0,0')) & (sv_data_nontrs['AP']!=0),'PR']=sv_data_nontrs.loc[((~sv_data_nontrs['PR'].str.contains(',')) | (sv_data_nontrs['PR']=='0,0')) & (sv_data_nontrs['AP']!=0),['RP','AP']].apply(lambda x: str(x['RP'])+','+str(x['AP']), axis=1)
     sv_data_nontrs.loc[((~sv_data_nontrs['SR'].str.contains(',')) | (sv_data_nontrs['SR']=='0,0')) & (sv_data_nontrs['AS']!=0),'SR']=sv_data_nontrs.loc[((~sv_data_nontrs['SR'].str.contains(',')) | (sv_data_nontrs['SR']=='0,0')) & (sv_data_nontrs['AS']!=0),['RS','AS']].apply(lambda x: str(x['RS'])+','+str(x['AS']), axis=1)             
@@ -244,7 +242,7 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     sv_data_nontrs.loc[((~sv_data_nontrs['SR'].str.contains(','))  | (sv_data_nontrs['SR']=='0,0')) & (sv_data_nontrs['RV']!=0),'SR']=sv_data_nontrs.loc[((~sv_data_nontrs['SR'].str.contains(','))  | (sv_data_nontrs['SR']=='0,0')) & (sv_data_nontrs['RV']!=0),['RR','RV']].apply(lambda x: str(x['RR'])+','+str(x['RV']), axis=1)  
     sv_data_nontrs.loc[~sv_data_nontrs['PR'].str.contains(','),'PR']='0,0'
     sv_data_nontrs.loc[~sv_data_nontrs['SR'].str.contains(','),'SR']='0,0'       
-    sv_data_nontrs.to_csv("/home/tzhang/nontrs_test",sep="\t",header=True,index=False)  
+
          
     sv_data_nontrs['PR_ref']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[0]) if ',' in x else 0)
     sv_data_nontrs['PR_alt']=sv_data_nontrs['PR'].apply(lambda x: int(x.split(',')[1]) if ',' in x else 0)
@@ -254,8 +252,7 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     # replace na
     sv_data_nontrs=sv_data_nontrs.fillna(0)
     sv_data_nontrs.replace('', 0, inplace=True)    
-    sv_data_nontrs.replace('.', 0, inplace=True) 
-    sv_data_nontrs.to_csv("/home/tzhang/test1",sep="\t",header=True,index=False)    
+    sv_data_nontrs.replace('.', 0, inplace=True)  
     
     # filter low quality sv
     sv_data_nontrs['sv_length']=sv_data_nontrs['sv_start_bp'].astype(int)-sv_data_nontrs['sv_end_bp'].astype(int)
@@ -297,7 +294,6 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     sv_data_nontrs=sv_data_nontrs.fillna(0)
     # replace infinite value
     sv_data_nontrs.replace([np.inf, -np.inf], 0, inplace=True)
-    sv_data_nontrs.to_csv("/home/tzhang/test2",sep="\t",header=True,index=False)   
     print(sv_data_nontrs.shape)  
         
     # label benchmark sv 
@@ -347,8 +343,7 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     sv_data_nontrs_2=sv_data_nontrs_2.reindex(new_index)
     sv_data_nontrs_2=sv_data_nontrs_2.reset_index(drop=True)    
     #sv_data_nontrs_2=sv_data_nontrs_2[sv_data_nontrs_2['sv_type']!='INV']
-    #sv_data_nontrs_2.loc[sv_data_nontrs_2['svtyper_score']=='.','svtyper_score']=0
-    sv_data_nontrs_2.to_csv("/home/tzhang/test4",sep="\t",header=True,index=False)       
+    #sv_data_nontrs_2.loc[sv_data_nontrs_2['svtyper_score']=='.','svtyper_score']=0   
     return sv_data_nontrs_2,sv_data_nontrs
 
 def sv_data_summary_plot(sv_data):
