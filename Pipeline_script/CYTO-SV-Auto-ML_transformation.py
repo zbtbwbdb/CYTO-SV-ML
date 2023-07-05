@@ -11,7 +11,6 @@ from numpy import asarray, sqrt, argmax
 from statistics import median
 from itertools import *
 import sv_dataframe_transform
-import sv_dataframe_transform_s
 from sklearn import svm, metrics, datasets, preprocessing
 from sklearn.preprocessing import LabelEncoder, label_binarize, StandardScaler, OrdinalEncoder, OneHotEncoder 
 from sklearn.ensemble import GradientBoostingRegressor,GradientBoostingClassifier, AdaBoostClassifier
@@ -43,7 +42,7 @@ for sv_type in sv_type_vector:
     if sv_type=='trs':
         sv_data_01=sv_data[~(sv_data['sv_type'].isin(['DEL','DUP','INV','INS']))].copy()  
         sv_data_01.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs_o',sep='\t', header=True, index=None) 
-        sv_data_tf=sv_dataframe_transform_s.trs_sv_data_transform(sv_data_01)
+        sv_data_tf=sv_dataframe_transform.trs_sv_data_transform(sv_data_01)
         sv_data_1=sv_data_tf[0]
         sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=True, index=None)
         sv_data_10=sv_data_tf[1]
@@ -51,7 +50,7 @@ for sv_type in sv_type_vector:
     else:
         sv_data_01=sv_data[sv_data['sv_type'].isin(['DEL','DUP','INV','INS'])].copy()     
         sv_data_01.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs_o',sep='\t', header=True, index=None) 
-        sv_data_tf=sv_dataframe_transform_s.nontrs_sv_data_transform(sv_data_01)        
+        sv_data_tf=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_01)        
         sv_data_1=sv_data_tf[0]
         sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs',sep='\t', header=True, index=None)        
         sv_data_10=sv_data_tf[1]
