@@ -5,6 +5,7 @@ sample_all=$3
 cyto_band_file=$4
 k=$5
 k=$((k-1))
+
 echo ${main_dir} ${cyto_sv_ml_dir} ${sample_all}
 echo "# prepare the data file for cyto-sv-ml application" && date   
 python ${cyto_sv_ml_dir}/Pipeline_script/interface_data.py -t ${main_dir}'/out/'${sample_all}'/cyto_sv_ml/'${sample_all}'_trs_'${k} -n ${main_dir}'/out/'${sample_all}'/cyto_sv_ml/'${sample_all}'_nontrs_'${k} -i ${main_dir}'/out/'${sample_all}'/'${sample_all}
