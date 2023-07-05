@@ -32,7 +32,7 @@ rule interface_docker:
     input:
         expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_{sv_type}_{k}_ts_EXP", cohort_name=cohort_name, k=[0,1,2,3,4], sv_type=['trs','nontrs'])   
     output:
-        expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}.all_pred", cohort_name=cohort_name),
+        expand(OUTPUT_DIR+"/{cohort_name}/{cohort_name}.all_pred", cohort_name=cohort_name),
         CYTO_SV_ML_DIR+"/docker/cyto-sv-ml/data/cyto_sv_ml.RData"
     params:
         kfolds=config['kfolds']         
