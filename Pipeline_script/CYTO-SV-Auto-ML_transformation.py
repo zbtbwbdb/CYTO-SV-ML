@@ -34,7 +34,8 @@ for op, value in opts:
 	if op == "-k":
 	    kfolds = int(value)
 sv_type_vector=['trs','nontrs']
-
+trs_sv_cutoff=1000
+nontrs_sv_cutoff=0.9
 ############################################################################################################################################################# 
 sv_data = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
 print(sv_data.columns)
@@ -42,7 +43,7 @@ for sv_type in sv_type_vector:
     if sv_type=='trs':
         sv_data_01=sv_data[~(sv_data['sv_type'].isin(['DEL','DUP','INV','INS']))].copy()  
         sv_data_01.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs_o',sep='\t', header=True, index=None) 
-        sv_data_tf=sv_dataframe_transform.trs_sv_data_transform(sv_data_01)
+        sv_data_tf=sv_dataframe_transform.trs_sv_data_transform(sv_data_01,trs_sv_cutoff)
         sv_data_1=sv_data_tf[0]
         sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=True, index=None)
         sv_data_10=sv_data_tf[1]
@@ -50,7 +51,7 @@ for sv_type in sv_type_vector:
     else:
         sv_data_01=sv_data[sv_data['sv_type'].isin(['DEL','DUP','INV','INS'])].copy()     
         sv_data_01.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs_o',sep='\t', header=True, index=None) 
-        sv_data_tf=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_01)        
+        sv_data_tf=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_01,nontrs_sv_cutoff)        
         sv_data_1=sv_data_tf[0]
         sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs',sep='\t', header=True, index=None)        
         sv_data_10=sv_data_tf[1]
