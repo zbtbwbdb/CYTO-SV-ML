@@ -116,11 +116,12 @@ X_trs_all.to_csv(inFile+'.trs_pred',sep='\t',index=False,header=True)
 X_nontrs_all.to_csv(inFile+'.nontrs_pred',sep='\t',index=False,header=True)
 
 # re-organize trs/nontrs data
-col_drop=[str(w) for w in X_trs_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a','sv_PR_ref','sv_SR_ref','sv_PR_alt','sv_SR_alt', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label']]
+col_keep=['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a','sv_PR_ref','sv_SR_ref','sv_PR_alt','sv_SR_alt', 'read_ratio', 'read_ratio_diff', 'sv_bp_st', 'sv_bp_end', 'ci_pos0', 'ci_pos1', 'sv_bp_end_POS', 'sv_bp_end_END', 'cipos_range', 'ciend_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label'] 
+col_drop=[str(w) for w in X_trs_all.columns if w not in col_keep]
 print(col_drop)
 X_trs_all=X_trs_all.drop(col_drop,axis=1)
 print(X_trs_all.columns)
-col_drop=[str(w) for w in X_nontrs_all.columns if w not in ['sv_type', 'sv_chr', 'sv_chr2', 'sv_read_r', 'sv_read_a','sv_PR_ref','sv_SR_ref','sv_PR_alt','sv_SR_alt', 'sv_read_ratio', 'sv_read_diff', 'sv_bp_st', 'sv_bp_end', 'sv_bp_st_ci0', 'sv_bp_st_ci1', 'sv_bp_end_ci0', 'sv_bp_end_ci1', 'sv_bp_st_ci_range', 'sv_bp_end_ci_range', 'sv_bp_st_cc_v1', 'sv_bp_end_cc_v1', 'sv_database', 'predict_label', 'prediction_TA', 'prediction_TG', 'prediction_TS', 'label']]
+col_drop=[str(w) for w in X_nontrs_all.columns if w not in col_keep]
 print(col_drop)
 X_nontrs_all=X_nontrs_all.drop(col_drop,axis=1)
 print(X_nontrs_all.columns)
