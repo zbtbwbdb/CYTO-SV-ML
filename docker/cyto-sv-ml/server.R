@@ -3,7 +3,6 @@ server<-function(input, output)
     ################################################################################################################### 
     
     # 1. load environment with the data below:
-     #data("data/cyto_sv_ml")
      load("data/cyto_sv_ml.RData")
      removeModal()
      
@@ -24,13 +23,9 @@ server<-function(input, output)
           #3.1 load assigned input values
             sv_chr<-check_sv_chr()
             sv_chr2<-check_sv_chr2() 
-#            sv_chr<-paste('chr',sv_chr,sep='')               
-#            sv_chr2<-paste('chr',sv_chr2,sep='')           
             sv_type<-check_sv_type()
             sv_chr_arm<-check_cytoband()    
             #3.2 generate the simulated examples from random resampling
-#            bp_min=genome_coor[genome_coor$chr==sv_chr & genome_coor$chr_arm==sv_chr_arm,3]
-#            bp_max=genome_coor[genome_coor$chr==sv_chr & genome_coor$chr_arm==sv_chr_arm,4]           
             cytoband_cen1=genome_coor[genome_coor$chr==sv_chr,2]
             cytoband_cen2=genome_coor[genome_coor$chr==sv_chr,3]            
       	    cytoband_end=genome_coor[genome_coor$chr==sv_chr,4]
@@ -43,23 +38,6 @@ server<-function(input, output)
                         cytoband_range=c(0,cytoband_end)
                   }
       	    print(cytoband_range)  
-#            if (sv_type=='TRS')
-#                  {
-#                  benchmark_sv=read.table("data/cnv_benchmark_all.vcf",sep="\t",header=T)
-#                  sv_simu_database=read.table("data/cnv_simu.vcf",sep="\t",header=T)
-#                  input_sv=sv_simu_database[sv_simu_database$Chrom==sv_chr & sv_simu_database$chr2==sv_chr2 & sv_simu_database$bp_st %in% cytoband_range,]
-#                  input_sv=sv_simu_database[sv_simu_database$Chrom==sv_chr & sv_simu_database$chr2==sv_chr2,]
-#            } else {
-#                  benchmark_sv=read.table("data/trs_benchmark_all.vcf",sep="\t",header=T)
-#                  sv_simu_database=read.table("data/trs_simu.vcf",sep="\t",header=T)
-#                  input_sv=sv_simu_database[sv_simu_database$sv_chr==sv_chr & sv_simu_database$sv_type==sv_type & sv_simu_database$bp_st %in% cytoband_range,]
-#                  input_sv=sv_simu_database[sv_simu_database$sv_chr==sv_chr & sv_simu_database$sv_type==sv_type,]
-#                  }
-#            input_sv=input_sv[sample(1:dim(input_sv)[1],1),]      
-#            write.table(input_sv,"data/input_sv.vcf",sep="\t",col.names=T,row.names=F)
-#            #3.3 model prediction by system call python script   
-#            pred_sv=system2("python","data/cyto-sv-ml.py","input_sv.vcf",sv_type, stdout = TRUE, stderr = TRUE)
-#            input_sv['prediction']=int(pred_sv)
             if ( sv_type=='TRS')
                   {
               all_input_sv=all_sv[all_sv$label=='UC' & all_sv$sv_chr==sv_chr & all_sv$sv_chr2==sv_chr2 & all_sv$sv_type==sv_type & ((all_sv$sv_bp_st>=cytoband_range[1] & all_sv$sv_bp_st<=cytoband_range[2]) | (all_sv$sv_bp_end>=cytoband_range[1] & all_sv$sv_bp_end<=cytoband_range[2])),]
@@ -138,7 +116,6 @@ server<-function(input, output)
             all_sel_sv=rbind(input_sv,all_benchmark_sv)               
             all_sel_sv$alphag <- ifelse(all_sel_sv$label %in% c('TS','TA','TS'),0.2,1)
             p2<- all_sel_sv %>% plot_ly(type = 'scatter3d',mode = 'markers',x=~-log(prediction_TA,10), y=~-log(prediction_TG,10),z=~-log(prediction_TS,10),size=~-log(predict_max,10)*10, color=~factor(label),  colors =c(rgb(169,169,169, alpha = 0.01 * 255, maxColorValue = 255),rgb(127,255,0, alpha = 0.01 * 255, maxColorValue = 255), rgb(30,144,255, alpha = 0.01 * 255, maxColorValue = 255),rgb(255,0,0, alpha = 0.6 * 255, maxColorValue = 255)) ,marker=list(opacity=all_sel_sv$alphag),hovertemplate = paste("sv_type:",all_sel_sv$sv_type,"<br>sv_chr:",all_sel_sv$sv_chr,"<br>sv_chr2:",all_sel_sv$sv_chr2,"<br>sv_bp_st:",all_sel_sv$sv_bp_st,"<br>sv_bp_end:",all_sel_sv$sv_bp_end, "<br>TA_SV_prob:", round(all_sel_sv$prediction_TA,2),"<br>TG_SV_prob:", round(all_sel_sv$prediction_TG,2),"<br>TS_SV_prob:", round(all_sel_sv$prediction_TS,2),"<br>sv_database:",all_sel_sv$sv_database),opacity=0.36)#as.numeric(all_sel_sv$prediction_TS))#ifelse(all_sel_sv$label %in% c('TS','UC'),0,1)) 
-            # p2 <-p2 %>%  add_trace(input_sv, x=~-log(prediction_TA,10), y=~-log(prediction_TG,10),z=~-log(prediction_TS,10), type = "scatter3d", mode = "markers",marker_symbol = 'star', marker_size = 15, color = I("red"), inherit = FALSE)
             p2 <- p2 %>% layout(scene = list(xaxis = list(title ="prediction_TA (-log)"), yaxis = list(title = "prediction_TG (-log)"),zaxis = list(title = "prediction_TS (-log)")))
             p2
     
@@ -178,9 +155,18 @@ server<-function(input, output)
             x=which(colnames(sel_sv)==input$feature_x)
             y=which(colnames(sel_sv)==input$feature_y)            
             x_y=which(1:dim(sel_sv)[2] %nin% c(x,y))
-            all_sv_sel<-sel_sv[,c(x,y,x_y)]               
-            all_sv_sel2<-all_sv_sel[,match(col_index,colnames(all_sv_sel))]
-            all_sv_sel2<-all_sv_sel2#[,colnames(all_sv_sel2) %nin% c('sv_chr','sv_chr2')]            
+            all_sv_sel<-sel_sv[,c(x,y,x_y)]   
+            for ( i in 1:dim(all_sv_sel)[2])
+            {
+              if (class(all_sv_sel[,i])=='integer')
+             { print(colnames(all_sv_sel)[i])
+              all_sv_sel[,i]<-as.numeric(all_sv_sel[,i])}
+              if (class(all_sv_sel[,i])=='character')
+              { print(colnames(all_sv_sel)[i])
+                all_sv_sel[,i]<-as.factor(all_sv_sel[,i])}              
+            }
+            #all_sv_sel2<-all_sv_sel[,match(col_index,colnames(all_sv_sel))]
+            all_sv_sel2<-all_sv_sel           
             lineup(all_sv_sel2, width = "100%")
              })
              
