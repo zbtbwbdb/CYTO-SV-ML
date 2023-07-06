@@ -128,7 +128,7 @@ print(X_nontrs_all.columns)
 
 # combined trs/nontrs data
 X_all=pd.concat([X_trs_all,X_nontrs_all],axis=0)
-X_all=X_all.rename(columns={'sv_chr1': 'sv_chr', 'read_ratio':'sv_read_ratio','read_ratio_diff':'sv_read_ratio_diff', 'ci_pos0':'sv_bp_st_ci0', 'ci_pos1':'sv_bp_st_ci1', 'sv_bp_end_POS':'sv_bp_end_ci0', 'sv_bp_end_END':'sv_bp_end_ci1','cipos_range':'sv_bp_st_ci_range', 'ciend_range':'sv_bp_end_ci_range'})  
+X_all=X_all.rename(columns={'sv_chr1': 'sv_chr','sv_start_bp':'sv_bp_st','sv_end_bp':'sv_bp_end', 'read_ratio':'sv_read_ratio','read_ratio_diff':'sv_read_ratio_diff', 'ci_pos0':'sv_bp_st_ci0', 'ci_pos1':'sv_bp_st_ci1', 'sv_bp_end_POS':'sv_bp_end_ci0', 'sv_bp_end_END':'sv_bp_end_ci1','cipos_range':'sv_bp_st_ci_range', 'ciend_range':'sv_bp_end_ci_range'})  
 
 # attach the prediction label to all the original SV data
 X_all['predict_max']=0
