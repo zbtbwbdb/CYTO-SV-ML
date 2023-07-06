@@ -2,6 +2,7 @@
 FROM docker.io/rocker/shiny:3.6.1
 MAINTAINER "Tao Zhang tzhang@nmdp.org"
 
+RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
 RUN apt-get update && apt-get install -y libxtst6
 RUN apt-get update && apt-get install -y openjdk-8-jdk libssl-dev && apt-get autoremove
 
