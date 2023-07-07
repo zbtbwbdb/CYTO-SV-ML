@@ -78,8 +78,9 @@ Please change the config.yaml according to your own environment settings:
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender}
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender} --report ${out_dir}/${ sample}/${ sample}_report.html
-![CYTO-SV-ML snakemake report](cyto-sv-ml_snakemake_runtime_report.png)
 ```
+![CYTO-SV-ML snakemake report](cyto-sv-ml_snakemake_runtime_report.png)
+
 ### 2. Run CYTO-SV-ML Snakemake modeling pipeline for whole cohort
 ```
 snakemake --core ${number_of_cores} -s cyto-sv-ml-automl.smk --config cohort_name=${cohort_name}
