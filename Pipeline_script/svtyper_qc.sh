@@ -48,4 +48,4 @@ sudo rm -rf sv_caller_vector.tmp
 # sudo mv ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf.re_id ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
 # python ${cyto_sv_ml_dir}/Pipeline_script/sv_info_tf_sim.py ${main_dir}/out/${sample}/${sample}.${size_k}k.all.svtyped.vcf
 
-#sudo rm -rf ${main_dir}/in/${sample}.bam*
+sudo rm -rf ${main_dir}/in/${sample}.bam*
