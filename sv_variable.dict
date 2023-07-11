@@ -47,31 +47,31 @@ Variables for SV read information:
 'read_ratio_diff' : 
 
 Variables for SV breakpoint sequence information:
-'sv_bp_st_cc1' : 
-'sv_bp_st_cc_v1' | ... | 'sv_bp_st_cc_v24' : 
-'sv_bp_end_cc1' : 
-'sv_bp_end_cc_v1' | ... | 'sv_bp_end_cc_v24' : 
+'sv_bp_st_cc1' : sequence complexity metrics of 1st SV breakpoint from komplexity (0~1)
+'sv_bp_st_cc_v1' | ... | 'sv_bp_st_cc_v24' : sequence complexity metrics of 1st SV breakpoint from SeqComplex (0~1)
+'sv_bp_end_cc1' : sequence complexity metrics of 2nd SV breakpoint from komplexity (0~1)
+'sv_bp_end_cc_v1' | ... | 'sv_bp_end_cc_v24' : sequence complexity metrics of 2nd SV breakpoint from SeqComplex (0~1)  
 
 Variables for sv database labels:
-'1000_gall | 1000G_all_g' : 
-'1000_g' : 
-'gnomad_gall | gnomAD_all_g' : 
-'gnomad_g | gnomAD_g' : 
-'control_gall | donor_all_g' : 
-'control_g | donor_g' : 
-'cytoatlas_s' | 'CytoAtlas_s' : 
-'cosmic_s' | 'COMSIC_s' : 
-'gnomad_qc' | 'gnomAD_qc' : 
-'dgv_g' | 'DGV_g' : 
-'centromere_qc' : 
-'uwstl_s' | 'chromoseq_s' : 
+'1000_gall | 1000G_all_g' : sv database labels of all SVs in 1000 genomes database
+'1000_g' : sv database labels of SVs with >=2 hits in 1000 genomes database
+'gnomad_gall | gnomAD_all_g' : sv database labels of all SVs  in gnomAD database 
+'gnomad_g | gnomAD_g' : sv database labels of SVs with >=0.05 AF in gnomAD database  
+'gnomad_qc' | 'gnomAD_qc' : sv database labels of SVs with QC fail labels in gnomAD database  
+'control_gall | donor_all_g' : sv database labels of SVs with >=10 hits in normal donor WGS data
+'control_g | donor_g' : sv database labels of SVs with >=100 hits in normal donor WGS data
+'cytoatlas_s' | 'CytoAtlas_s' : sv database labels of all SVs in CytoAtlas database 
+'cosmic_s' | 'COMSIC_s' : sv database labels of all SVs in COMSIC database  
+'dgv_g' | 'DGV_g' : sv database labels of all SVs in DGV database   
+'centromere_qc' : sv database labels of all SVs in centromere genomic range
+'uwstl_s' | 'chromoseq_s' : sv database labels of all cyto-SVs in chromoseq pipeline 
 
 Variables for SV class information ( from both database labelling and model prediction):
 'label' : sv database labelling (0: unclassified SV; -1: true artifact SV; 1: true germline SV; 2: true somatic SV) 
-'prediction_-1' | 'prediction_TA' : sv model prediction for class -1 true artifact SV (probability 0~1)
-'prediction_1' | 'prediction_TG' : sv model prediction for class 1 true germline SV (probability 0~1)
-'prediction_2' | 'prediction_TS' : sv model prediction for class 2 true somatic SV (probability 0~1)
-'predict_max' : the max probability of sv model prediction (probability 0~1)
+'prediction_-1' | 'prediction_TA' : sv model prediction for class -1 true artifact SV (0~1)
+'prediction_1' | 'prediction_TG' : sv model prediction for class 1 true germline SV (0~1)
+'prediction_2' | 'prediction_TS' : sv model prediction for class 2 true somatic SV (0~1)
+'predict_max' : the max probability of sv model prediction (0~1)
 
 
 
