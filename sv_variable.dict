@@ -66,12 +66,12 @@ Variables for sv database labels:
 'centromere_qc' : 
 'uwstl_s' | 'chromoseq_s' : 
 
-Variables for SV class information ( from both database mapping and model prediction):
-'label'
-'prediction_-1' | 'prediction_TA' : 
-'prediction_1' | 'prediction_TG' : 
-'prediction_2' | 'prediction_TS' : 
-'predict_max' : 
+Variables for SV class information ( from both database labelling and model prediction):
+'label' : sv database labelling (0: unclassified SV; -1: true artifact SV; 1: true germline SV; 2: true somatic SV) 
+'prediction_-1' | 'prediction_TA' : sv model prediction for class -1 true artifact SV (probability 0~1)
+'prediction_1' | 'prediction_TG' : sv model prediction for class 1 true germline SV (probability 0~1)
+'prediction_2' | 'prediction_TS' : sv model prediction for class 2 true somatic SV (probability 0~1)
+'predict_max' : the max probability of sv model prediction (probability 0~1)
 
 
 
