@@ -3,14 +3,14 @@ TRS SV database mapping by breakpoint distance (1000bp) / nonTRS SV database map
 ###########################################################################################################
 
 1000 genome database SVs  <br />
-├── 1000_gall.bp.trs                              ------1000 genome database all trs SVs with CI info  <br />
-├── 1000_gall.nontrs.gz                           ------1000 genome database all nontrs SVs  <br /> 
+├── 1000_gall.bp.trs                              ------1000 genomes database all trs SVs with CI info  <br />
+├── 1000_gall.nontrs.gz                           ------1000 genomes database all nontrs SVs  <br /> 
 ├── 1000_gall.nontrs.gz.tbi    <br />
-├── 1000_gall.trs                                 ------1000 genome database all trs SVs                    
-├── 1000_g.bp.trs                                 ------1000 genome database trs SVs >=2 hits with CI info  <br />
-├── 1000_g.nontrs.gz                              ------1000 genome database nontrs SVs >=2 hits  <br />
+├── 1000_gall.trs                                 ------1000 genomes database all trs SVs                    
+├── 1000_g.bp.trs                                 ------1000 genomes database trs SVs >=2 hits with CI info  <br />
+├── 1000_g.nontrs.gz                              ------1000 genomes database nontrs SVs >=2 hits  <br />
 ├── 1000_g.nontrs.gz.tbi  <br />
-├── 1000_g.trs                                    ------1000 genome database trs SVs >=2 hits  <br />
+├── 1000_g.trs                                    ------1000 genomes database trs SVs >=2 hits  <br />
 ├──    <br />
 centromere genomic range SVs  <br />
 ├── centromere_qc.nontrs.gz                       ------centromere genomic range for nontrs SVs  <br />
