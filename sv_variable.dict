@@ -5,17 +5,30 @@
 'sv_id' :  'sv identifier'
 
 Variables for SV general information:
-'sv_chr1' : 'CHROM' : 'sv_chr' : 
-'sv_chr2' : 'CHR2' : 
-'SVTYPE' : 'svtype' : 
+'sv_chr1' | 'CHROM' | 'sv_chr' : 
+'sv_chr2' | 'CHR2' : 
+'SVTYPE' | 'svtype' : 
+'sv_bp_st':'POS'
+'sv_bp_end':'END'
 
 Variables for SV quality information:
 'svtyper_score' : 
 'sv_caller_supp' : 
 'cipos_range' : 
 'ciend_range' : 
+'sv_bp_st_ci_range':'cipos_range'
+'sv_bp_end_ci_range':'ciend_range'
+'sv_bp_st_ci0':'ci_pos0'
+'sv_bp_st_ci1':'ci_pos1'
+'sv_bp_end_ci0':'sv_bp_end_POS'
+'sv_bp_end_ci1':'sv_bp_end_END'
 
 Variables for SV read information:
+'sv_read_ratio':'read_ratio'
+'PR_ref':'sv_PR_ref'
+'SR_ref':'sv_SR_ref'
+'PR_alt':'sv_PR_alt'
+'SR_alt':'sv_SR_alt'
 'PR_read_ratio' : 
 'SR_read_ratio' : 
 'read_ratio' : 
@@ -24,25 +37,28 @@ Variables for SV read information:
 'read_ratio_diff' : 
 
 Variables for SV breakpoint sequence information:
+'sv_bp_end_cc1', 'sv_bp_end_cc_v1','sv_bp_end_cc_v2', 'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4','sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11', 'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14', 'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16','sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2', 'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6', 'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24'
 
-Variables for sv database labels: 
-'1000_gall' : 
+Variables for sv database labels:
+'1000_gall':'1000G_all_g' : 
 '1000_g' : 
-'gnomad_gall' : 
-'gnomad_g' : 
-'control_gall' : 
-'control_g' : 
-'cytoatlas_s' : 
-'cosmic_s' : 
-'gnomad_qc' : 
-'dgv_g' : 
+'gnomad_gall':'gnomAD_all_g' : 
+'gnomad_g':'gnomAD_g' : 
+'control_gall':'donor_all_g' : 
+'control_g':'donor_g' : 
+'cytoatlas_s':'CytoAtlas_s' : 
+'cosmic_s':'COMSIC_s' : 
+'gnomad_qc':'gnomAD_qc' : 
+'dgv_g':'DGV_g' : 
 'centromere_qc' : 
-'uwstl_s' : 
+'uwstl_s':'chromoseq_s' : 
 
-Variables for SV class information:
+Variables for SV class information ( from both database mapping and model prediction):
 'label'
-
-
+'prediction_-1':'prediction_TA' : 
+'prediction_1':'prediction_TG' : 
+'prediction_2':'prediction_TS' : 
+'predict_max' : 
 
 
 
