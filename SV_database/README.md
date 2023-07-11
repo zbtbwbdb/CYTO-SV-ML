@@ -48,7 +48,7 @@ gnomAD database SVs  <br />
 ├── gnomad_gall.nontrs.gz.tbi  <br />
 ├── gnomad_g.nontrs.gz                             ------gnomAD database nontrs SVs AF >=0.05  <br />
 ├── gnomad_g.nontrs.gz.tbi  <br />
-├── gnomad_qc.nontrs.gz                            ------gnomAD database nontrs SVs with QC fail  <br />
+├── gnomad_qc.nontrs.gz                            ------gnomAD database nontrs SVs with QC fail labels <br />
 ├── gnomad_qc.nontrs.gz.tbi  <br />
 ├── gnomad_qc.trs                                  ------gnomAD database trs SVs with QC fail  <br />
 └── gnomad.trs                                     ------gnomAD database all trs SVs  <br />
