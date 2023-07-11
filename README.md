@@ -59,7 +59,7 @@ wget https://console.cloud.google.com/storage/browser/genomics-public-data/resou
 wget https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.fai
 mv Homo_sapiens_assembly38.fasta reference/hg38/hs38.fasta
 mv Homo_sapiens_assembly38.fasta.fai reference/hg38/hs38.fasta.fai
-# VEP GRCh38 from ensembl
+# Please donwload VEP GRCh38 from ensembl (chromoseq pipeline)
 curl -O https://ftp.ensembl.org/pub/release-90/variation/VEP/homo_sapiens_vep_90_GRCh38.tar.gz
 tar xzf homo_sapiens_vep_90_GRCh38.tar.gz
 cd CYTO-SV-ML/reference/homo_sapiens/90_GRCh38
