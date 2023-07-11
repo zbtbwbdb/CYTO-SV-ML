@@ -1,6 +1,6 @@
 The shell and python scripts in the Snakemake workflow.
-########################################################################################### 
-### cyto-sv-ml-preprocess.smk  ############################################################ 
+#######################################################################################
+### cyto-sv-ml-preprocess.smk  ########################################################
 ├── rule chromoseq_sv
 |   ├── run_chromoseq.sh
 |   	├── ichnorcnv_tf.py
@@ -39,7 +39,7 @@ The shell and python scripts in the Snakemake workflow.
 |   ├── sv_info_extract.sh
 ├── rule sv_all_combine
     ├── sv_all_combine.sh
-###########################################################################################
+#######################################################################################
 ### cyto-sv-ml-automl.smk  ############################################################
 ├── rule all_sample_sv_combine
 |   ├── all_sample_sv_combine.sh
@@ -47,8 +47,8 @@ The shell and python scripts in the Snakemake workflow.
     ├── CYTO-SV-Auto-ML_transformation.py
    	├── sv_dataframe_transform.py
     ├── CYTO-SV-Auto-ML_modelling.py
-###########################################################################################
-### cyto-sv-ml-interface.smk  ############################################################
+#######################################################################################
+### cyto-sv-ml-interface.smk  #########################################################
 ├── rule interface_docker
     ├── interface_docker.sh
    	├── interface_data.py
