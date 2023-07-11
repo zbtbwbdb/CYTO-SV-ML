@@ -1,2 +1,54 @@
 ### Note: bp is the abbreviation of break point; sc_f is the abbreviation of sequence complexity feature; ci is the abbreviation of confidence interval; ref is the abbreviation of reference; alt is the abbreviation of alternative; sr is the abbreviation of split read; pr is the abbreviation of pair read; bnd is the abbreviation of break-end; sv is the abbreviation of structural variant.
 
+
+'sample_id' : 'sample identifier'
+'sv_id' :  'sv identifier'
+
+Variables for SV general information:
+'sv_chr1' : 'CHROM' : 'sv_chr' : 
+'sv_chr2' : 'CHR2' : 
+'SVTYPE' : 'svtype' : 
+
+Variables for SV quality information:
+'svtyper_score' : 
+'sv_caller_supp' : 
+'cipos_range' : 
+'ciend_range' : 
+
+Variables for SV read information:
+'PR_read_ratio' : 
+'SR_read_ratio' : 
+'read_ratio' : 
+'PR_read_ratio_diff' : 
+'SR_read_ratio_diff' : 
+'read_ratio_diff' : 
+
+Variables for SV breakpoint sequence information:
+
+Variables for sv database labels: 
+'1000_gall' : 
+'1000_g' : 
+'gnomad_gall' : 
+'gnomad_g' : 
+'control_gall' : 
+'control_g' : 
+'cytoatlas_s' : 
+'cosmic_s' : 
+'gnomad_qc' : 
+'dgv_g' : 
+'centromere_qc' : 
+'uwstl_s' : 
+
+Variables for SV class information:
+'label'
+
+
+
+
+
+
+
+
+
+
+
