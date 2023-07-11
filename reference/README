@@ -1,10 +1,10 @@
-Please donwload hg38 refernece genome ( CYTO-SV-ML/reference/hs38.fasta, CYTO-SV-ML/reference/hs38.fasta.fai) from Broad Institute Google Cloud: 
-https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/
+# Please donwload hg38 refernece genome ( CYTO-SV-ML/reference/hs38.fasta, CYTO-SV-ML/reference/hs38.fasta.fai) from Broad Institute Google Cloud: 
+mkdir CYTO-SV-ML/reference/hg38
 wget https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta
 wget https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.fai
 mv Homo_sapiens_assembly38.fasta reference/hg38/hs38.fasta
 mv Homo_sapiens_assembly38.fasta.fai reference/hg38/hs38.fasta.fai
-# VEP GRCh38
-cd CYTO-SV-ML/reference
-curl -O https://ftp.ensembl.org/pub/release-108/variation/vep/homo_sapiens_vep_104_GRCh38.tar.gz
-tar xzf homo_sapiens_vep_104_GRCh38.tar.gz
+#  Please donwload VEP GRCh38 from ensembl (chromoseq pipeline)
+curl -O https://ftp.ensembl.org/pub/release-90/variation/VEP/homo_sapiens_vep_90_GRCh38.tar.gz
+tar xzf homo_sapiens_vep_90_GRCh38.tar.gz
+cd CYTO-SV-ML/reference/homo_sapiens/90_GRCh38
