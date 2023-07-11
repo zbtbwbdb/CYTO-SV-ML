@@ -53,18 +53,18 @@ Variables for SV breakpoint sequence information:
 'sv_bp_end_cc_v1' | ... | 'sv_bp_end_cc_v24' : sequence complexity metrics of 2nd SV breakpoint from SeqComplex (0~1)  
 
 Variables for sv database labels:
-'1000_gall | 1000G_all_g' : sv database labels of all SVs in 1000 genomes database
-'1000_g' : sv database labels of SVs with >=2 hits in 1000 genomes database
-'gnomad_gall | gnomAD_all_g' : sv database labels of all SVs  in gnomAD database 
-'gnomad_g | gnomAD_g' : sv database labels of SVs with >=0.05 AF in gnomAD database  
-'gnomad_qc' | 'gnomAD_qc' : sv database labels of SVs with QC fail labels in gnomAD database  
-'control_gall | donor_all_g' : sv database labels of SVs with >=10 hits in normal donor WGS data
-'control_g | donor_g' : sv database labels of SVs with >=100 hits in normal donor WGS data
-'cytoatlas_s' | 'CytoAtlas_s' : sv database labels of all SVs in CytoAtlas database 
-'cosmic_s' | 'COMSIC_s' : sv database labels of all SVs in COMSIC database  
-'dgv_g' | 'DGV_g' : sv database labels of all SVs in DGV database   
-'centromere_qc' : sv database labels of all SVs in centromere genomic range
-'uwstl_s' | 'chromoseq_s' : sv database labels of all cyto-SVs in chromoseq pipeline 
+'1000_gall | 1000G_all_g' : sv database labels of all SVs in 1000 genomes database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)
+'1000_g' : sv database labels of SVs with >=2 hits in 1000 genomes database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)
+'gnomad_gall | gnomAD_all_g' : sv database labels of all SVs  in gnomAD database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%) 
+'gnomad_g | gnomAD_g' : sv database labels of SVs with >=0.05 AF in gnomAD database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)  
+'gnomad_qc' | 'gnomAD_qc' : sv database labels of SVs with QC fail labels in gnomAD database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)  
+'control_gall | donor_all_g' : sv database labels of SVs with >=10 hits in normal donor WGS data (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)
+'control_g | donor_g' : sv database labels of SVs with >=100 hits in normal donor WGS data (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)
+'cytoatlas_s' | 'CytoAtlas_s' : sv database labels of all SVs in CytoAtlas database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%) 
+'cosmic_s' | 'COMSIC_s' : sv database labels of all SVs in COMSIC database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)  
+'dgv_g' | 'DGV_g' : sv database labels of all SVs in DGV database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)   
+'centromere_qc' : sv database labels of all SVs in centromere genomic range (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)
+'uwstl_s' | 'chromoseq_s' : sv database labels of all cyto-SVs in chromoseq pipeline (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%) 
 
 Variables for SV class information ( from both database labelling and model prediction):
 'label' : sv database labelling (0: unclassified SV; -1: true artifact SV; 1: true germline SV; 2: true somatic SV) 
