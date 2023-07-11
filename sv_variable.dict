@@ -1,4 +1,4 @@
-### Note: 
+### Note: ##########################################################################
 bp is the abbreviation of break point; 
 sc_f is the abbreviation of sequence complexity feature; 
 ci is the abbreviation of confidence interval; 
@@ -8,7 +8,7 @@ sr is the abbreviation of split read;
 pr is the abbreviation of pair read; 
 bnd is the abbreviation of break-end; 
 sv is the abbreviation of structural variant.
-#########################################################################################
+####################################################################################
 
 # Variable name : variable defintion (value range)
 'sample_id' : 'sample identifier'
@@ -47,7 +47,10 @@ Variables for SV read information:
 'read_ratio_diff' : 
 
 Variables for SV breakpoint sequence information:
-'sv_bp_end_cc1', 'sv_bp_end_cc_v1','sv_bp_end_cc_v2', 'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4','sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11', 'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14', 'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16','sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2', 'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6', 'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24'
+'sv_bp_st_cc1' : 
+'sv_bp_st_cc_v1' | ... | 'sv_bp_st_cc_v24' : 
+'sv_bp_end_cc1' : 
+'sv_bp_end_cc_v1' | ... | 'sv_bp_end_cc_v24' : 
 
 Variables for sv database labels:
 '1000_gall':'1000G_all_g' : 
