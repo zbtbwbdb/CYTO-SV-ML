@@ -1,1 +1,55 @@
 The shell and python scripts in the Snakemake workflow.
+########################################################################################### 
+cyto-sv-ml-preprocess.smk
+├── rule chromoseq_sv
+|   ├── run_chromoseq.sh
+|   	├── ichnorcnv_tf.py
+├── rule parliment2_sv
+|   ├── run_parliment2.sh
+├── rule sv_vcf_tf
+|   ├── sv_vcf_tf.sh
+|   	├── sv_id_tf.py
+|   	├── sv_size.py
+|   	├── sv_vcf_tf.py
+|   	├── sv_info_tf_sim.py
+├── rule svmerge_qc
+|   ├── svmerge_qc.sh
+|   	├── sv_consolidate_info_tf_sim.py
+|   	├── sv_consolidate_id_mapping.py
+|   	├── sv_info_tf_sim.py
+|   	├── sv_vcf_sim.py
+├── rule svtyper_qc
+|   ├── svtyper_qc.sh
+|   	├── trs_svtyper_tf.py
+|   	├── sv_id_tf.py
+|   	├── sv_info_tf_sim.py
+├── rule sv_seq_complex
+|   ├── sv_seq_complex.sh
+|   	├── sv_vcf_bed_tf.py
+├── rule sv_database_ann
+|   ├── sv_database_ann.sh
+|   	├── sv_database_mapping.py
+|   	├── sv_bnd_database_mapping.py
+|   	├── sv_bnd_database_mapping.bp.py
+|   	├── sv_db_tf.py
+|   	├── SVCNV.py
+|   	├── SVCNV_set.py
+|   	├── SVCNV_sim.py
+├── rule sv_info_extract
+|   ├── sv_info_extract.sh
+├── rule sv_all_combine
+    ├── sv_all_combine.sh
+###########################################################################################
+cyto-sv-ml-automl.smk
+├── rule all_sample_sv_combine
+|   ├── all_sample_sv_combine.sh
+├── rule cyto_sv_ml
+    ├── CYTO-SV-Auto-ML_transformation.py
+   	├── sv_dataframe_transform.py
+    ├── CYTO-SV-Auto-ML_modelling.py
+###########################################################################################
+cyto-sv-ml-interface.smk
+├── rule interface_docker
+    ├── interface_docker.sh
+   	├── interface_data.py
+   	├── interface_data.R
