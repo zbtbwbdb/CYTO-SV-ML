@@ -71,10 +71,10 @@ Pipeline Usage
 ### 1. Run CYTO-SV-ML Snakemake preprocess pipeline for each sample
 Please change the config.yaml according to your own environment settings:                                                    
 {your_work_dir} --> input/output dir <br/>
-{your_work_dir}/in/${sample}.cram --> input for chromseq pipeline <br/>
-{your_work_dir}/in/${sample}.bam --> input for parliament2 pipeline <br/> 
 {cyto_sv_ml_dir} --> cyto_sv_ml dir and software subdir and reference subdir <br/>
 {Sample_1} --> sample id
+create input for chromseq pipeline --> {your_work_dir}/in/${sample}.cram <br/>
+create input for parliament2 pipeline --> {your_work_dir}/in/${sample}.bam <br/> 
 ```
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender}
