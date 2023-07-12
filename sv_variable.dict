@@ -65,10 +65,10 @@ Variables for sv database labels:
 
 Variables for SV class information ( from both database labelling and model prediction):
 'label' : sv database labelling (0: unclassified SV; -1: true artifact SV; 1: true germline SV; 2: true somatic SV) 
-'prediction_-1' | 'prediction_TA' : sv model prediction for class -1 true artifact SV (0~1)
-'prediction_1' | 'prediction_TG' : sv model prediction for class 1 true germline SV (0~1)
-'prediction_2' | 'prediction_TS' : sv model prediction for class 2 true somatic SV (0~1)
-'predict_max' : the max probability of sv model prediction (0~1)
+'prediction_-1' | 'prediction_TA' : sv model prediction probability for class -1 true artifact SV (float)
+'prediction_1' | 'prediction_TG' : sv model prediction probability for class 1 true germline SV (float)
+'prediction_2' | 'prediction_TS' : sv model prediction probability for class 2 true somatic SV (float)
+'predict_max' : the max probability of sv model prediction (float)
 
 
 
