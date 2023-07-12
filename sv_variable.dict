@@ -15,23 +15,21 @@ sv is the abbreviation of structural variant.
 'sv_id' :  'sv identifier'
 
 Variables for SV general information:
-'sv_chr1' | 'CHROM' | 'sv_chr' : 
-'sv_chr2' | 'CHR2' : 
-'SVTYPE' | 'svtype' : 
-'sv_bp_st | POS' : 
-'sv_bp_end | END' : 
+'sv_chr1' | 'CHROM' | 'sv_chr' : chromosome number of the 1st SV breakpoint (chr1~22 X Y)
+'sv_chr2' | 'CHR2' : chromosome number of the 2nd SV breakpoint (chr1~22 X Y)
+'SVTYPE' | 'svtype' : the subtype of SV (TRS/BND/TRA: translocation SV; DEL: deletion SV; DUP: duplication SV; INV: inversion SV)
+'sv_bp_st | POS' : genomic coordinates of the 1st SV breakpoint (integer)
+'sv_bp_end | END' : genomic coordinates of the 2nd SV breakpoint (integer)
 
 Variables for SV quality information:
-'svtyper_score' : 
-'sv_caller_supp' : 
-'cipos_range' : 
-'ciend_range' : 
-'sv_bp_st_ci_range | cipos_range' : 
-'sv_bp_end_ci_range | ciend_range' : 
-'sv_bp_st_ci0 | ci_pos0' : 
-'sv_bp_st_ci1 | ci_pos1' : 
-'sv_bp_end_ci0 | sv_bp_end_POS' : 
-'sv_bp_end_ci1 | sv_bp_end_END' : 
+'svtyper_score' : quality score of SV from SVTyper (float) 
+'sv_caller_supp' : the number of SV callers supporting that SV (integer)
+'sv_bp_st_ci_range' | cipos_range' : confidence interval around the 1st SV breakpoint (integer) 
+'sv_bp_end_ci_range' | ciend_range' : confidence interval around the 2nd SV breakpoint (integer)
+'sv_bp_st_ci0 | ci_pos0' : the left bounds of confidence interval around the 1st SV breakpoint (integer) 
+'sv_bp_st_ci1 | ci_pos1' : the right bounds of confidence interval around the 1st SV breakpoint (integer) 
+'sv_bp_end_ci0 | sv_bp_end_POS' : the left bounds of confidence interval around the 2nd SV breakpoint (integer)  
+'sv_bp_end_ci1 | sv_bp_end_END' : the right bounds of confidence interval around the 2nd SV breakpoint (integer)  
 
 Variables for SV read information:
 'sv_read_ratio | read_ratio' : 
@@ -47,10 +45,10 @@ Variables for SV read information:
 'read_ratio_diff' : 
 
 Variables for SV breakpoint sequence information:
-'sv_bp_st_cc1' : sequence complexity metrics of 1st SV breakpoint from komplexity (0~1)
-'sv_bp_st_cc_v1' | ... | 'sv_bp_st_cc_v24' : sequence complexity metrics of 1st SV breakpoint from SeqComplex (0~1)
-'sv_bp_end_cc1' : sequence complexity metrics of 2nd SV breakpoint from komplexity (0~1)
-'sv_bp_end_cc_v1' | ... | 'sv_bp_end_cc_v24' : sequence complexity metrics of 2nd SV breakpoint from SeqComplex (0~1)  
+'sv_bp_st_cc1' : sequence complexity metrics of the 1st SV breakpoint from komplexity (0~1)
+'sv_bp_st_cc_v1' | ... | 'sv_bp_st_cc_v24' : sequence complexity metrics of the 1st SV breakpoint from SeqComplex (0~1)
+'sv_bp_end_cc1' : sequence complexity metrics of the 2nd SV breakpoint from komplexity (0~1)
+'sv_bp_end_cc_v1' | ... | 'sv_bp_end_cc_v24' : sequence complexity metrics of the 2nd SV breakpoint from SeqComplex (0~1)  
 
 Variables for sv database labels:
 '1000_gall | 1000G_all_g' : sv database labels of all SVs in 1000 genomes database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)
