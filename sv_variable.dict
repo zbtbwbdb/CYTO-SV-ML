@@ -32,10 +32,12 @@ Variables for SV quality information:
 'sv_bp_end_ci1 | sv_bp_end_END' : the right bounds of confidence interval around the 2nd SV breakpoint (integer)  
 
 Variables for SV read information:
-'PR_ref | sv_PR_ref' : spanning paired-read support for the ref alleles of the SV (integer)
-'SR_ref | sv_SR_ref' : split read support for the ref alleles of the SV (integer)
-'PR_alt | sv_PR_alt' : spanning paired-read support for the alt alleles of the SV (integer)
-'SR_alt | sv_SR_alt' : split read support for the alt alleles of the SV (integer)
+'RP' |'PR_ref' | 'sv_PR_ref' : spanning paired-read support for the ref alleles of the SV (integer)
+'RS' | 'SR_ref' | 'sv_SR_ref' : split read support for the ref alleles of the SV (integer)
+'AP' | 'PR_alt' | 'sv_PR_alt' : spanning paired-read support for the alt alleles of the SV (integer)
+'AS' | 'SR_alt' | 'sv_SR_alt' : split read support for the alt alleles of the SV (integer)
+'BND_DEPTH' : Read depth at local translocation breakend (integer)
+'MATE_BND_DEPTH' : Read depth at remote translocation mate breakend (integer)
 'PR_read_ratio' : the ratio of spanning paired-read between the ref and alt alleles of the SV (float) 
 'SR_read_ratio' : the ratio of split read between the ref and alt alleles of the SV (float) 
 'sv_read_ratio | read_ratio' : the ratio of all reads between the ref and alt alleles of the SV (float)  
