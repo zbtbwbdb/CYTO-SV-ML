@@ -23,7 +23,7 @@ Variables for SV general information:
 
 Variables for SV quality information:
 'svtyper_score' : quality score of SV from SVTyper (float) 
-'sv_caller_supp' : the number of SV callers supporting that SV (integer)
+'sv_caller_supp' : the number of SV callers support the SV (integer)
 'sv_bp_st_ci_range' | cipos_range' : confidence interval around the 1st SV breakpoint (integer) 
 'sv_bp_end_ci_range' | ciend_range' : confidence interval around the 2nd SV breakpoint (integer)
 'sv_bp_st_ci0 | ci_pos0' : the left bounds of confidence interval around the 1st SV breakpoint (integer) 
@@ -32,17 +32,16 @@ Variables for SV quality information:
 'sv_bp_end_ci1 | sv_bp_end_END' : the right bounds of confidence interval around the 2nd SV breakpoint (integer)  
 
 Variables for SV read information:
-'sv_read_ratio | read_ratio' : 
-'PR_ref | sv_PR_ref' : 
-'SR_ref | sv_SR_ref' : 
-'PR_alt | sv_PR_alt' : 
-'SR_alt | sv_SR_alt' : 
-'PR_read_ratio' : 
-'SR_read_ratio' : 
-'read_ratio' : 
-'PR_read_ratio_diff' : 
-'SR_read_ratio_diff' : 
-'read_ratio_diff' : 
+'PR_ref | sv_PR_ref' : spanning paired-read support for the ref alleles of the SV (integer)
+'SR_ref | sv_SR_ref' : split read support for the ref alleles of the SV (integer)
+'PR_alt | sv_PR_alt' : spanning paired-read support for the alt alleles of the SV (integer)
+'SR_alt | sv_SR_alt' : split read support for the alt alleles of the SV (integer)
+'PR_read_ratio' : the ratio of spanning paired-read between the ref and alt alleles of the SV (float) 
+'SR_read_ratio' : the ratio of split read between the ref and alt alleles of the SV (float) 
+'sv_read_ratio | read_ratio' : the ratio of all reads between the ref and alt alleles of the SV (float)  
+'PR_read_ratio_diff' : the differences/ratio of spanning paired-read between the ref and alt alleles of the SV (float) 
+'SR_read_ratio_diff' : the differences/ratio  of split read between the ref and alt alleles of the SV (float) 
+'read_ratio_diff' : the differences/ratio  of all read between the ref and alt alleles of the SV (float) 
 
 Variables for SV breakpoint sequence information:
 'sv_bp_st_cc1' : sequence complexity metrics of the 1st SV breakpoint from komplexity (0~1)
