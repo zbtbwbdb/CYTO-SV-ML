@@ -68,7 +68,7 @@ Variables for SV class information ( from both database labelling and model pred
 'prediction_-1' | 'prediction_TA' : sv model prediction probability for class -1 true artifact SV (float)
 'prediction_1' | 'prediction_TG' : sv model prediction probability for class 1 true germline SV (float)
 'prediction_2' | 'prediction_TS' : sv model prediction probability for class 2 true somatic SV (float)
-'predict_max' : the max probability of sv model prediction (float)
+'predict_max' : the max probability of all 3 sv classes prediction (float)
 
 
 
