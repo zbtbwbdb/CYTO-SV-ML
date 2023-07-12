@@ -44,10 +44,10 @@ Variables for SV read information:
 'read_ratio_diff' : the differences/ratio  of all read between the ref and alt alleles of the SV (float) 
 
 Variables for SV breakpoint sequence information:
-'sv_bp_st_cc1' : sequence complexity metrics of the 1st SV breakpoint from komplexity (0~1)
-'sv_bp_st_cc_v1' | ... | 'sv_bp_st_cc_v24' : sequence complexity metrics of the 1st SV breakpoint from SeqComplex (0~1)
-'sv_bp_end_cc1' : sequence complexity metrics of the 2nd SV breakpoint from komplexity (0~1)
-'sv_bp_end_cc_v1' | ... | 'sv_bp_end_cc_v24' : sequence complexity metrics of the 2nd SV breakpoint from SeqComplex (0~1)  
+'sv_bp_st_cc1' : sequence complexity metrics of the 1st SV breakpoint from komplexity (float)
+'sv_bp_st_cc_v1' | ... | 'sv_bp_st_cc_v24' : sequence complexity metrics of the 1st SV breakpoint from SeqComplex (float)
+'sv_bp_end_cc1' : sequence complexity metrics of the 2nd SV breakpoint from komplexity (float)
+'sv_bp_end_cc_v1' | ... | 'sv_bp_end_cc_v24' : sequence complexity metrics of the 2nd SV breakpoint from SeqComplex (float)  
 
 Variables for sv database labels:
 '1000_gall | 1000G_all_g' : sv database labels of all SVs in 1000 genomes database (TRS: breakpoint distance 0~1000bp or > 1000bp; nonTRS: overlap ratio 0~100%)
