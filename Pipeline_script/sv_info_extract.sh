@@ -9,22 +9,6 @@ cp ${main_dir}/out/${sample}/${sample}.${size_k}k.sv.all.sv_id_mapping ${main_di
 echo ${sv_caller_vector} | sed "s%@%\n%g" > ${main_dir}/out/${sample}/sv_caller_vector.tmp2
 sc_ln=$(wc -l ${main_dir}/out/${sample}/sv_caller_vector.tmp2 | awk '{print $1}')
 
-# # combine the sv_caller annotation vcf 
-# n=0
-# for i in $(seq 1 $sc_ln)
-#    do
-#        sv_caller=$(awk -v a="$i" '(FNR==a){print $1}' ${main_dir}/out/${sample}/sv_caller_vector.tmp2)  
-#           echo $sv_caller "ok"      
-#       if [ "${n}" == 0 ]; then
-#           awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ($2 in a) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.10k.sv_info.sim ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 > ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp1
-#           n=1
-#       else
-#           awk 'FNR==NR{a[$3];b[$3]=$0;next} {if ((FNR!=1)&&($2 in a)) {print $0"\t"b[$2]} else {print $0}}' ${main_dir}/out/${sample}/sv_caller_results/${sample}.${sv_caller}.vcf.10k.sv_info.sim ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 > ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp1    
-#       fi
-#       cp ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp1 ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 
-#    done
-# awk '{print NF}'  ${main_dir}/out/${sample}/${sample}.10k.sv.all.sv_id_mapping.tmp0 | awk '!a[$1]++'   
-
 # combine the svtyper annotation vcf 
 n=0
 for i in $(seq 1 $sc_ln)
