@@ -35,7 +35,5 @@ for line in in_vcf:
     item=line.strip().split('\t')    
     if line.startswith('#'):
         continue
-    #elif item[0].startswith('#CHROM'):      
-    #    out_bed.write('sv_chr\tsv_start_bp\tsv_end_bp\tsv_chr2\tsv_type\tsv_id\n')
     else:
         out_bed.write(vcf_bed_tf(line))        
