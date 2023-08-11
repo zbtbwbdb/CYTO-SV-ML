@@ -32,17 +32,15 @@ for i in range(in_vcf.shape[0]):
     bp1=int(in_vcf.iloc[i,1])
     chr2=str(in_vcf.iloc[i,3])   
     bp2=int(in_vcf.iloc[i,2])
+    
     # extract mapping records 
     bnd_dict=ref_data[(ref_data.iloc[:,0]==chr1) & (ref_data.iloc[:,3]==chr2) & (abs(ref_data.iloc[:,1].astype(int)-bp1)<=bp_dis) & (abs(ref_data.iloc[:,2].astype(int)-bp2)<=bp_dis)] 
     if bnd_dict.empty or bnd_dict.shape[0]==0:
         continue
     else:
-#         print(in_vcf.iloc[i,:])        
-#         print(bnd_dict)
         bnd_dict.iloc[:,1]=abs(bnd_dict.iloc[:,1].astype(int)-bp1)
         bnd_dict.iloc[:,2]=abs(bnd_dict.iloc[:,2].astype(int)-bp2) 
         bnd_dict['info']=bnd_dict.apply(lambda x: max(x[1:3]),axis=1)
-#         print(bnd_dict['info'])
         in_vcf.iloc[i,in_vcf.shape[1]-1]=min(bnd_dict['info']) 
 
 # export to csv
