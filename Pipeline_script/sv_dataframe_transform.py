@@ -19,7 +19,6 @@ def trs_sv_data_transform(sv_data_trs,trs_sv_cutoff):
     # transform database label
     sv_db_list=['1000_gall','1000_g','gnomad_gall','gnomad_g','control_gall', 'control_g', 'cytoatlas_s','cosmic_s','gnomad_qc', 'dgv_g', 'centromere_qc','uwstl_s' ]
     for sv_db in sv_db_list:
-#        sv_data_trs.loc[np.r_[np.where(sv_data_trs[sv_db].isnull()) ],sv_db]="Not_in_database"
         sv_data_trs.loc[np.r_[np.where(sv_data_trs[sv_db].isnull()) ],sv_db]=trs_sv_cutoff*10000
         sv_data_trs.loc[np.r_[np.where(sv_data_trs[sv_db]=='NAN')],sv_db]=trs_sv_cutoff*10000
         sv_data_trs.loc[np.r_[np.where(sv_data_trs[sv_db]=='Not_in_database')],sv_db]=trs_sv_cutoff*10000   
@@ -60,7 +59,6 @@ def trs_sv_data_transform(sv_data_trs,trs_sv_cutoff):
     sv_data_trs.loc[(sv_data_trs['RR'].isnull()) | (sv_data_trs['RR']=='NA') | (sv_data_trs['RR']=='.'),'RR']=0          
     sv_data_trs.loc[(sv_data_trs['RV'].isnull()) | (sv_data_trs['RV']=='NA') | (sv_data_trs['RV']=='.'),'RV']=0  
   
-#     print(sv_data_trs.loc[((~sv_data_trs['PR'].str.contains(',')) | (sv_data_trs['PR']=='0,0')) & (sv_data_trs['AP']!=0),['RP','AP']].shape)
     sv_data_trs.loc[((~sv_data_trs['PR'].str.contains(',')) | (sv_data_trs['PR']=='0,0')) & (sv_data_trs['AP']!=0),'PR']=sv_data_trs.loc[((~sv_data_trs['PR'].str.contains(',')) | (sv_data_trs['PR']=='0,0')) & (sv_data_trs['AP']!=0),['RP','AP']].apply(lambda x: str(x['RP'])+','+str(x['AP']), axis=1)
     sv_data_trs.loc[((~sv_data_trs['SR'].str.contains(',')) | (sv_data_trs['SR']=='0,0')) & (sv_data_trs['AS']!=0),'SR']=sv_data_trs.loc[((~sv_data_trs['SR'].str.contains(',')) | (sv_data_trs['SR']=='0,0')) & (sv_data_trs['AS']!=0),['RS','AS']].apply(lambda x: str(x['RS'])+','+str(x['AS']), axis=1)             
     sv_data_trs.loc[((~sv_data_trs['PR'].str.contains(',')) | (sv_data_trs['PR']=='0,0')) & (sv_data_trs['DV']!=0),'PR']=sv_data_trs.loc[((~sv_data_trs['PR'].str.contains(',')) | (sv_data_trs['PR']=='0,0')) & (sv_data_trs['DV']!=0),['DR','DV']].apply(lambda x: str(x['DR'])+','+str(x['DV']), axis=1)
@@ -196,7 +194,6 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     sv_data_nontrs.loc[(sv_data_nontrs['RR'].isnull()) | (sv_data_nontrs['RR']=='NA') | (sv_data_nontrs['RR']=='.'),'RR']=0          
     sv_data_nontrs.loc[(sv_data_nontrs['RV'].isnull()) | (sv_data_nontrs['RV']=='NA') | (sv_data_nontrs['RV']=='.'),'RV']=0  
  
-#     print(sv_data_nontrs.loc[((~sv_data_nontrs['PR'].str.contains(',')) | (sv_data_nontrs['PR']=='0,0')) & (sv_data_nontrs['AP']!=0),['RP','AP']].shape)
     sv_data_nontrs.loc[((~sv_data_nontrs['PR'].str.contains(',')) | (sv_data_nontrs['PR']=='0,0')) & (sv_data_nontrs['AP']!=0),'PR']=sv_data_nontrs.loc[((~sv_data_nontrs['PR'].str.contains(',')) | (sv_data_nontrs['PR']=='0,0')) & (sv_data_nontrs['AP']!=0),['RP','AP']].apply(lambda x: str(x['RP'])+','+str(x['AP']), axis=1)
     sv_data_nontrs.loc[((~sv_data_nontrs['SR'].str.contains(',')) | (sv_data_nontrs['SR']=='0,0')) & (sv_data_nontrs['AS']!=0),'SR']=sv_data_nontrs.loc[((~sv_data_nontrs['SR'].str.contains(',')) | (sv_data_nontrs['SR']=='0,0')) & (sv_data_nontrs['AS']!=0),['RS','AS']].apply(lambda x: str(x['RS'])+','+str(x['AS']), axis=1)             
     sv_data_nontrs.loc[((~sv_data_nontrs['PR'].str.contains(',')) | (sv_data_nontrs['PR']=='0,0')) & (sv_data_nontrs['DV']!=0),'PR']=sv_data_nontrs.loc[((~sv_data_nontrs['PR'].str.contains(',')) | (sv_data_nontrs['PR']=='0,0')) & (sv_data_nontrs['DV']!=0),['DR','DV']].apply(lambda x: str(x['DR'])+','+str(x['DV']), axis=1)
