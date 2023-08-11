@@ -34,10 +34,10 @@ for i in $(seq 1 $sc_ln)
 sudo rm -rf sv_caller_vector.tmp 
 
 # # SV svtyper run    
-# echo "# run sytyper for all nontrs SV" && date
+# # echo "# run sytyper for all nontrs SV" && date
 # ${svtyper} --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${size_k}k.nontrs_tf.all.svtyped.vcf
 
-# echo "# run sytyper for all trs SV" && date
+# # echo "# run sytyper for all trs SV" && date
 # python ${cyto_sv_ml_dir}/Pipeline_script/trs_svtyper_tf.py ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all
 # ${svtyper} --max_reads 100000 -i ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.tmp -B ${main_dir}/in/${sample}.bam > ${main_dir}/out/${sample}/${sample}.${size_k}k.trs_tf.all.svtyped.vcf
 
