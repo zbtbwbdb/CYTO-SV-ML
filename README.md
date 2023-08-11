@@ -79,7 +79,7 @@ Please create output folder --> {your_work_dir}/out/ <br/>
 ```
 conda activate cyto-sv-ml
 snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender}
-snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender} --report ${your_work_dir}/out/${ sample}/${ sample}_report.html
+snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --config sample=${sample} gender=${gender} --report ${your_work_dir}/out/${sample}/${sample}_report.html
 ```
 ![CYTO-SV-ML snakemake report](cyto-sv-ml_snakemake_runtime_report.png)
 
