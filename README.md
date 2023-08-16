@@ -3,7 +3,7 @@
 ![CYTO-SV-ML PIPELINE WORKFLOW](workflow.png)
 
 ### CYTO-SV-ML snakemake workflow
-![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_Snakemake_workflow.png)
+![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_snakemake_workflow.png)
 
 <!--ts-->
    * [Installation](#Installation)
