@@ -4,8 +4,8 @@ The shell and python scripts in the Snakemake workflow.
 ├── rule chromoseq_sv
 |   ├── run_chromoseq.sh
 |   	├── ichnorcnv_tf.py
-├── rule parliment2_sv
-|   ├── run_parliment2.sh
+├── rule parliament2_sv
+|   ├── run_parliament2.sh
 ├── rule sv_vcf_tf
 |   ├── sv_vcf_tf.sh
 |   	├── sv_id_tf.py
