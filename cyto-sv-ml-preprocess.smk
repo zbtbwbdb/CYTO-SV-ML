@@ -19,11 +19,11 @@ LOG_DIR = config['main_dir']+'/out/log'
 CYTO_SV_ML_DIR = config['cyto_sv_ml_dir']
 SOFTWARE_DIR = config['cyto_sv_ml_dir']+'/software'
 DATABASE_DIR = config['cyto_sv_ml_dir']+'/SV_database'
-parliment_docker = config['parliment_docker']
+parliament_docker = config['parliament_docker']
 chromoseq_docker = config['chromoseq_docker']
-parliment2_sv_callers = config['parliment2_sv_callers']
+parliament2_sv_callers = config['parliament2_sv_callers']
 chromoseq_sv_callers = config['chromoseq_sv_callers']
-all_callers=chromoseq_sv_callers+parliment2_sv_callers
+all_callers=chromoseq_sv_callers+parliament2_sv_callers
 SV_DB=config['sv_db']
 size=int(config['size'])
 SIZE_K=round(size/1000)
@@ -51,21 +51,21 @@ rule chromoseq_sv:
          bash {CYTO_SV_ML_DIR}/Pipeline_script/run_chromoseq.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.chromoseq_docker} {params.sm} {params.gd} 
         """
         
-# Run parliment2_sv
-rule parliment2_sv:
+# Run parliament2_sv
+rule parliament2_sv:
 #    singularity: 
 #         "docker://docker.io/dongwonlee/parliament2-sing:v0.12"        
     input:         
         sample_bam=expand(INPUT_DIR+"/{sample}.bam",sample=SAMPLES)  
     output:  
-        sample_vcf = protected(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller= parliment2_sv_callers))  
+        sample_vcf = protected(expand(OUTPUT_DIR+"/{sample}/sv_caller_results/{sample}.{sv_caller}.vcf", sample=SAMPLES, sv_caller= parliament2_sv_callers))  
     threads: 8
     params:
-        parliment_docker = parliment_docker,
+        parliament_docker = parliament_docker,
         sm = SAMPLES
     shell:   
          """   
-         bash {CYTO_SV_ML_DIR}/Pipeline_script/run_parliment2.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.parliment_docker} {params.sm} 
+         bash {CYTO_SV_ML_DIR}/Pipeline_script/run_parliament2.sh {MAIN_DIR} {CYTO_SV_ML_DIR} {params.parliament_docker} {params.sm} 
          """    
         
 # #  SV VCF preparation
