@@ -6,6 +6,9 @@ sample=$4
 gender=$5
 
 echo $sample $gender
+sudo mkdir -p ${main_dir}/out/${sample}/sv_caller_results/
+sudo chmod 777 -R ${main_dir}/out/${sample}/sv_caller_results/
+
 echo "# set up the configure file for chromoseq" && date
 sed "s%XXXXXX%${sample}%g" ${cyto_sv_ml_dir}/software/docker-basespace_chromoseq/lsf/inputs.json | sed "s%Male%${gender}%g" > ${cyto_sv_ml_dir}/software/docker-basespace_chromoseq/lsf/inputs.json.tmp
 
