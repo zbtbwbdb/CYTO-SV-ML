@@ -271,14 +271,14 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
 
 
     print(sv_data_nontrs['label'].value_counts())      
-    sv_data_nontrs=sv_data_nontrs.rename(columns={'QUAL':'svtyper_score','SUPP':'sv_caller_supp'})  
+    sv_data_nontrs=sv_data_nontrs.rename(columns={'QUAL':'svtyper_score','SUPP':'sv_caller_supp', 'CN':'sv_copy_number'})  
     sv_data_nontrs.replace('NAN', 0, inplace=True) 
     sv_data_nontrs.replace('-', 0, inplace=True)  
     sv_data_nontrs.replace('', 0, inplace=True)  
     
     # drop columns wih rebundant variables
     sv_data_nontrs_2=sv_data_nontrs.copy()
-    sv_data_nontrs_2=sv_data_nontrs_2.loc[:,['sv_type', 'svtyper_score', 'sv_bp_end_cc1', 'sv_bp_end_cc_v1','sv_bp_end_cc_v2', 'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4','sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11', 'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14', 'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16','sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2', 'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6', 'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24', 'sv_caller_supp', 'cipos_range', 'ciend_range', 'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'PR_read_ratio_diff',  'SR_read_ratio_diff', 'read_ratio_diff', 'label']]
+    sv_data_nontrs_2=sv_data_nontrs_2.loc[:,['sv_type', 'svtyper_score', 'sv_bp_end_cc1', 'sv_bp_end_cc_v1','sv_bp_end_cc_v2', 'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4','sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11', 'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14', 'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16','sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2', 'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6', 'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24', 'sv_copy_number', 'sv_caller_supp', 'cipos_range', 'ciend_range', 'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'PR_read_ratio_diff',  'SR_read_ratio_diff', 'read_ratio_diff','label']]
     sv_data_nontrs_2.columns
     
     # re-arrange the data 
