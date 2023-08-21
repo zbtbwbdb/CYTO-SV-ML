@@ -83,6 +83,6 @@ rule cyto_sv_ml:
     shell:
         """
         sudo mkdir -p {OUTPUT_DIR}/{cohort_name}/cyto_sv_ml &&
-        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_transformation.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs}  &&
+        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_transformation.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} &&
         {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_modelling.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs}    
         """             
