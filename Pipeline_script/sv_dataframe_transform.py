@@ -273,6 +273,7 @@ def nontrs_sv_data_transform(sv_data_nontrs, nontrs_sv_cutoff):
     print(sv_data_nontrs['label'].value_counts())      
     sv_data_nontrs=sv_data_nontrs.rename(columns={'QUAL':'svtyper_score','SUPP':'sv_caller_supp', 'CN':'sv_copy_number'})  
     sv_data_nontrs.replace('NAN', 0, inplace=True) 
+    sv_data_nontrs.replace('NA', 0, inplace=True)
     sv_data_nontrs.replace('-', 0, inplace=True)  
     sv_data_nontrs.replace('', 0, inplace=True)  
     
