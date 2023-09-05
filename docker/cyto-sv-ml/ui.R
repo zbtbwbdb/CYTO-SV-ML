@@ -5,14 +5,14 @@ ui<- dashboardPage(
      ################################################################################################################### 
      
      #1. head information
-     dashboardHeader(title = "SC-SV-ML pipeline for prediction of somatic cytogenetic results through genomic structural variant classification", titleWidth = 1200),
+     dashboardHeader(title = "CYTO-SV-ML pipeline for prediction of somatic cytogenetic results through genomic structural variant classification", titleWidth = 1200),
      
      ###################################################################################################################
      
      #2. set up input widget    
      dashboardSidebar(
      # action button for ploting    
-                actionButton("Make_simulated_SV",'Run_SC_SV_ML'),
+                actionButton("Make_simulated_SV",'Run_CYTO_SV_ML'),
      # Input: Slider for SV type                    
            selectInput(inputId = "sv_type",
                        label = "SV type:",
