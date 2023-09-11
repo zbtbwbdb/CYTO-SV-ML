@@ -20,11 +20,15 @@ gender: '{Male}'
 cyto_band_file: '{cyto_sv_ml_dir}/cyto_band_dict.csv'
 
 # sv settings
+# SV caller list
 parliament2_sv_callers: ['breakdancer','cnvnator','delly.deletion','delly.duplication','delly.inversion']
 chromoseq_sv_callers: ['ichnorcnv','manta']
+# SV database list
 sv_db: ['1000_g', '1000_gall', 'cosmic_s', 'cytoatlas_s', 'gnomad_g2ab', 'gnomad_gall', 'gnomad_g', 'gnomad_qc', 'centromere_qc', 'dgv_g', 'control_g', 'control_gall']
-# 'size': SV size < 10000 bp will be excluded in the analyses; 'trs_sv_cutoff': SV breakpoint distance > 1000 bp to SVs in database annotation will be not be labelled;  'nontrs_sv_cutoff': SV region overlap < 0.9 (90%) to SVs in database annotation will be not be labelled; kfolds: cross-validation folds for machine learning models
+# 'size': SV size < 10000 bp will be excluded in the analyses; 
 size: 10000
+# 'trs_sv_cutoff': SV breakpoint distance > 1000 bp to SVs in database annotation will be not be labelled;  'nontrs_sv_cutoff': SV region overlap < 0.9 (90%) to SVs in database annotation will be not be labelled;
 trs_sv_cutoff: 1000
 nontrs_sv_cutoff : 0.9
+# kfolds: k folds for machine learning models
 kfolds: 5
