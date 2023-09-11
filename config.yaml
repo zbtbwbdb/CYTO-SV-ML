@@ -18,6 +18,7 @@ sample_list: '{your_work_dir}/{sample_list}'
 sample: '{Sample_1}'
 gender: '{Male}'
 cyto_band_file: '{cyto_sv_ml_dir}/cyto_band_dict.csv'
+sv_feature_metrics_index_file: '{cyto_sv_ml_dir}/sv_feature_metrics.csv'
 
 # sv settings
 # SV caller list
