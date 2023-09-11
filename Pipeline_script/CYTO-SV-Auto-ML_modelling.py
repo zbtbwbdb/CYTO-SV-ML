@@ -25,14 +25,16 @@ warnings.filterwarnings("ignore")
 
 ############################################################################################################################################################# 
 wd = sys.path[0]
-opts,args = getopt.getopt(sys.argv[1:],"s:o:k:")
+opts,args = getopt.getopt(sys.argv[1:],"s:o:x:k:")
 for op, value in opts:
 	if op == "-s":
 	    cohort_name = str(value)
 	if op == "-o":
 	    outdir = str(value)
+	if op == "-x":
+	    sv_feature_metrics_index = str(value)
 	if op == "-k":
-	    kfolds = int(value)
+	    kfolds = int(value)		
 sv_type_vector=['trs','nontrs']
 # add cyto-idx into sv_data (outside of modelling)
 # drop cyto-idx for modelling (before modelling)
