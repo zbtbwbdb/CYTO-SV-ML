@@ -39,6 +39,7 @@ sv_type_vector=['trs','nontrs']
 sv_feature_metrics=pd.read_csv(sv_feature_metrics_index_file,sep='\t', header=0, index_col=None, keep_default_na=False)
 trs_sv_feature_metrics=sv_feature_metrics.iloc[0,1:]
 nontrs_sv_feature_metrics=sv_feature_metrics.iloc[1,1:]
+nontrs_sv_feature_metrics[nontrs_sv_feature_metrics!='']
 # add cyto-idx into sv_data (outside of modelling)
 # drop cyto-idx for modelling (before modelling)
 # calculate label-2 cyto-idx count (after modelling)
@@ -49,13 +50,13 @@ for sv_type in sv_type_vector:
         sv_data_1 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=0, index_col=None, keep_default_na=False)    
         sv_data_10 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs_all',sep='\t', header=0, index_col=None, keep_default_na=False)  
         sv_data_10_sim=sv_data_10[['sample_id','sv_chr1','sv_chr2','SVTYPE','sv_id','label','1000_gall','1000_g','gnomad_gall','gnomad_g','control_gall', 'control_g', 'cytoatlas_s','cosmic_s','gnomad_qc', 'dgv_g', 'centromere_qc','uwstl_s']]         
-        X10 = sv_data_10.loc[:,['sv_bp_end_cc1', 'sv_bp_end_cc_v1', 'sv_bp_end_cc_v2',  'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4', 'sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11',  'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14',   'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16', 'sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2',  'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6',  'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24', 'cipos_range', 'ciend_range',  'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'bnd_depth_ratio',  'PR_read_ratio_diff', 'SR_read_ratio_diff', 'read_ratio_diff', 'bnd_depth_ratio_diff']]
+        X10 = sv_data_10.loc[:,trs_sv_feature_metrics]
         print(X10.shape)        
     else:  
         sv_data_1 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs',sep='\t', header=0, index_col=None, keep_default_na=False)      
         sv_data_10 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs_all',sep='\t', header=0, index_col=None, keep_default_na=False)  
         sv_data_10_sim=sv_data_10[['sample_id','sv_chr1','sv_chr2','SVTYPE','sv_id','label','sv_length','1000_gall','1000_g','gnomad_gall','gnomad_g','control_gall', 'control_g', 'cytoatlas_s','cosmic_s','gnomad_qc', 'dgv_g', 'centromere_qc','uwstl_s']]        
-        X10 = sv_data_10.loc[:,['svtyper_score', 'sv_bp_end_cc1', 'sv_bp_end_cc_v1','sv_bp_end_cc_v2', 'sv_bp_end_cc_v3', 'sv_bp_end_cc_v4','sv_bp_end_cc_v5', 'sv_bp_end_cc_v6', 'sv_bp_end_cc_v7', 'sv_bp_end_cc_v8', 'sv_bp_end_cc_v9', 'sv_bp_end_cc_v10', 'sv_bp_end_cc_v11', 'sv_bp_end_cc_v12', 'sv_bp_end_cc_v13', 'sv_bp_end_cc_v14', 'sv_bp_end_cc_v15', 'sv_bp_end_cc_v16','sv_bp_end_cc_v17', 'sv_bp_end_cc_v18', 'sv_bp_end_cc_v19', 'sv_bp_end_cc_v20', 'sv_bp_end_cc_v21', 'sv_bp_end_cc_v22', 'sv_bp_end_cc_v23', 'sv_bp_end_cc_v24', 'sv_bp_st_cc1', 'sv_bp_st_cc_v1', 'sv_bp_st_cc_v2', 'sv_bp_st_cc_v3', 'sv_bp_st_cc_v4', 'sv_bp_st_cc_v5', 'sv_bp_st_cc_v6', 'sv_bp_st_cc_v7', 'sv_bp_st_cc_v8', 'sv_bp_st_cc_v9', 'sv_bp_st_cc_v10', 'sv_bp_st_cc_v11', 'sv_bp_st_cc_v12', 'sv_bp_st_cc_v13', 'sv_bp_st_cc_v14', 'sv_bp_st_cc_v15', 'sv_bp_st_cc_v16', 'sv_bp_st_cc_v17', 'sv_bp_st_cc_v18', 'sv_bp_st_cc_v19', 'sv_bp_st_cc_v20', 'sv_bp_st_cc_v21', 'sv_bp_st_cc_v22', 'sv_bp_st_cc_v23', 'sv_bp_st_cc_v24','sv_copy_number', 'sv_caller_supp', 'cipos_range', 'ciend_range', 'PR_read_ratio', 'SR_read_ratio', 'read_ratio', 'PR_read_ratio_diff',  'SR_read_ratio_diff', 'read_ratio_diff']]    
+        X10 = sv_data_10.loc[:,nontrs_sv_feature_metrics]    
         print(X10.shape)
         
     print(sv_data_1.columns)
