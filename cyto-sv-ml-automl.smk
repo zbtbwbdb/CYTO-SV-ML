@@ -76,13 +76,15 @@ rule cyto_sv_ml:
         report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_trs_{k}_ts_model_aucroc_curve.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model_aucroc_curve","sv type": "trs","data type": "plot" }),    
         report(expand(OUTPUT_DIR+"/{cohort_name}/cyto_sv_ml/{cohort_name}_nontrs_{k}_ts_model_aucroc_curve.pdf", cohort_name=cohort_name,k=0), category="sv model summary", subcategory="model",labels={"data name" : "model aucroc curve","sv type": "nontrs","data type": "plot" })         
     params:
-        kfs=config['kfolds_shuffle'], 
+        kfs=config['kfolds'], 
+        trs_sv_cutoff=config['trs_sv_cutoff'],
+        nontrs_sv_cutoff=config['nontrs_sv_cutoff'],
         py39_dir=config['py39_dir']        
 #    conda:
 #        "py39.yaml"          
     shell:
         """
         sudo mkdir -p {OUTPUT_DIR}/{cohort_name}/cyto_sv_ml &&
-        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_transformation.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} &&
+        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_transformation.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -t {params.trs_sv_cutoff} -c {params.nontrs_sv_cutoff} &&
         {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_modelling.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs}    
         """             
