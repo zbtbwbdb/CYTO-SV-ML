@@ -37,9 +37,10 @@ for op, value in opts:
 	    kfolds = int(value)		
 sv_type_vector=['trs','nontrs']
 sv_feature_metrics=pd.read_csv(sv_feature_metrics_index_file,sep='\t', header=None, index_col=None, keep_default_na=False)
-trs_sv_feature_metrics=sv_feature_metrics.iloc[0,1:]
-nontrs_sv_feature_metrics=sv_feature_metrics.iloc[1,1:]
-nontrs_sv_feature_metrics[nontrs_sv_feature_metrics!='']
+trs_sv_feature_metrics=sv_feature_metrics.iloc[1,1:]
+trs_sv_feature_metrics=trs_sv_feature_metrics[nontrs_sv_feature_metrics!='']
+nontrs_sv_feature_metrics=sv_feature_metrics.iloc[0,1:]
+nontrs_sv_feature_metrics=nontrs_sv_feature_metrics[nontrs_sv_feature_metrics!='']
 # add cyto-idx into sv_data (outside of modelling)
 # drop cyto-idx for modelling (before modelling)
 # calculate label-2 cyto-idx count (after modelling)
