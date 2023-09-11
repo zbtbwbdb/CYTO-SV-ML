@@ -79,6 +79,7 @@ rule cyto_sv_ml:
         kfs=config['kfolds'], 
         trs_sv_cutoff=config['trs_sv_cutoff'],
         nontrs_sv_cutoff=config['nontrs_sv_cutoff'],
+        sv_feature_metrics_index=config['sv_feature_metrics_index_file'],
         py39_dir=config['py39_dir']        
 #    conda:
 #        "py39.yaml"          
@@ -86,5 +87,5 @@ rule cyto_sv_ml:
         """
         sudo mkdir -p {OUTPUT_DIR}/{cohort_name}/cyto_sv_ml &&
         {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_transformation.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -t {params.trs_sv_cutoff} -c {params.nontrs_sv_cutoff} &&
-        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_modelling.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -k {params.kfs}    
+        {params.py39_dir}/python {CYTO_SV_ML_DIR}/Pipeline_script/CYTO-SV-Auto-ML_modelling.py -s {cohort_name} -o {OUTPUT_DIR}/{cohort_name} -x {params.sv_feature_metrics_index} -k {params.kfs}    
         """             
