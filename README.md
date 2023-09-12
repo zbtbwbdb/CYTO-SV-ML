@@ -87,7 +87,7 @@ snakemake --core ${number_of_cores} -s cyto-sv-ml-preprocess.smk --use-conda --c
 ```
 snakemake --core ${number_of_cores} -s cyto-sv-ml-automl.smk --config cohort_name=${cohort_name}
 snakemake --core ${number_of_cores} -s cyto-sv-ml-automl.smk --config cohort_name=${cohort_name} --report ${your_work_dir}/out/${cohort_name}_report.html
-# please kindly check sv_variable.dict for sv feature variable dictionary
+# please kindly check sv_feature_variable.dict for sv feature variable dictionary
 ```
 ![CYTO-SV-ML snakemake report](cyto-sv-ml_snakemake_report.png)
 
