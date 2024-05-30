@@ -1,6 +1,6 @@
 # CYTO-SV-ML
 #### CYTO-SV-ML pipeline design:
-![CYTO-SV-ML PIPELINE WORKFLOW](workflow.png)
+![CYTO-SV-ML PIPELINE WORKFLOW](workflow.jpg)
 
 ### CYTO-SV-ML snakemake workflow
 ![CYTO-SV-ML Snakemake Snakemake workflow](cyto-sv-ml_snakemake_workflow.png)
