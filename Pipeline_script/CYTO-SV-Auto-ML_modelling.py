@@ -25,6 +25,8 @@ warnings.filterwarnings("ignore")
 
 ############################################################################################################################################################# 
 wd = sys.path[0]
+
+# Command-line arguments parsing
 opts,args = getopt.getopt(sys.argv[1:],"s:o:x:k:")
 for op, value in opts:
 	if op == "-s":
@@ -34,7 +36,9 @@ for op, value in opts:
 	if op == "-x":
 	    sv_feature_metrics_index_file = str(value)
 	if op == "-k":
-	    kfolds = int(value)		
+	    kfolds = int(value)	
+		
+#  Define SV types and read feature metrics		
 sv_type_vector=['trs','nontrs']
 sv_feature_metrics=pd.read_csv(sv_feature_metrics_index_file,sep='\t', header=None, index_col=None, keep_default_na=False)
 trs_sv_feature_metrics=sv_feature_metrics.iloc[1,1:]
@@ -46,6 +50,7 @@ nontrs_sv_feature_metrics=nontrs_sv_feature_metrics[nontrs_sv_feature_metrics!='
 # calculate label-2 cyto-idx count (after modelling)
 
 ############################################################################################################################################################# 
+# Loop through SV types
 for sv_type in sv_type_vector:
     if sv_type=='trs':
         sv_data_1 = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=0, index_col=None, keep_default_na=False)    
