@@ -24,40 +24,55 @@ from supervised.automl import AutoML
 warnings.filterwarnings("ignore")
 
 ############################################################################################################################################################# 
+# Set up working directory and SV type cutoffs
 wd = sys.path[0]
-trs_sv_cutoff=1000 # trs_sv breakpoint distance based cutoff
-nontrs_sv_cutoff=0.9 # nontrs_sv sequence overlapping based cutoff
-opts,args = getopt.getopt(sys.argv[1:],"s:o:t:c:")
+trs_sv_cutoff = 1000  # TRS-SV breakpoint distance cutoff
+nontrs_sv_cutoff = 0.9  # Non-TRS-SV sequence overlap cutoff
+
+# Parsing command line arguments
+opts, args = getopt.getopt(sys.argv[1:], "s:o:t:c:")
 for op, value in opts:
-	if op == "-s":
-	    cohort_name = str(value)
-	if op == "-o":
-	    outdir = str(value)
-	if op == "-t":
-	    trs_sv_cutoff = int(value)
-	if op == "-c":
-	    nontrs_sv_cutoff = float(value)  
-sv_type_vector=['trs','nontrs']
+    if op == "-s":
+        cohort_name = str(value)
+    elif op == "-o":
+        outdir = str(value)
+    elif op == "-t":
+        trs_sv_cutoff = int(value)
+    elif op == "-c":
+        nontrs_sv_cutoff = float(value)
+
+# Define SV types
+sv_type_vector = ['trs', 'nontrs']
 
 ############################################################################################################################################################# 
-sv_data = pd.read_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all',sep='\t', header=0, index_col=None, keep_default_na=False)
+
+# Load SV data
+sv_data = pd.read_csv(os.path.join(outdir, f'{cohort_name}.sv.all.combine_all'), sep='\t', header=0, index_col=None, keep_default_na=False)
 print(sv_data.columns)
+
+# Process each SV type
 for sv_type in sv_type_vector:
-    if sv_type=='trs':
-        sv_data_01=sv_data[~(sv_data['sv_type'].isin(['DEL','DUP','INV','INS']))].copy()  
-        sv_data_01.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs_o',sep='\t', header=True, index=None) 
-        sv_data_tf=sv_dataframe_transform.trs_sv_data_transform(sv_data_01,trs_sv_cutoff)
-        sv_data_1=sv_data_tf[0]
-        sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs',sep='\t', header=True, index=None)
-        sv_data_10=sv_data_tf[1]
-        sv_data_10.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_trs_all',sep='\t', header=True, index=None)        
+    if sv_type == 'trs':
+        sv_data_01 = sv_data[~sv_data['sv_type'].isin(['DEL', 'DUP', 'INV', 'INS'])].copy()
+        sv_data_01.to_csv(os.path.join(outdir, f'{cohort_name}.sv.all.combine_all_trs_o'), sep='\t', header=True, index=None)
+        
+        # Transform TRS-SV data
+        sv_data_tf = sv_dataframe_transform.trs_sv_data_transform(sv_data_01, trs_sv_cutoff)
+        sv_data_1 = sv_data_tf[0]
+        sv_data_1.to_csv(os.path.join(outdir, f'{cohort_name}.sv.all.combine_all_trs'), sep='\t', header=True, index=None)
+        sv_data_10 = sv_data_tf[1]
+        sv_data_10.to_csv(os.path.join(outdir, f'{cohort_name}.sv.all.combine_all_trs_all'), sep='\t', header=True, index=None)
     else:
-        sv_data_01=sv_data[sv_data['sv_type'].isin(['DEL','DUP','INV','INS'])].copy()     
-        sv_data_01.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs_o',sep='\t', header=True, index=None) 
-        sv_data_tf=sv_dataframe_transform.nontrs_sv_data_transform(sv_data_01,nontrs_sv_cutoff)        
-        sv_data_1=sv_data_tf[0]
-        sv_data_1.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs',sep='\t', header=True, index=None)        
-        sv_data_10=sv_data_tf[1]
-        sv_data_10.to_csv(outdir+'/'+str(cohort_name)+'.sv.all.combine_all_nontrs_all',sep='\t', header=True, index=None)            
-    sv_summary_plot=sv_dataframe_transform.sv_data_summary_plot(sv_data_1)    
-    sv_summary_plot.savefig(outdir+'/cyto_sv_ml/'+str(cohort_name)+'_'+sv_type+'_'+'sv_summary_plot.pdf', transparent=True)  # open the plot file for save sv data summary   
+        sv_data_01 = sv_data[sv_data['sv_type'].isin(['DEL', 'DUP', 'INV', 'INS'])].copy()
+        sv_data_01.to_csv(os.path.join(outdir, f'{cohort_name}.sv.all.combine_all_nontrs_o'), sep='\t', header=True, index=None)
+        
+        # Transform non-TRS-SV data
+        sv_data_tf = sv_dataframe_transform.nontrs_sv_data_transform(sv_data_01, nontrs_sv_cutoff)
+        sv_data_1 = sv_data_tf[0]
+        sv_data_1.to_csv(os.path.join(outdir, f'{cohort_name}.sv.all.combine_all_nontrs'), sep='\t', header=True, index=None)
+        sv_data_10 = sv_data_tf[1]
+        sv_data_10.to_csv(os.path.join(outdir, f'{cohort_name}.sv.all.combine_all_nontrs_all'), sep='\t', header=True, index=None)
+
+    # Plot SV data summary
+    sv_summary_plot = sv_dataframe_transform.sv_data_summary_plot(sv_data_1)
+    sv_summary_plot.savefig(os.path.join(outdir, 'cyto_sv_ml', f'{cohort_name}_{sv_type}_sv_summary_plot.pdf'), transparent=True)
