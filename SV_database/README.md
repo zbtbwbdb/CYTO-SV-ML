@@ -1,5 +1,5 @@
 ### Bed format SV database files ###
-TRS SV database mapping by breakpoint distance (1000bp) / nonTRS SV database mapping by overlap ratio (90%) 
+Threshold: TRS SV database mapping by breakpoint distance (200/500/1000bp) / nonTRS SV database mapping by overlap ratio (50/70/90%) 
 ###########################################################################################################
 
 1000 genome database SVs  <br />
